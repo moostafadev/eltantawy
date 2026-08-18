@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-main: #c1272d;
+  --color-main-foreground: #fdf6ef;
+  --color-background-second: #ffd2d4;
+
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-base: 1.5rem;
+  --space-lg: 2rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* COLORS */
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-main: var(--color-main);
+  --color-main-foreground: var(--color-main-foreground);
+  --color-background-second: var(--color-background-second);
+
+  /* SPACING */
+  --spacing-xs: var(--space-xs);
+  --spacing-sm: var(--space-sm);
+  --spacing-base: var(--space-base);
+  --spacing-lg: var(--space-lg);
+
+  /* FONTS */
+  --font-sans: var(--font-cairo);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@utility container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--spacing-sm);
+
+  @media (width >= theme(--breakpoint-sm)) {
+    max-width: theme(--breakpoint-sm);
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @media (width >= theme(--breakpoint-md)) {
+    max-width: theme(--breakpoint-md);
+    padding-inline: var(--spacing-base);
+  }
+  @media (width >= theme(--breakpoint-lg)) {
+    max-width: theme(--breakpoint-lg);
+  }
+  @media (width >= theme(--breakpoint-xl)) {
+    max-width: 1240px;
+    padding-inline: var(--spacing-lg);
+  }
+  @media (width >= theme(--breakpoint-2xl)) {
+    max-width: 1320px;
+  }
 }
