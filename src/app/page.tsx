@@ -29,16 +29,16 @@ const Page = () => {
           priority
         />
 
-        <h1 className="mt-8 text-6xl font-black tracking-tight text-[#F3ECDF] sm:text-[108px] md:text-9xl">
+        <h1 className="mt-8 text-6xl font-black tracking-tight text-main-foreground sm:text-[108px] md:text-9xl">
           الطنطاوي
         </h1>
 
-        <div className="mx-auto mt-6 h-0.75 w-14 rounded-full bg-[#B90A1A]" />
+        <div className="mx-auto mt-6 h-0.75 w-14 rounded-full bg-main" />
 
-        <p className="mt-6 text-lg font-medium text-[#F3ECDF]/70 sm:text-xl">
+        <p className="mt-6 text-lg font-medium text-main-foreground/80 sm:text-xl">
           جودة وطعم أصلي
         </p>
-        <p className="mt-1 text-sm font-semibold tracking-widest text-[#B90A1A] sm:text-base">
+        <p className="mt-1 text-sm font-semibold tracking-widest text-main sm:text-base">
           رقم واحد في مصر
         </p>
       </div>

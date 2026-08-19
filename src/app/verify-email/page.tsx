@@ -1,4 +1,4 @@
-import { VerifyEmailContent } from "@/features/client/auth/verification-code";
+import { VerifyEmailForm } from "@/features/client/auth/verification-code";
 import Image from "next/image";
 
 const VerifyEmail = () => {
@@ -15,7 +15,7 @@ const VerifyEmail = () => {
               priority
             />
           </div>
-          <VerifyEmailContent />
+          <VerifyEmailForm />
         </div>
       </div>
       <div className="flex-1 h-full hidden items-center justify-center p-4 bg-linear-to-b from-white via-background-second/30 to-white lg:flex">

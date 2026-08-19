@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import { cookies } from "next/headers";
 
 import { prisma } from "@/lib/prisma";
+import { signAccessToken, signRefreshToken } from "@/lib/auth";
 
 function hashCode(code: string) {
   return crypto.createHash("sha256").update(code).digest("hex");
@@ -9,29 +11,47 @@ function hashCode(code: string) {
 
 export async function POST(request: Request) {
   try {
-    const { userId, code } = await request.json();
+    const body = await request.json();
 
-    if (!userId || !code) {
+    const { code } = body;
+
+    if (!code) {
       return NextResponse.json(
         {
-          message: "User ID and verification code are required.",
+          message: "Verification code is required.",
         },
         { status: 400 },
       );
     }
 
-    if (!/^\d{6}$/.test(code)) {
+    /*
+     * ================================
+     * Get pending verification email
+     * ================================
+     */
+
+    const cookieStore = await cookies();
+
+    const email = cookieStore.get("pending_verification_email")?.value;
+
+    if (!email) {
       return NextResponse.json(
         {
-          message: "Verification code must be 6 digits.",
+          message: "Verification session has expired. Please register again.",
         },
-        { status: 400 },
+        { status: 401 },
       );
     }
+
+    /*
+     * ================================
+     * Find user
+     * ================================
+     */
 
     const user = await prisma.user.findUnique({
       where: {
-        id: userId,
+        email,
       },
     });
 
@@ -44,33 +64,39 @@ export async function POST(request: Request) {
       );
     }
 
+    /*
+     * ================================
+     * Already verified
+     * ================================
+     */
+
     if (user.isVerified) {
-      return NextResponse.json({
-        message: "Email is already verified.",
-      });
-    }
-
-    if (!user.emailVerificationCodeHash || !user.emailVerificationExpiresAt) {
       return NextResponse.json(
         {
-          message: "No verification code found.",
+          message: "Email is already verified.",
         },
         { status: 400 },
       );
     }
 
-    if (user.emailVerificationExpiresAt.getTime() < Date.now()) {
+    /*
+     * ================================
+     * Check verification code
+     * ================================
+     */
+
+    if (!user.emailVerificationCodeHash) {
       return NextResponse.json(
         {
-          message: "جلسة التحقق غير صالحة.",
+          message: "Verification code is invalid.",
         },
         { status: 400 },
       );
     }
 
-    const hashedCode = hashCode(code);
+    const codeHash = hashCode(code);
 
-    if (hashedCode !== user.emailVerificationCodeHash) {
+    if (codeHash !== user.emailVerificationCodeHash) {
       return NextResponse.json(
         {
           message: "رمز التحقق غير صحيح.",
@@ -79,28 +105,122 @@ export async function POST(request: Request) {
       );
     }
 
-    await prisma.user.update({
+    /*
+     * ================================
+     * Check expiration
+     * ================================
+     */
+
+    if (
+      !user.emailVerificationExpiresAt ||
+      user.emailVerificationExpiresAt < new Date()
+    ) {
+      return NextResponse.json(
+        {
+          message: "انتهت صلاحية رمز التحقق. أرسل رمزًا جديدًا.",
+        },
+        { status: 400 },
+      );
+    }
+
+    /*
+     * ================================
+     * Verify user
+     * ================================
+     */
+
+    const updatedUser = await prisma.user.update({
       where: {
         id: user.id,
       },
       data: {
         isVerified: true,
-
         emailVerificationCodeHash: null,
-
         emailVerificationExpiresAt: null,
+      },
+      select: {
+        id: true,
+        fName: true,
+        lName: true,
+        email: true,
+        phone: true,
+        role: true,
+        isVerified: true,
       },
     });
 
-    return NextResponse.json({
-      message: "تم تأكيد البريد الإلكتروني بنجاح.",
+    /*
+     * ================================
+     * Create authentication tokens
+     * ================================
+     */
+
+    const accessToken = signAccessToken({
+      userId: updatedUser.id,
+      role: updatedUser.role,
     });
+
+    const refreshToken = signRefreshToken({
+      userId: updatedUser.id,
+      role: updatedUser.role,
+    });
+
+    /*
+     * ================================
+     * Response
+     * ================================
+     */
+
+    const response = NextResponse.json({
+      message: "Email verified and login successful.",
+
+      user: updatedUser,
+    });
+
+    /*
+     * ================================
+     * Access Token
+     * ================================
+     */
+
+    response.cookies.set("access_token", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60,
+    });
+
+    /*
+     * ================================
+     * Refresh Token
+     * ================================
+     */
+
+    response.cookies.set("refresh_token", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 30 * 24 * 60 * 60,
+    });
+
+    /*
+     * ================================
+     * Delete pending verification cookies
+     * ================================
+     */
+
+    response.cookies.delete("pending_verification_email");
+    response.cookies.delete("pending_verification_name");
+
+    return response;
   } catch (error) {
     console.error("Verify email error:", error);
 
     return NextResponse.json(
       {
-        message: "Unable to verify email.",
+        message: "Unable to verify email. Please try again.",
       },
       { status: 500 },
     );

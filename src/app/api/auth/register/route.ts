@@ -20,10 +20,11 @@ export async function POST(request: Request) {
 
     const { fName, lName, phone, email, password } = body;
 
-    if (!fName || !lName || !phone || !password) {
+    if (!fName || !lName || !phone || !email || !password) {
       return NextResponse.json(
         {
-          message: "First name, last name, phone and password are required.",
+          message:
+            "First name, last name, phone, email and password are required.",
         },
         { status: 400 },
       );
@@ -39,10 +40,11 @@ export async function POST(request: Request) {
     }
 
     const normalizedPhone = phone.trim();
+    const normalizedEmail = email.trim().toLowerCase();
 
-    const normalizedEmail = email ? email.trim().toLowerCase() : null;
-
-    // Check phone
+    /*
+     * Check phone
+     */
     const existingPhone = await prisma.user.findUnique({
       where: {
         phone: normalizedPhone,
@@ -58,38 +60,40 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check email
-    if (normalizedEmail) {
-      const existingEmail = await prisma.user.findUnique({
-        where: {
-          email: normalizedEmail,
-        },
-      });
+    /*
+     * Check email
+     */
+    const existingEmail = await prisma.user.findUnique({
+      where: {
+        email: normalizedEmail,
+      },
+    });
 
-      if (existingEmail) {
-        return NextResponse.json(
-          {
-            message: "This email is already registered.",
-          },
-          { status: 409 },
-        );
-      }
+    if (existingEmail) {
+      return NextResponse.json(
+        {
+          message: "This email is already registered.",
+        },
+        { status: 409 },
+      );
     }
 
+    /*
+     * Hash password
+     */
     const hashedPassword = await bcrypt.hash(password, 12);
 
     /*
-     * ================================
-     * Email provided
-     * ================================
+     * Verification code
      */
-
     const code = generateCode();
-
     const codeHash = hashCode(code);
 
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
+    /*
+     * Create user
+     */
     const user = await prisma.user.create({
       data: {
         fName: fName.trim(),
@@ -101,7 +105,6 @@ export async function POST(request: Request) {
         isVerified: false,
 
         emailVerificationCodeHash: codeHash,
-
         emailVerificationExpiresAt: expiresAt,
       },
     });
@@ -122,7 +125,6 @@ export async function POST(request: Request) {
     if (error) {
       console.error("Resend error:", error);
 
-      // Remove user if email could not be sent
       await prisma.user.delete({
         where: {
           id: user.id,
@@ -137,14 +139,37 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json(
+    /*
+     * Create response
+     */
+    const response = NextResponse.json(
       {
         message: "Account created. Verification code sent to your email.",
         requiresEmailVerification: true,
-        userId: user.id,
       },
       { status: 201 },
     );
+
+    /*
+     * Save verification information
+     */
+    response.cookies.set("pending_verification_email", normalizedEmail, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 10 * 60,
+    });
+
+    response.cookies.set("pending_verification_name", user.fName, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 10 * 60,
+    });
+
+    return response;
   } catch (error) {
     console.error("Signup error:", error);
 

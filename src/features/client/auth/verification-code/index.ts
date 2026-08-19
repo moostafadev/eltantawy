@@ -1,1 +1,1 @@
-export { default as VerifyEmailContent } from "./Main";
+export { default as VerifyEmailForm } from "./Main";

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
 import { Layout } from "@/layouts/client";
+import { AuthProvider } from "@/context/AuthContext";
 
 const fontFamily = Cairo({
   variable: "--font-cairo",
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${fontFamily.variable} h-full antialiased`}
     >
       <body className="flex">
-        <Layout>{children}</Layout>
+        <AuthProvider>
+          <Layout>{children}</Layout>
+        </AuthProvider>
       </body>
     </html>
   );

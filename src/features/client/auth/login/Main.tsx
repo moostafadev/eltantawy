@@ -9,12 +9,13 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { LoginForm } from "./types";
 import { loginSchema } from "./schema";
-import PasswordRequirements from "./PasswordRequirements";
+import { LoginForm } from "./types";
+import { useAuth } from "@/context/AuthContext";
 
-const RegisterForm = () => {
+const FormLogin = () => {
   const router = useRouter();
+  const { setUser } = useAuth();
 
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState("");
@@ -24,7 +25,7 @@ const RegisterForm = () => {
       setIsLoading(true);
       setServerError("");
 
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,16 +36,22 @@ const RegisterForm = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        setServerError(result.message || "حدث خطأ أثناء إنشاء الحساب.");
+        setServerError("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+
+        if (result.requiresEmailVerification) {
+          router.push("/verify-email");
+        }
 
         return;
       }
 
-      router.push("/verify-email");
-    } catch (error) {
-      console.error("Register error:", error);
+      setUser(result.user);
 
-      setServerError("حدث خطأ أثناء إنشاء الحساب، يرجى المحاولة مرة أخرى.");
+      router.push("/");
+    } catch (error) {
+      console.error("Login error:", error);
+
+      setServerError("حدث خطأ أثناء تسجيل الدخول، يرجى المحاولة مرة أخرى.");
     } finally {
       setIsLoading(false);
     }
@@ -67,35 +74,14 @@ const RegisterForm = () => {
       </div>
 
       <div className="flex flex-col gap-2 text-center">
-        <h1 className="text-2xl font-bold text-foreground">إنشاء حساب جديد</h1>
+        <h1 className="text-2xl font-bold text-foreground">تسجيل الدخول</h1>
 
         <p className="text-sm text-muted-foreground">
-          أنشئ حسابك واستمتع بالخصومات
+          سجل الدخول إلى حسابك واستمتع بالخصومات
         </p>
       </div>
 
       <div className="flex flex-col gap-5">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Input<LoginForm>
-            name="fName"
-            label="الاسم الأول"
-            placeholder="أدخل اسمك الأول"
-          />
-
-          <Input<LoginForm>
-            name="lName"
-            label="اسم العائلة"
-            placeholder="أدخل اسم العائلة"
-          />
-        </div>
-
-        <Input<LoginForm>
-          name="phone"
-          label="رقم الهاتف"
-          type="tel"
-          placeholder="01xxxxxxxxx"
-        />
-
         <Input<LoginForm>
           name="email"
           label="البريد الإلكتروني"
@@ -103,16 +89,12 @@ const RegisterForm = () => {
           placeholder="example@email.com"
         />
 
-        <div className="flex flex-col gap-2">
-          <Input<LoginForm>
-            name="password"
-            label="كلمة المرور"
-            type="password"
-            placeholder="أدخل كلمة مرور قوية"
-          />
-
-          <PasswordRequirements />
-        </div>
+        <Input<LoginForm>
+          name="password"
+          label="كلمة المرور"
+          type="password"
+          placeholder="أدخل كلمة المرور"
+        />
       </div>
 
       {serverError && (
@@ -125,19 +107,22 @@ const RegisterForm = () => {
       )}
 
       <Button type="submit" color="MAIN" size="lg" loading={isLoading}>
-        {isLoading ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
+        {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
       </Button>
 
-      {/* Login */}
+      {/* Register */}
       <div className="flex items-center justify-center gap-1 text-sm">
-        <span className="text-muted-foreground">لديك حساب بالفعل؟</span>
+        <span className="text-muted-foreground">ليس لديك حساب؟</span>
 
-        <Link href="/login" className="font-medium text-main hover:underline">
-          تسجيل الدخول
+        <Link
+          href="/register"
+          className="font-medium text-main hover:underline"
+        >
+          إنشاء حساب جديد
         </Link>
       </div>
     </Form>
   );
 };
 
-export default RegisterForm;
+export default FormLogin;

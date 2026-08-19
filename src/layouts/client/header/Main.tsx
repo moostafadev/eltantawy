@@ -3,9 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ShoppingCart, UserRound } from "lucide-react";
+import {
+  CircleUserRound,
+  ShoppingCart,
+  UserRound,
+  LoaderCircle,
+} from "lucide-react";
+
 import { ButtonMobile, NavbarMobile } from "./mobile";
 import Navbar from "./Navbar";
+import { useAuth } from "@/context/AuthContext";
 
 interface HeaderProps {
   isScrolled: boolean;
@@ -14,8 +21,11 @@ interface HeaderProps {
 const Header = ({ isScrolled }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
+
     return () => {
       document.body.style.overflow = "";
     };
@@ -23,11 +33,18 @@ const Header = ({ isScrolled }: HeaderProps) => {
 
   useEffect(() => {
     if (!isMenuOpen) return;
+
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsMenuOpen(false);
+      if (e.key === "Escape") {
+        setIsMenuOpen(false);
+      }
     };
+
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [isMenuOpen]);
 
   return (
@@ -58,27 +75,47 @@ const Header = ({ isScrolled }: HeaderProps) => {
           <Navbar />
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/register"
-              className="-m-2.5 flex h-11 w-11 items-center justify-center"
-            >
-              <UserRound
-                className="text-foreground"
-                size={22}
-                strokeWidth={1.75}
-              />
-            </Link>
+            {/* User */}
+            {isAuthLoading ? (
+              <div className="flex h-11 w-11 items-center justify-center">
+                <LoaderCircle
+                  size={21}
+                  strokeWidth={1.75}
+                  className="animate-spin text-muted-foreground"
+                />
+              </div>
+            ) : (
+              <Link
+                href={isAuthenticated ? "/profile" : "/login"}
+                className="-m-2.5 flex h-11 w-11 items-center justify-center"
+              >
+                {isAuthenticated ? (
+                  <CircleUserRound
+                    className="text-foreground transition-colors hover:text-main"
+                    size={22}
+                    strokeWidth={1.75}
+                  />
+                ) : (
+                  <UserRound
+                    className="text-foreground transition-colors hover:text-main"
+                    size={22}
+                    strokeWidth={1.75}
+                  />
+                )}
+              </Link>
+            )}
 
+            {/* Cart
             <Link
               href="/cart"
               className="-m-2.5 flex h-11 w-11 items-center justify-center"
             >
               <ShoppingCart
-                className="text-foreground"
+                className="text-foreground transition-colors hover:text-main"
                 size={22}
                 strokeWidth={1.75}
               />
-            </Link>
+            </Link> */}
 
             <ButtonMobile isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
           </div>
