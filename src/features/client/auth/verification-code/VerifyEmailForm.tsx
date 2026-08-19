@@ -5,7 +5,7 @@ import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   verifyEmailSchema,
@@ -18,9 +18,31 @@ interface VerifyEmailFormProps {
 
 const VerifyEmailForm = ({ userId }: VerifyEmailFormProps) => {
   const router = useRouter();
+
   const [isLoading, setIsLoading] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+
   const [serverError, setServerError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
 
   const handleSubmit = async (data: VerifyEmailFormType) => {
     if (!userId) {
@@ -67,11 +89,57 @@ const VerifyEmailForm = ({ userId }: VerifyEmailFormProps) => {
     }
   };
 
+  const handleResendCode = async () => {
+    if (!userId) {
+      setServerError("جلسة التحقق غير صالحة.");
+      return;
+    }
+
+    if (isResending || resendCooldown > 0) {
+      return;
+    }
+
+    try {
+      setIsResending(true);
+      setServerError("");
+      setSuccessMessage("");
+
+      const response = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        setServerError(result.message || "تعذر إعادة إرسال رمز التحقق.");
+        return;
+      }
+
+      setSuccessMessage("تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.");
+
+      setResendCooldown(60);
+    } catch (error) {
+      console.error("Resend verification error:", error);
+
+      setServerError(
+        "حدث خطأ أثناء إعادة إرسال رمز التحقق، يرجى المحاولة مرة أخرى.",
+      );
+    } finally {
+      setIsResending(false);
+    }
+  };
+
   return (
     <Form<VerifyEmailFormType>
       onSubmit={handleSubmit}
       resolver={zodResolver(verifyEmailSchema)}
-      className="w-full max-w-xl flex flex-col gap-6 border border-background-second/60 bg-background p-4 shadow-sm sm:p-8 "
+      className="w-full max-w-xl flex flex-col gap-6 border border-background-second/60 bg-background p-4 shadow-sm sm:p-8"
     >
       <div className="flex flex-col gap-2 text-center">
         <h1 className="text-2xl font-bold text-foreground">
@@ -95,7 +163,7 @@ const VerifyEmailForm = ({ userId }: VerifyEmailFormProps) => {
       {serverError && (
         <div
           role="alert"
-          className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive "
+          className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive"
         >
           {serverError}
         </div>
@@ -104,7 +172,7 @@ const VerifyEmailForm = ({ userId }: VerifyEmailFormProps) => {
       {successMessage && (
         <div
           role="status"
-          className="rounded-lg border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-600 "
+          className="rounded-lg border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-600"
         >
           {successMessage}
         </div>
@@ -113,6 +181,24 @@ const VerifyEmailForm = ({ userId }: VerifyEmailFormProps) => {
       <Button type="submit" color="MAIN" size="lg" loading={isLoading}>
         {isLoading ? "جاري التأكيد..." : "تأكيد البريد الإلكتروني"}
       </Button>
+
+      <div className="flex flex-col items-center gap-2 text-sm">
+        <span className="text-muted-foreground">لم يصلك رمز التحقق؟</span>
+
+        <Button
+          type="button"
+          onClick={handleResendCode}
+          disabled={isResending || resendCooldown > 0}
+          color="WHITE"
+          size="sm"
+        >
+          {isResending
+            ? "جاري إرسال الرمز..."
+            : resendCooldown > 0
+              ? `إعادة الإرسال بعد ${resendCooldown} ثانية`
+              : "إعادة إرسال رمز التحقق"}
+        </Button>
+      </div>
     </Form>
   );
 };

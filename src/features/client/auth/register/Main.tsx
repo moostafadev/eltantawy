@@ -117,7 +117,7 @@ const RegisterForm = () => {
       </div>
 
       <Button type="submit" color="MAIN" size="lg" loading={isLoading}>
-        {isLoading ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
+        إنشاء الحساب
       </Button>
     </Form>
   );

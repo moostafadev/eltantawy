@@ -1,5 +1,6 @@
 "use client";
 
+import Spin from "../icons/Spin";
 import { getColor, getSize } from "./lib";
 import { IProps } from "./types";
 
@@ -17,7 +18,7 @@ const Button = ({
       disabled={loading}
       {...props}
     >
-      {loading ? "...Loading" : children}
+      {loading ? <Spin /> : children}
     </button>
   );
 };
