@@ -6,13 +6,16 @@ import { IProps } from "./types";
 const Form = <T extends FieldValues>({
   onSubmit,
   children,
+  className,
   ...formOptions
 }: IProps<T>) => {
   const methods = useForm<T>(formOptions);
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(onSubmit)}>{children}</form>
+      <form onSubmit={methods.handleSubmit(onSubmit)} className={className}>
+        {children}
+      </form>
     </FormProvider>
   );
 };

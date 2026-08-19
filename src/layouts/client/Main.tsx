@@ -19,7 +19,7 @@ const LayoutClient = ({ children }: { children: ReactNode }) => {
       <Header isScrolled={isScrolled} />
 
       <main
-        className={`${isScrolled ? "mt-16" : "mt-20"} min-h-[calc(100dvh-5rem)] bg-background-second transition-[margin] duration-300`}
+        className={`${isScrolled ? "mb-16 lg:mb-0 lg:mt-16" : "mb-20 lg:mb-0 lg:mt-20"} w-full min-h-[calc(100dvh-5rem)] transition-[margin] duration-300`}
       >
         {children}
       </main>

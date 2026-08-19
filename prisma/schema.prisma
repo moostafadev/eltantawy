@@ -1,0 +1,35 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  fName String
+  lName String
+
+  phone String @unique
+  email String @unique
+
+  password String
+
+  role UserRole @default(USER)
+
+  isVerified Boolean @default(false)
+
+  emailVerificationCodeHash String?
+  emailVerificationExpiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

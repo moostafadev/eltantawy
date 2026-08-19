@@ -5,4 +5,5 @@ export interface IProps<T extends FieldValues> {
   label?: string;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
+  className?: string;
 }

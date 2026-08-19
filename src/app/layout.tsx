@@ -1,4 +1,3 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
@@ -22,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       dir="rtl"
       className={`${fontFamily.variable} h-full antialiased`}
     >
-      <body className="min-h-dvh">
+      <body className="flex">
         <Layout>{children}</Layout>
       </body>
     </html>

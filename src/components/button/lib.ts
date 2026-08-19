@@ -15,9 +15,11 @@ export const getColor = (color: COLOR) => {
 export const getSize = (size: TSize) => {
   switch (size) {
     case "lg":
-      return "px-6 text-lg";
+      return "px-6 text-base py-1.5";
     case "sm":
       return "px-sm text-sm";
+    case "xs":
+      return "px-xs text-xs";
     default:
       return "px-base text-base";
   }

@@ -25,11 +25,11 @@ const Page = () => {
           alt="شعار الطنطاوي"
           width={240}
           height={219}
-          className="mx-auto h-28 w-auto sm:h-36"
+          className="mx-auto h-40 w-auto sm:h-36"
           priority
         />
 
-        <h1 className="mt-8 text-7xl font-black tracking-tight text-[#F3ECDF] sm:text-9xl">
+        <h1 className="mt-8 text-6xl font-black tracking-tight text-[#F3ECDF] sm:text-[108px] md:text-9xl">
           الطنطاوي
         </h1>
 
