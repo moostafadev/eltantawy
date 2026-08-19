@@ -80,33 +80,6 @@ export async function POST(request: Request) {
 
     /*
      * ================================
-     * No email
-     * ================================
-     */
-
-    if (!normalizedEmail) {
-      const user = await prisma.user.create({
-        data: {
-          fName: fName.trim(),
-          lName: lName.trim(),
-          phone: normalizedPhone,
-          password: hashedPassword,
-          isVerified: false,
-        },
-      });
-
-      return NextResponse.json(
-        {
-          message: "Account created successfully.",
-          requiresEmailVerification: false,
-          userId: user.id,
-        },
-        { status: 201 },
-      );
-    }
-
-    /*
-     * ================================
      * Email provided
      * ================================
      */
@@ -139,7 +112,7 @@ export async function POST(request: Request) {
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL!,
       to: [normalizedEmail],
-      subject: "Verify your email address",
+      subject: "تأكيد البريد الإلكتروني - الطنطاوي",
       html: verificationEmail({
         name: user.fName,
         code,

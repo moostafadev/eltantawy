@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL!,
       to: [user.email],
-      subject: "Your new verification code",
+      subject: "تأكيد البريد الإلكتروني - الطنطاوي",
       html: verificationEmail({
         name: user.fName,
         code,

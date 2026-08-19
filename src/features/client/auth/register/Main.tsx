@@ -8,19 +8,56 @@ import { loginSchema } from "./schema";
 import { Button } from "@/components/button";
 import PasswordRequirements from "./PasswordRequirements";
 import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const RegisterForm = () => {
-  const handleSubmit = (data: LoginForm) => {
-    console.log(data);
+  const router = useRouter();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (data: LoginForm) => {
+    try {
+      setIsLoading(true);
+
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        return;
+      }
+
+      router.push(`/verify-email?userId=${encodeURIComponent(result.userId)}`);
+    } catch (error) {
+      console.error("Register error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <Form<LoginForm>
       onSubmit={handleSubmit}
       resolver={zodResolver(loginSchema)}
-      className="w-full border border-background-second/60 bg-background p-4 sm:p-8 shadow-sm flex flex-col gap-4 max-w-xl"
+      className="
+        w-full
+        max-w-xl
+        flex flex-col gap-4
+        border border-background-second/60
+        bg-background
+        p-4
+        shadow-sm
+        sm:p-8
+      "
     >
-      <div className="lg:hidden pb-4 border-b-2 border-b-main/30 w-full flex justify-center items-center">
+      <div className="flex w-full items-center justify-center border-b-2 border-b-main/30 pb-4 lg:hidden">
         <Image
           src="/logo-alt.png"
           alt="الطنطاوي"
@@ -29,6 +66,7 @@ const RegisterForm = () => {
           priority
         />
       </div>
+
       <div className="flex flex-col gap-2 text-center">
         <h1 className="text-2xl font-bold text-foreground">إنشاء حساب جديد</h1>
 
@@ -38,7 +76,7 @@ const RegisterForm = () => {
       </div>
 
       <div className="flex flex-col gap-5">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Input<LoginForm>
             name="fName"
             label="الاسم الأول"
@@ -78,8 +116,8 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      <Button type="submit" color="MAIN" size="lg">
-        إنشاء الحساب
+      <Button type="submit" color="MAIN" size="lg" loading={isLoading}>
+        {isLoading ? "جاري إنشاء الحساب..." : "إنشاء الحساب"}
       </Button>
     </Form>
   );

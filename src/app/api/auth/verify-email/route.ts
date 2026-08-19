@@ -44,15 +44,6 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!user.email) {
-      return NextResponse.json(
-        {
-          message: "This account does not have an email.",
-        },
-        { status: 400 },
-      );
-    }
-
     if (user.isVerified) {
       return NextResponse.json({
         message: "Email is already verified.",
@@ -71,7 +62,7 @@ export async function POST(request: Request) {
     if (user.emailVerificationExpiresAt.getTime() < Date.now()) {
       return NextResponse.json(
         {
-          message: "Verification code has expired.",
+          message: "جلسة التحقق غير صالحة.",
         },
         { status: 400 },
       );
@@ -82,7 +73,7 @@ export async function POST(request: Request) {
     if (hashedCode !== user.emailVerificationCodeHash) {
       return NextResponse.json(
         {
-          message: "Invalid verification code.",
+          message: "رمز التحقق غير صحيح.",
         },
         { status: 400 },
       );
@@ -102,7 +93,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({
-      message: "Email verified successfully.",
+      message: "تم تأكيد البريد الإلكتروني بنجاح.",
     });
   } catch (error) {
     console.error("Verify email error:", error);

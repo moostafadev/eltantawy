@@ -1,4 +1,4 @@
-import { RegisterForm } from "@/features/client/register";
+import { RegisterForm } from "@/features/client/auth/register";
 import Image from "next/image";
 
 const Register = () => {
