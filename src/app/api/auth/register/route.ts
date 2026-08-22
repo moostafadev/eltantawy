@@ -6,6 +6,9 @@ import { prisma } from "@/lib/prisma";
 import { resend } from "@/lib/resend";
 import { verificationEmail } from "@/lib/emails/verification-email";
 
+const resendApiKey = process.env.RESEND_API_KEY;
+const resendFromEmail = process.env.RESEND_FROM_EMAIL;
+
 function generateCode() {
   return crypto.randomInt(100000, 1000000).toString();
 }
@@ -15,6 +18,24 @@ function hashCode(code: string) {
 }
 
 export async function POST(request: Request) {
+  if (!resendApiKey) {
+    console.error("RESEND_API_KEY is missing");
+
+    return NextResponse.json(
+      { message: "Email service is not configured." },
+      { status: 500 },
+    );
+  }
+
+  if (!resendFromEmail) {
+    console.error("RESEND_FROM_EMAIL is missing");
+
+    return NextResponse.json(
+      { message: "Email service is not configured." },
+      { status: 500 },
+    );
+  }
+
   try {
     const body = await request.json();
 
@@ -113,7 +134,7 @@ export async function POST(request: Request) {
      * Send verification email
      */
     const { error } = await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL!,
+      from: resendFromEmail,
       to: [normalizedEmail],
       subject: "تأكيد البريد الإلكتروني - الطنطاوي",
       html: verificationEmail({
@@ -122,8 +143,19 @@ export async function POST(request: Request) {
       }),
     });
 
+    console.log("RESEND DEBUG:", {
+      hasApiKey: Boolean(process.env.RESEND_API_KEY),
+      fromEmail: process.env.RESEND_FROM_EMAIL,
+    });
+
     if (error) {
-      console.error("Resend error:", error);
+      console.error("RESEND ERROR:", JSON.stringify(error, null, 2));
+
+      console.error("RESEND FROM:", resendFromEmail);
+      console.error(
+        "RESEND API KEY EXISTS:",
+        Boolean(process.env.RESEND_API_KEY),
+      );
 
       await prisma.user.delete({
         where: {
