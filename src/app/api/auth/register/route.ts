@@ -143,25 +143,8 @@ export async function POST(request: Request) {
       }),
     });
 
-    console.log("RESEND DEBUG:", {
-      hasApiKey: Boolean(process.env.RESEND_API_KEY),
-      fromEmail: process.env.RESEND_FROM_EMAIL,
-    });
-
     if (error) {
       console.error("RESEND ERROR:", JSON.stringify(error, null, 2));
-
-      console.error("RESEND FROM:", resendFromEmail);
-      console.error(
-        "RESEND API KEY EXISTS:",
-        Boolean(process.env.RESEND_API_KEY),
-      );
-
-      await prisma.user.delete({
-        where: {
-          id: user.id,
-        },
-      });
 
       return NextResponse.json(
         {

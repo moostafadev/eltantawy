@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { verifyAccessToken } from "@/lib/auth";
 import LogoutButton from "@/features/client/auth/logout/LogoutButton";
+import Link from "next/link";
+import { Button } from "@/components/button";
 
 const Profile = async () => {
   const cookieStore = await cookies();
@@ -43,7 +45,7 @@ const Profile = async () => {
   return (
     <div className="bg-background py-8">
       <div className="container mx-auto px-4">
-        <div className="mx-auto w-full max-w-3xl">
+        <div className="mx-auto w-full max-w-3xl flex flex-col gap-4">
           {/* Header */}
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-foreground">الملف الشخصي</h1>
@@ -94,8 +96,15 @@ const Profile = async () => {
               />
             </div>
           </div>
-          <div className="mt-4">
+          <div className="flex items-center justify-between gap-2">
             <LogoutButton />
+            {payload.role === "ADMIN" ? (
+              <Link href={"/admin"}>
+                <Button size="lg">الداشبورد</Button>
+              </Link>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
