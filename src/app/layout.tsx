@@ -22,7 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       dir="rtl"
       className={`${fontFamily.variable} h-full antialiased`}
     >
-      <body className="flex">
+      <body className="flex flex-col">
         <AuthProvider>
           <Layout>{children}</Layout>
         </AuthProvider>

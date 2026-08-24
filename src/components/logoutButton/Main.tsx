@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
-
-import { Button } from "@/components/button";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Button } from "../button";
+import { LogOut } from "lucide-react";
+import { IProps } from "./types";
 
-const LogoutButton = () => {
+const LogoutButton = ({ children, className }: IProps) => {
   const router = useRouter();
   const { logout } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
@@ -33,10 +33,14 @@ const LogoutButton = () => {
       color="MAIN"
       size="lg"
       loading={isLoading}
-      className="flex items-center gap-4"
+      className={`flex items-center gap-4 ${className}`}
     >
-      <LogOut size={18} />
-      تسجيل الخروج
+      {children ?? (
+        <>
+          <LogOut className="size-5" />
+          <span>تسجيل الخروج</span>
+        </>
+      )}
     </Button>
   );
 };

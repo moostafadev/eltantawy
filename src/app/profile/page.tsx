@@ -3,9 +3,10 @@ import { redirect } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 import { verifyAccessToken } from "@/lib/auth";
-import LogoutButton from "@/features/client/auth/logout/LogoutButton";
 import Link from "next/link";
 import { Button } from "@/components/button";
+import { LogoutButton } from "@/components/logoutButton";
+import { LayoutDashboard } from "lucide-react";
 
 const Profile = async () => {
   const cookieStore = await cookies();
@@ -100,7 +101,13 @@ const Profile = async () => {
             <LogoutButton />
             {payload.role === "ADMIN" ? (
               <Link href={"/admin"}>
-                <Button size="lg">الداشبورد</Button>
+                <Button
+                  size="lg"
+                  className="flex items-center justify-center gap-4"
+                >
+                  <LayoutDashboard className="size-5" />
+                  <span>الداشبورد</span>
+                </Button>
               </Link>
             ) : (
               <></>

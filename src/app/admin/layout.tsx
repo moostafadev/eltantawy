@@ -1,3 +1,4 @@
+import { Admin } from "@/layouts/admin";
 import { requireAdmin } from "@/lib/auth/require-admin";
 
 export default async function AdminLayout({
@@ -5,15 +6,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const admin = await requireAdmin();
+  await requireAdmin();
 
-  return (
-    <div className="min-h-screen">
-      <header>
-        <p>Welcome, {admin.id}</p>
-      </header>
-
-      {children}
-    </div>
-  );
+  return <Admin>{children}</Admin>;
 }

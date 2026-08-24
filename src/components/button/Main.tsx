@@ -14,7 +14,7 @@ const Button = ({
 }: IProps) => {
   return (
     <button
-      className={`${getColor(color)} ${getSize(size)} py-1 duration-150 hover:opacity-75 cursor-pointer ${loading && "opacity-60"} ${className}`}
+      className={`${getColor(color)} ${getSize(size)} py-1 duration-150 hover:opacity-75 cursor-pointer shadow-sm ${loading && "opacity-60"} ${className}`}
       disabled={loading}
       {...props}
     >
