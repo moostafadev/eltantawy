@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/button";
 import { LogoutButton } from "@/components/logoutButton";
 import { LayoutDashboard } from "lucide-react";
+import { toArabicNums } from "@/utils/toArabicNums";
 
 const Profile = async () => {
   const cookieStore = await cookies();
@@ -84,7 +85,10 @@ const Profile = async () => {
 
               <ProfileItem label="البريد الإلكتروني" value={user.email ?? ""} />
 
-              <ProfileItem label="رقم الهاتف" value={user.phone} />
+              <ProfileItem
+                label="رقم الهاتف"
+                value={toArabicNums(user.phone)}
+              />
 
               <ProfileItem
                 label="حالة البريد الإلكتروني"
@@ -97,10 +101,10 @@ const Profile = async () => {
               />
             </div>
           </div>
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex lg:items-center justify-between gap-2 flex-wrap">
             <LogoutButton />
             {payload.role === "ADMIN" ? (
-              <Link href={"/admin"}>
+              <Link href={"/admin"} className="mr-auto">
                 <Button
                   size="lg"
                   className="flex items-center justify-center gap-4"

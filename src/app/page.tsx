@@ -65,7 +65,7 @@ const Page = () => {
           </div>
 
           {/* Products Grid */}
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 lg:gap-5 lg:grid-cols-4">
             {[
               {
                 name: "لحمة سمانة فاخرة",
@@ -93,7 +93,7 @@ const Page = () => {
                 className="group relative overflow-hidden border border-main-foreground/10 bg-background shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
               >
                 {/* Image */}
-                <div className="relative aspect-4/3 overflow-hidden">
+                <div className="relative aspect-3/4 lg:aspect-4/3 overflow-hidden">
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -111,22 +111,27 @@ const Page = () => {
                 </div>
 
                 {/* Content */}
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="text-lg font-bold md:text-xl">
+                <div className="flex flex-1 flex-col p-2 lg:p-5">
+                  <h3 className="text-sm lg:text-lg font-bold md:text-xl">
                     {product.name}
                   </h3>
 
-                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                  <p className="mt-2 line-clamp-2 text-xs lg:text-sm leading-6 text-muted-foreground">
                     {product.description}
                   </p>
 
                   {/* Footer */}
-                  <div className="mt-5 flex items-center justify-between border-t border-main-foreground/10 pt-4">
-                    <span className="text-sm font-medium text-main">
+                  <div className="mt-2 lg:mt-5 flex items-center justify-between flex-col lg:flex-row gap-2 border-t border-main-foreground/10 pt-2 lg:pt-4">
+                    <span className="text-sm font-medium text-main self-start">
                       جودة مضمونة
                     </span>
 
-                    <Button type="button" color="MAIN" size="sm">
+                    <Button
+                      type="button"
+                      color="MAIN"
+                      size="sm"
+                      className="self-end"
+                    >
                       عرض المنتج
                     </Button>
                   </div>

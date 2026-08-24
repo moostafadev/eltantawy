@@ -52,7 +52,7 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
                   ? "bg-main/5 hover:bg-main/10 cursor-pointer"
                   : "cursor-not-allowed opacity-50"
               } ${
-                hasActiveChild ? "bg-main text-background" : ""
+                hasActiveChild ? "bg-main text-main" : ""
               } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center"} py-3 lg:py-4 font-medium `}
             >
               <Icon className="size-5 shrink-0" />
