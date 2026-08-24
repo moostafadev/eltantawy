@@ -3,9 +3,15 @@
 :root {
   --color-background: #ffffff;
   --color-foreground: #171717;
+
   --color-main: #c1272d;
   --color-main-foreground: #fdf6ef;
+
   --color-background-second: #ffd2d4;
+
+  --color-muted: #f8f8f8;
+  --color-muted-foreground: #737373;
+  --color-border: #e5e5e5;
 
   --space-xs: 0.5rem;
   --space-sm: 1rem;
@@ -15,19 +21,28 @@
 
 @theme inline {
   /* COLORS */
+
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
+
   --color-main: var(--color-main);
   --color-main-foreground: var(--color-main-foreground);
+
   --color-background-second: var(--color-background-second);
 
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-border: var(--color-border);
+
   /* SPACING */
+
   --spacing-xs: var(--space-xs);
   --spacing-sm: var(--space-sm);
   --spacing-base: var(--space-base);
   --spacing-lg: var(--space-lg);
 
   /* FONTS */
+
   --font-sans: var(--font-cairo);
 }
 
