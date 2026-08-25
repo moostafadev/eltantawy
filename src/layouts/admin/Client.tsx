@@ -9,7 +9,7 @@ const ClientAdmin = ({ children }: IProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <HeaderAdmin isOpen={isOpen} setIsOpen={setIsOpen} />
+      <HeaderAdmin isOpen={isOpen} />
       <main className="min-h-[calc(100dvh-4rem)] w-full">
         <SidebarAdmin isOpen={isOpen} setIsOpen={setIsOpen} />
         <article

@@ -6,7 +6,7 @@ import { IProps } from "./types";
 
 const Button = ({
   children,
-  className,
+  className = "",
   color = "BLACK",
   loading = false,
   size = "md",
@@ -14,9 +14,9 @@ const Button = ({
 }: IProps) => {
   return (
     <button
-      className={`${getColor(color)} ${getSize(size)} py-1 duration-150 hover:opacity-75 cursor-pointer shadow-sm ${loading && "opacity-60"} ${className}`}
-      disabled={loading}
       {...props}
+      disabled={loading || props.disabled}
+      className={`${getColor(color)} ${getSize(size)} cursor-pointer inline-flex items-center justify-center gap-2 font-medium whitespace-nowrap shadow-sm transition-all duration-150 hover:opacity-75 focus:outline-none focus:ring-2 focus:ring-main/15 disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {loading ? <Spin /> : children}
     </button>

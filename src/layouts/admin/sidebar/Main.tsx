@@ -98,7 +98,7 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
     >
       {/* Toggle */}
       <Button
-        size="xs"
+        size="icon"
         color="MAIN"
         className={`fixed ${isOpen ? "right-68" : "right-20"} top-4 lg:top-4 z-50`}
         onClick={() => setIsOpen((open) => !open)}

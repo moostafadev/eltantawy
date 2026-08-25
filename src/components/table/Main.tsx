@@ -11,15 +11,7 @@ const Table = <T,>({
 }: TableProps<T>) => {
   return (
     <div
-      className={`
-        w-full
-        overflow-hidden
-        border
-        border-background-second/60
-        bg-background
-        shadow-sm
-        ${className}
-      `}
+      className={`w-full overflow-hidden border border-background-second/60 bg-background shadow-sm ${className}`}
     >
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-200 border-collapse text-sm">
@@ -29,18 +21,7 @@ const Table = <T,>({
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className={`
-                    whitespace-nowrap
-                    border-b
-                    border-background-second/50
-                    px-4 lg:px-5
-                    py-3 lg:py-4
-                    text-right
-                    text-xs
-                    font-bold
-                    text-foreground/70
-                    ${column.className ?? ""}
-                  `}
+                  className={`whitespace-nowrap border-b border-background-second/50 px-4 py-3 text-right text-xs font-bold text-foreground/70 lg:px-5 lg:py-4 ${column.className ?? ""}`}
                 >
                   {column.title}
                 </th>
@@ -54,27 +35,12 @@ const Table = <T,>({
               data.map((item, index) => (
                 <tr
                   key={keyExtractor ? keyExtractor(item, index) : index}
-                  className="
-                    group
-                    border-b
-                    border-background-second/30
-                    transition-colors
-                    duration-150
-                    last:border-b-0
-                    hover:bg-background-second/10
-                  "
+                  className="group border-b border-background-second/30 transition-colors duration-150 last:border-b-0 hover:bg-background-second/10"
                 >
                   {columns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className={`
-                        whitespace-nowrap
-                        px-4 lg:px-5
-                        py-3 lg:py-4
-                        text-right
-                        text-foreground
-                        ${column.className ?? ""}
-                      `}
+                      className={`whitespace-nowrap px-4 py-3 text-right text-foreground lg:px-5 lg:py-4 ${column.className ?? ""}`}
                     >
                       {column.render
                         ? column.render(item, index)
@@ -87,17 +53,7 @@ const Table = <T,>({
               <tr>
                 <td colSpan={columns.length} className="px-5 py-16 text-center">
                   <div className="flex flex-col items-center justify-center gap-2">
-                    <div
-                      className="
-                        flex
-                        size-12
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-background-second/30
-                        text-main
-                      "
-                    >
+                    <div className="flex size-12 items-center justify-center rounded-full bg-background-second/30 text-main">
                       —
                     </div>
 

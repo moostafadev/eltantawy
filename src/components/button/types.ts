@@ -1,7 +1,7 @@
 import { COLOR } from "@/constants/types";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 
-export type TSize = "xs" | "sm" | "md" | "lg";
+export type TSize = "xs" | "sm" | "md" | "lg" | "icon";
 
 export interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
