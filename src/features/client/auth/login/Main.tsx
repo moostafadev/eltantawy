@@ -3,6 +3,7 @@
 import { Form } from "@/components/form";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
+import { useToast } from "@/components/toaster";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,14 +17,13 @@ import { useAuth } from "@/context/AuthContext";
 const FormLogin = () => {
   const router = useRouter();
   const { setUser } = useAuth();
+  const { toast } = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [serverError, setServerError] = useState("");
 
   const handleSubmit = async (data: LoginForm) => {
     try {
       setIsLoading(true);
-      setServerError("");
 
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -36,22 +36,25 @@ const FormLogin = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        setServerError("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
-
         if (result.requiresEmailVerification) {
+          toast.warning("يرجى تأكيد بريدك الإلكتروني أولًا.");
           router.push("/verify-email");
+          return;
         }
 
+        toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
         return;
       }
 
       setUser(result.user);
 
+      toast.success("تم تسجيل الدخول بنجاح.");
+
       router.push("/");
     } catch (error) {
       console.error("Login error:", error);
 
-      setServerError("حدث خطأ أثناء تسجيل الدخول، يرجى المحاولة مرة أخرى.");
+      toast.error("حدث خطأ أثناء تسجيل الدخول، يرجى المحاولة مرة أخرى.");
     } finally {
       setIsLoading(false);
     }
@@ -61,7 +64,7 @@ const FormLogin = () => {
     <Form<LoginForm>
       onSubmit={handleSubmit}
       resolver={zodResolver(loginSchema)}
-      className="w-full max-w-xl flex flex-col gap-4 border border-background-second/60 bg-background p-4 shadow-sm"
+      className="flex w-full max-w-xl flex-col gap-4 border border-background-second/60 bg-background p-4 shadow-sm"
     >
       <div className="flex w-full items-center justify-center border-b-2 border-b-main/30 pb-4 lg:hidden">
         <Image
@@ -97,20 +100,10 @@ const FormLogin = () => {
         />
       </div>
 
-      {serverError && (
-        <div
-          role="alert"
-          className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-        >
-          {serverError}
-        </div>
-      )}
-
       <Button type="submit" color="MAIN" size="lg" loading={isLoading}>
         {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
       </Button>
 
-      {/* Register */}
       <div className="flex items-center justify-center gap-1 text-sm">
         <span className="text-muted-foreground">ليس لديك حساب؟</span>
 

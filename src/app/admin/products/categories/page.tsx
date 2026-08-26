@@ -6,6 +6,7 @@ import {
   getCategories,
   CategoriesTable,
 } from "@/features/admin/categories/table";
+import Example from "@/components/dialog/test";
 
 const CategoriesPage = async () => {
   const categories = await getCategories();
@@ -28,6 +29,7 @@ const CategoriesPage = async () => {
       </div>
 
       <CategoriesTable categories={categories} />
+      <Example />
     </div>
   );
 };

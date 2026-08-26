@@ -1,13 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { memo, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/button";
 import { Form } from "@/components/form";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
+import { useToast } from "@/components/toaster";
 
 import { createCategoryAction } from "./createCategory.service";
 import { createCategorySchema } from "./schema";
@@ -15,12 +16,20 @@ import { buildCategoryOptions } from "../Graph";
 import { CreateCategoryFormValues, IProps } from "../types";
 import { useCategoryCreateActions } from "../store";
 
+const defaultValues: CreateCategoryFormValues = {
+  title: "",
+  desc: "",
+  parentId: "",
+  image: "",
+};
+
 const CreateCategoryForm = ({ categories }: IProps) => {
-  const router = useRouter();
-
   const { setSelectedParentId } = useCategoryCreateActions();
+  const { toast } = useToast();
 
-  const [serverError, setServerError] = useState("");
+  const [formMethods, setFormMethods] =
+    useState<UseFormReturn<CreateCategoryFormValues> | null>(null);
+
   const [loading, setLoading] = useState(false);
 
   const categoryOptions = useMemo(
@@ -30,20 +39,25 @@ const CreateCategoryForm = ({ categories }: IProps) => {
 
   const handleSubmit = async (values: CreateCategoryFormValues) => {
     setLoading(true);
-    setServerError("");
 
     try {
       const result = await createCategoryAction(values);
 
       if (!result.success) {
-        setServerError(result.message);
+        toast.error(result.message);
         return;
       }
 
-      router.push("/admin/products/categories");
-      router.refresh();
+      formMethods?.reset({
+        title: "",
+        desc: "",
+        image: "",
+        parentId: values.parentId,
+      });
+
+      toast.success("تم إنشاء التصنيف بنجاح");
     } catch {
-      setServerError("حدث خطأ غير متوقع");
+      toast.error("حدث خطأ غير متوقع");
     } finally {
       setLoading(false);
     }
@@ -53,13 +67,9 @@ const CreateCategoryForm = ({ categories }: IProps) => {
     <Form<CreateCategoryFormValues>
       onSubmit={handleSubmit}
       resolver={zodResolver(createCategorySchema)}
-      defaultValues={{
-        title: "",
-        desc: "",
-        parentId: "",
-        image: "",
-      }}
-      className="flex h-fit min-w-0 flex-1 flex-col gap-4 border border-background-second bg-background p-3 md:p-4 lg:p-6 shadow-sm lg:max-w-96"
+      defaultValues={defaultValues}
+      onFormReady={setFormMethods}
+      className="flex h-fit min-w-0 flex-1 flex-col gap-4 border border-background-second bg-background p-3 shadow-sm md:p-4 lg:max-w-96 lg:p-6"
     >
       <Select<CreateCategoryFormValues>
         name="parentId"
@@ -87,15 +97,11 @@ const CreateCategoryForm = ({ categories }: IProps) => {
         placeholder="https://example.com/image.jpg"
       />
 
-      {serverError && (
-        <p className="mt-4 text-sm font-medium text-main">{serverError}</p>
-      )}
-
       <Button
         type="submit"
         color="MAIN"
         loading={loading}
-        className="mt-auto w-full"
+        className="mt-auto mr-auto w-fit"
       >
         إنشاء التصنيف
       </Button>

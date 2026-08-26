@@ -9,6 +9,18 @@
 
   --color-background-second: #ffd2d4;
 
+  --color-success: #16a34a;
+  --color-success-foreground: #ffffff;
+
+  --color-danger: #dc2626;
+  --color-danger-foreground: #ffffff;
+
+  --color-warning: #eab308;
+  --color-warning-foreground: #171717;
+
+  --color-info: #2563eb;
+  --color-info-foreground: #ffffff;
+
   --color-muted: #f8f8f8;
   --color-muted-foreground: #737373;
   --color-border: #e5e5e5;
@@ -20,8 +32,6 @@
 }
 
 @theme inline {
-  /* COLORS */
-
   --color-background: var(--color-background);
   --color-foreground: var(--color-foreground);
 
@@ -29,6 +39,18 @@
   --color-main-foreground: var(--color-main-foreground);
 
   --color-background-second: var(--color-background-second);
+
+  --color-success: var(--color-success);
+  --color-success-foreground: var(--color-success-foreground);
+
+  --color-danger: var(--color-danger);
+  --color-danger-foreground: var(--color-danger-foreground);
+
+  --color-warning: var(--color-warning);
+  --color-warning-foreground: var(--color-warning-foreground);
+
+  --color-info: var(--color-info);
+  --color-info-foreground: var(--color-info-foreground);
 
   --color-muted: var(--color-muted);
   --color-muted-foreground: var(--color-muted-foreground);
@@ -46,6 +68,82 @@
   --font-sans: var(--font-cairo);
 }
 
+@theme {
+  --animate-toast-in: toast-in 300ms ease-out;
+  --animate-toast-progress: toast-progress linear;
+
+  --animate-dialog-in: dialog-in 300ms ease-out;
+  --animate-dialog-out: dialog-out 200ms ease-in;
+  --animate-dialog-content-in: dialog-content-in 300ms ease-out;
+  --animate-dialog-content-out: dialog-content-out 200ms ease-in;
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateX(40px) scale(0.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+
+  @keyframes toast-progress {
+    from {
+      transform: scaleX(1);
+    }
+
+    to {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes dialog-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes dialog-out {
+    from {
+      opacity: 1;
+    }
+
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes dialog-content-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  @keyframes dialog-content-out {
+    from {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    to {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+  }
+}
+
 @utility container {
   width: 100%;
   margin-inline: auto;
@@ -54,17 +152,21 @@
   @media (width >= theme(--breakpoint-sm)) {
     max-width: theme(--breakpoint-sm);
   }
+
   @media (width >= theme(--breakpoint-md)) {
     max-width: theme(--breakpoint-md);
     padding-inline: var(--spacing-base);
   }
+
   @media (width >= theme(--breakpoint-lg)) {
     max-width: theme(--breakpoint-lg);
   }
+
   @media (width >= theme(--breakpoint-xl)) {
     max-width: 1240px;
     padding-inline: var(--spacing-lg);
   }
+
   @media (width >= theme(--breakpoint-2xl)) {
     max-width: 1320px;
   }

@@ -1,3 +1,4 @@
+import { Breadcrumb } from "@/components/breadcrumb";
 import { Create } from "@/features/admin/categories/create";
 import { getCategoriesForParentSelect } from "@/features/admin/categories/table";
 
@@ -6,6 +7,17 @@ const CreateCategoryPage = async () => {
 
   return (
     <div dir="rtl" className="space-y-6">
+      <Breadcrumb
+        items={[
+          {
+            label: "التصنيفات",
+            href: "/admin/products/categories",
+          },
+          {
+            label: "انشاء تصنيف",
+          },
+        ]}
+      />
       <div>
         <h1 className="text-2xl font-bold">إنشاء تصنيف</h1>
 

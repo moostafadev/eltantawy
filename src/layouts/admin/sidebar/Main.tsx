@@ -145,7 +145,7 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
           <Button
             className={`flex items-center justify-center gap-3 lg:gap-4 w-full ${isOpen ? "" : "px-3! lg:px-4!"}`}
             color="WHITE"
-            size="lg"
+            size="sm"
           >
             <Globe className="size-5" />
             {isOpen ? <span>الصفحة الرئيسية</span> : <></>}
@@ -153,7 +153,7 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
         </Link>
         <LogoutButton
           className={`w-full justify-center ${isOpen ? "" : "px-3! lg:px-4!"}`}
-          size="xs"
+          size="sm"
         >
           <LogOut className="size-5" />
           {isOpen ? (

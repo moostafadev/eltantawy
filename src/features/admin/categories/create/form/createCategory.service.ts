@@ -62,7 +62,8 @@ export const createCategoryAction = async (values: unknown) => {
       },
     });
 
-    revalidatePath("/admin/categories");
+    revalidatePath("/admin/products/categories");
+    revalidatePath("/admin/products/categories/create");
 
     return {
       success: true,

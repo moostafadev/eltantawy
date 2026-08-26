@@ -20,7 +20,7 @@ const CategoryGraph = ({ categories }: IBaseProps) => {
 
   if (!selectedParentId) {
     return (
-      <div className="flex min-h-64 flex-1 flex-col items-center justify-center border border-dashed bg-muted/20 px-6 text-center">
+      <div className="flex min-h-64 flex-1 flex-col items-center justify-center border border-dashed border-background-second bg-muted/20 px-6 text-center">
         <div className="mb-3 flex size-12 items-center justify-center bg-muted">
           <FolderTree className="size-5 text-muted-foreground" />
         </div>

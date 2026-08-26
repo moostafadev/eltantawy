@@ -33,6 +33,37 @@ export const getCategories = async () => {
   });
 };
 
+export const getOneCategory = async (id: string) => {
+  return prisma.category.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      title: true,
+      desc: true,
+      image: true,
+      parentId: true,
+
+      parent: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+
+      _count: {
+        select: {
+          products: true,
+          children: true,
+        },
+      },
+
+      createdAt: true,
+    },
+  });
+};
+
 export const getCategoryParents = async () => {
   return prisma.category.findMany({
     where: {

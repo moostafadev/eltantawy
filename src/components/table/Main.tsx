@@ -35,12 +35,12 @@ const Table = <T,>({
               data.map((item, index) => (
                 <tr
                   key={keyExtractor ? keyExtractor(item, index) : index}
-                  className="group border-b border-background-second/30 transition-colors duration-150 last:border-b-0 hover:bg-background-second/10"
+                  className="group border-b border-background-second/30 transition-colors duration-300 last:border-b-0 hover:bg-background-second/10"
                 >
                   {columns.map((column) => (
                     <td
                       key={String(column.key)}
-                      className={`whitespace-nowrap px-4 py-3 text-right text-foreground lg:px-5 lg:py-4 ${column.className ?? ""}`}
+                      className={`whitespace-nowrap px-4 py-1.5 text-right text-foreground lg:px-5 lg:py-2.5 ${column.className ?? ""}`}
                     >
                       {column.render
                         ? column.render(item, index)

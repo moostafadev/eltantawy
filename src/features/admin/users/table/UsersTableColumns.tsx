@@ -1,6 +1,8 @@
+import { Tag } from "@/components/tag";
 import { TableColumn } from "@/components/table/types";
-import { User } from "./types";
 import { toArabicNums } from "@/utils/toArabicNums";
+
+import { User } from "./types";
 
 export const usersTableColumns: TableColumn<User>[] = [
   {
@@ -27,57 +29,43 @@ export const usersTableColumns: TableColumn<User>[] = [
 
   {
     key: "role",
-    title: "الصلاحية",
+    title: <div className="flex justify-center">الصلاحية</div>,
     render: (user) => (
-      <span
-        className={`
-          inline-flex
-          rounded-full
-          px-3
-          py-1
-          text-xs
-          font-medium
-          ${
-            user.role === "ADMIN"
-              ? "bg-main/10 text-main"
-              : "bg-muted text-muted-foreground"
-          }
-        `}
-      >
-        {user.role === "ADMIN" ? "مدير" : "مستخدم"}
-      </span>
+      <div className="flex justify-center">
+        <Tag
+          color={user.role === "ADMIN" ? "MAIN" : "NEUTRAL"}
+          variant="soft"
+          size="sm"
+        >
+          {user.role === "ADMIN" ? "مدير" : "مستخدم"}
+        </Tag>
+      </div>
     ),
   },
 
   {
     key: "isVerified",
-    title: "الحالة",
+    title: <div className="flex justify-center">الحالة</div>,
     render: (user) => (
-      <span
-        className={`
-          inline-flex
-          rounded-full
-          px-3
-          py-1
-          text-xs
-          font-medium
-          ${
-            user.isVerified
-              ? "bg-green-500/10 text-green-600"
-              : "bg-red-500/10 text-red-600"
-          }
-        `}
-      >
-        {user.isVerified ? "موثق" : "غير موثق"}
-      </span>
+      <div className="flex justify-center">
+        <Tag
+          color={user.isVerified ? "SUCCESS" : "DANGER"}
+          variant="soft"
+          size="sm"
+        >
+          {user.isVerified ? "موثق" : "غير موثق"}
+        </Tag>
+      </div>
     ),
   },
 
   {
     key: "createdAt",
-    title: "تاريخ التسجيل",
+    title: <div className="flex justify-end">تاريخ التسجيل</div>,
     render: (user) => (
-      <span>{new Date(user.createdAt).toLocaleDateString("ar-EG")}</span>
+      <span className="flex justify-end">
+        {new Date(user.createdAt).toLocaleDateString("ar-EG")}
+      </span>
     ),
   },
 ];

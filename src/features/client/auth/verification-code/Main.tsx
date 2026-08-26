@@ -3,6 +3,7 @@
 import { Form } from "@/components/form";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
+import { useToast } from "@/components/toaster";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,12 +17,10 @@ import { useAuth } from "@/context/AuthContext";
 const VerifyEmailForm = () => {
   const router = useRouter();
   const { setUser } = useAuth();
+  const { toast } = useToast();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
-
-  const [serverError, setServerError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
 
   const [resendCooldown, setResendCooldown] = useState(0);
 
@@ -51,8 +50,6 @@ const VerifyEmailForm = () => {
   const handleSubmit = async (data: VerifyEmailFormType) => {
     try {
       setIsLoading(true);
-      setServerError("");
-      setSuccessMessage("");
 
       const response = await fetch("/api/auth/verify-email", {
         method: "POST",
@@ -67,12 +64,13 @@ const VerifyEmailForm = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        setServerError(result.message || "رمز التحقق غير صحيح.");
+        toast.error(result.message || "رمز التحقق غير صحيح.");
         return;
       }
+
       setUser(result.user);
 
-      setSuccessMessage("تم تأكيد البريد الإلكتروني بنجاح.");
+      toast.success("تم تأكيد البريد الإلكتروني بنجاح.");
 
       setTimeout(() => {
         router.push("/");
@@ -80,7 +78,7 @@ const VerifyEmailForm = () => {
     } catch (error) {
       console.error("Verify email error:", error);
 
-      setServerError(
+      toast.error(
         "حدث خطأ أثناء تأكيد البريد الإلكتروني، يرجى المحاولة مرة أخرى.",
       );
     } finally {
@@ -98,8 +96,6 @@ const VerifyEmailForm = () => {
 
     try {
       setIsResending(true);
-      setServerError("");
-      setSuccessMessage("");
 
       const response = await fetch("/api/auth/resend-verification", {
         method: "POST",
@@ -108,17 +104,17 @@ const VerifyEmailForm = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        setServerError(result.message || "تعذر إعادة إرسال رمز التحقق.");
+        toast.error(result.message || "تعذر إعادة إرسال رمز التحقق.");
         return;
       }
 
-      setSuccessMessage("تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.");
+      toast.success("تم إرسال رمز تحقق جديد إلى بريدك الإلكتروني.");
 
       setResendCooldown(60);
     } catch (error) {
       console.error("Resend verification error:", error);
 
-      setServerError(
+      toast.error(
         "حدث خطأ أثناء إعادة إرسال رمز التحقق، يرجى المحاولة مرة أخرى.",
       );
     } finally {
@@ -130,7 +126,7 @@ const VerifyEmailForm = () => {
     <Form<VerifyEmailFormType>
       onSubmit={handleSubmit}
       resolver={zodResolver(verifyEmailSchema)}
-      className="w-full max-w-xl flex flex-col gap-6 border border-background-second/60 bg-background p-4 shadow-sm sm:p-8"
+      className="flex w-full max-w-xl flex-col gap-6 border border-background-second/60 bg-background p-4 shadow-sm sm:p-8"
     >
       <div className="flex flex-col gap-2 text-center">
         <h1 className="text-2xl font-bold text-foreground">
@@ -151,24 +147,6 @@ const VerifyEmailForm = () => {
         className="[&_input]:text-center [&_input]:text-2xl [&_input]:font-bold [&_input]:tracking-[0.5em]"
       />
 
-      {serverError && (
-        <div
-          role="alert"
-          className="rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-sm text-destructive"
-        >
-          {serverError}
-        </div>
-      )}
-
-      {successMessage && (
-        <div
-          role="status"
-          className="rounded-lg border border-green-500/20 bg-green-500/10 px-3 py-2 text-sm text-green-600"
-        >
-          {successMessage}
-        </div>
-      )}
-
       <Button type="submit" color="MAIN" size="lg" loading={isLoading}>
         {isLoading ? "جاري التأكيد..." : "تأكيد البريد الإلكتروني"}
       </Button>
@@ -180,7 +158,8 @@ const VerifyEmailForm = () => {
           type="button"
           onClick={handleResendCode}
           disabled={isResending || resendCooldown > 0}
-          color="WHITE"
+          color="INFO"
+          variant="outline"
           size="sm"
         >
           {isResending
