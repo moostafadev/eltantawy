@@ -3,8 +3,8 @@ import Image from "next/image";
 
 const Login = () => {
   return (
-    <div className="flex flex-1 items-stretch">
-      <div className="flex-1 h-full p-4 my-auto flex justify-center items-center bg-background-second/20 lg:bg-background">
+    <div className="flex flex-1 items-stretch bg-background-second/20 lg:bg-background">
+      <div className="flex-1 h-full p-4 my-auto flex justify-center items-center">
         <FormLogin />
       </div>
 
