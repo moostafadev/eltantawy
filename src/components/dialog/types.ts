@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 export interface DialogOptions {
   title?: string;
   content: ReactNode;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "md" | "lg" | "xl";
 }
 
 export interface DialogContextValue {

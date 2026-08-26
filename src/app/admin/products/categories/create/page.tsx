@@ -6,7 +6,7 @@ const CreateCategoryPage = async () => {
   const categories = await getCategoriesForParentSelect();
 
   return (
-    <div dir="rtl" className="space-y-6">
+    <div className="flex flex-col gap-3 lg:gap-4">
       <Breadcrumb
         items={[
           {
@@ -14,10 +14,11 @@ const CreateCategoryPage = async () => {
             href: "/admin/products/categories",
           },
           {
-            label: "انشاء تصنيف",
+            label: "إنشاء تصنيف",
           },
         ]}
       />
+
       <div>
         <h1 className="text-2xl font-bold">إنشاء تصنيف</h1>
 

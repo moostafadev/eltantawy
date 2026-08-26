@@ -4,7 +4,8 @@ import { Category } from "./types";
 import { toArabicNums } from "@/utils/toArabicNums";
 import { Button } from "@/components/button";
 import Link from "next/link";
-import { Eye, Pen, Trash2 } from "lucide-react";
+import { Eye, Pen } from "lucide-react";
+import DeleteCategoryButton from "./DeleteCategoryButton";
 
 export const categoriesTableColumns: TableColumn<Category>[] = [
   {
@@ -75,9 +76,7 @@ export const categoriesTableColumns: TableColumn<Category>[] = [
             <Pen className="size-4 lg:size-5" />
           </Button>
         </Link>
-        <Button size="icon" color="DANGER">
-          <Trash2 className="size-4 lg:size-5" />
-        </Button>
+        <DeleteCategoryButton id={category.id} />
       </div>
     ),
   },

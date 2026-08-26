@@ -14,9 +14,8 @@ import {
   IPropsStore,
 } from "./types";
 
-const CategoryCreateStateContext = createContext<ICategoryCreateState | null>(
-  null,
-);
+export const CategoryCreateStateContext =
+  createContext<ICategoryCreateState | null>(null);
 
 const CategoryCreateActionsContext =
   createContext<ICategoryCreateActions | null>(null);

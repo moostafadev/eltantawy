@@ -7,28 +7,19 @@ export const getCategories = async () => {
     orderBy: {
       createdAt: "desc",
     },
-
-    select: {
-      id: true,
-      title: true,
-      desc: true,
-      image: true,
-
+    include: {
       parent: {
         select: {
           id: true,
           title: true,
         },
       },
-
       _count: {
         select: {
           products: true,
           children: true,
         },
       },
-
-      createdAt: true,
     },
   });
 };
@@ -84,6 +75,16 @@ export const getCategoriesForParentSelect = async () => {
     orderBy: {
       title: "asc",
     },
+    select: {
+      id: true,
+      title: true,
+      parentId: true,
+    },
+  });
+};
+
+export const getCategoriesForGraph = async () => {
+  return prisma.category.findMany({
     select: {
       id: true,
       title: true,

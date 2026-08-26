@@ -4,19 +4,15 @@ export interface CategoryParent {
   parentId: string | null;
 }
 
-interface IBaseProps {
+export interface IBaseProps {
   categories: CategoryParent[];
+}
+
+export interface IGraphProps extends IBaseProps {
   selectedId?: string;
 }
 
-interface INodeProps {
+export interface INodeProps extends IBaseProps {
   category: CategoryParent;
-  categories: CategoryParent[];
   isRoot?: boolean;
 }
-
-interface IProps {
-  categories: CategoryParent[];
-}
-
-export type { IProps, IBaseProps, INodeProps };

@@ -2,7 +2,7 @@ import { IProps } from "./types";
 import { getColor } from "./lib";
 
 const Skeleton = ({
-  color = "BLACK",
+  color = "MAIN",
   count = 1,
   width,
   height,

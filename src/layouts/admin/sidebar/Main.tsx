@@ -144,7 +144,8 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
         <Link href={"/"}>
           <Button
             className={`flex items-center justify-center gap-3 lg:gap-4 w-full ${isOpen ? "" : "px-3! lg:px-4!"}`}
-            color="WHITE"
+            color="NEUTRAL"
+            variant="outline"
             size="sm"
           >
             <Globe className="size-5" />

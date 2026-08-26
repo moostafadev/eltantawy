@@ -3,4 +3,6 @@ export {
   getCategories,
   getCategoryParents,
   getCategoriesForParentSelect,
+  getCategoriesForGraph,
+  getOneCategory,
 } from "./categories.service";

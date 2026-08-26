@@ -1,24 +1,26 @@
 "use client";
 
-import { memo, useMemo } from "react";
+import { memo, useContext, useMemo } from "react";
 import { FolderTree } from "lucide-react";
 
-import { IBaseProps } from "./types";
 import CategoryNode from "./Node";
-import { useCategoryCreateState } from "../store";
+import { IGraphProps } from "./types";
+import { CategoryCreateStateContext } from "../store";
 
-const CategoryGraph = ({ categories }: IBaseProps) => {
-  const { selectedParentId } = useCategoryCreateState();
+const CategoryGraph = ({ categories, selectedId }: IGraphProps) => {
+  const context = useContext(CategoryCreateStateContext);
+
+  const currentSelectedId = selectedId ?? context?.selectedParentId;
 
   const selectedCategory = useMemo(() => {
-    if (!selectedParentId) {
+    if (!currentSelectedId) {
       return undefined;
     }
 
-    return categories.find((category) => category.id === selectedParentId);
-  }, [categories, selectedParentId]);
+    return categories.find((category) => category.id === currentSelectedId);
+  }, [categories, currentSelectedId]);
 
-  if (!selectedParentId) {
+  if (!currentSelectedId) {
     return (
       <div className="flex min-h-64 flex-1 flex-col items-center justify-center border border-dashed border-background-second bg-muted/20 px-6 text-center">
         <div className="mb-3 flex size-12 items-center justify-center bg-muted">
@@ -40,7 +42,6 @@ const CategoryGraph = ({ categories }: IBaseProps) => {
 
   return (
     <section className="flex-1 overflow-hidden border border-background-second bg-background shadow-sm">
-      {/* Header */}
       <div className="flex items-center justify-between border-b border-background-second bg-muted/30 px-5 py-4">
         <div>
           <h2 className="text-sm font-semibold">هيكل التصنيف</h2>
@@ -55,7 +56,6 @@ const CategoryGraph = ({ categories }: IBaseProps) => {
         </div>
       </div>
 
-      {/* Graph */}
       <div className="overflow-x-auto p-8">
         <div className="flex min-w-max justify-center">
           <CategoryNode

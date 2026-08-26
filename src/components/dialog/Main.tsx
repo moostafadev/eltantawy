@@ -12,7 +12,6 @@ interface Props extends DialogOptions {
 }
 
 const sizes = {
-  sm: "max-w-sm",
   md: "max-w-md",
   lg: "max-w-lg",
   xl: "max-w-xl",
@@ -49,7 +48,7 @@ const Dialog = ({
     >
       <div
         onMouseDown={(e) => e.stopPropagation()}
-        className={`relative w-full ${sizes[size]} border border-border bg-background p-3 shadow-md ${
+        className={`relative w-full shrink-0 ${sizes[size]} border border-border bg-background p-4 shadow-md ${
           closing ? "animate-dialog-content-out" : "animate-dialog-content-in"
         }`}
       >
