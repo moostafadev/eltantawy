@@ -3,7 +3,7 @@
 import { List } from "lucide-react";
 
 import { TableProps } from "./types";
-import { Skeleton } from "@/components/skelaton";
+import { Skeleton } from "@/components/skeleton";
 import Spin from "@/components/icons/Spin";
 
 const Table = <T,>({

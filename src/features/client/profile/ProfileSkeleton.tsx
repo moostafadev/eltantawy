@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/skelaton";
+import { Skeleton } from "@/components/skeleton";
 
 const ProfileSkeleton = () => {
   return (
