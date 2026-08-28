@@ -6,6 +6,7 @@ import { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/button";
 import { Form } from "@/components/form";
+import { ImageInput } from "@/components/image-input";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { useToast } from "@/components/toaster";
@@ -15,6 +16,7 @@ import { createCategorySchema } from "./schema";
 import { buildCategoryOptions } from "../Graph";
 import { CreateCategoryFormValues, IProps } from "../types";
 import { useCategoryCreateActions } from "../store";
+import { Switch } from "@/components/switch";
 
 const defaultValues: CreateCategoryFormValues = {
   title: "",
@@ -31,6 +33,7 @@ const CreateCategoryForm = ({ categories }: IProps) => {
     useState<UseFormReturn<CreateCategoryFormValues> | null>(null);
 
   const [loading, setLoading] = useState(false);
+  const [useImageUpload, setUseImageUpload] = useState(true);
 
   const categoryOptions = useMemo(
     () => buildCategoryOptions(categories),
@@ -69,7 +72,7 @@ const CreateCategoryForm = ({ categories }: IProps) => {
       resolver={zodResolver(createCategorySchema)}
       defaultValues={defaultValues}
       onFormReady={setFormMethods}
-      className="flex h-fit min-w-0 flex-1 flex-col gap-3 lg:gap-4 border border-background-second bg-background p-3 shadow-sm lg:p-4 lg:max-w-96"
+      className="flex h-fit min-w-0 flex-1 flex-col gap-3 border border-background-second bg-background p-3 shadow-sm lg:max-w-96 lg:gap-4 lg:p-4"
     >
       <Select<CreateCategoryFormValues>
         name="parentId"
@@ -91,11 +94,27 @@ const CreateCategoryForm = ({ categories }: IProps) => {
         placeholder="وصف مختصر للتصنيف"
       />
 
-      <Input<CreateCategoryFormValues>
-        name="image"
-        label="رابط الصورة"
-        placeholder="https://example.com/image.jpg"
-      />
+      <div className="flex flex-col gap-3">
+        <Switch
+          checked={useImageUpload}
+          onCheckedChange={setUseImageUpload}
+          label="طريقة إضافة الصورة"
+        />
+
+        {useImageUpload ? (
+          <ImageInput<CreateCategoryFormValues>
+            name="image"
+            label="الصورة"
+            placeholder="اختر صورة من الجهاز"
+          />
+        ) : (
+          <Input<CreateCategoryFormValues>
+            name="image"
+            label="رابط الصورة"
+            placeholder="https://example.com/image.jpg"
+          />
+        )}
+      </div>
 
       <Button
         type="submit"

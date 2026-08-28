@@ -6,8 +6,10 @@ import { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/button";
 import { Form } from "@/components/form";
+import { ImageInput } from "@/components/image-input";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
+import { Switch } from "@/components/switch";
 import { useToast } from "@/components/toaster";
 
 import { buildCategoryOptions } from "@/features/admin/categories/create/Graph";
@@ -35,6 +37,7 @@ const CreateProductForm = ({ categories }: IProps) => {
     useState<UseFormReturn<CreateProductFormValues> | null>(null);
 
   const [loading, setLoading] = useState(false);
+  const [useImageUpload, setUseImageUpload] = useState(true);
 
   const categoryOptions = useMemo(
     () => buildCategoryOptions(categories),
@@ -54,6 +57,7 @@ const CreateProductForm = ({ categories }: IProps) => {
 
       formMethods?.reset(defaultValues);
       setSelectedParentId("");
+      setUseImageUpload(true);
 
       toast.success("تم إنشاء المنتج بنجاح");
     } catch {
@@ -91,11 +95,27 @@ const CreateProductForm = ({ categories }: IProps) => {
         placeholder="وصف مختصر للمنتج"
       />
 
-      <Input<CreateProductFormValues>
-        name="image"
-        label="رابط الصورة"
-        placeholder="https://example.com/image.jpg"
-      />
+      <div className="flex flex-col gap-3">
+        <Switch
+          checked={useImageUpload}
+          onCheckedChange={setUseImageUpload}
+          label="طريقة إضافة الصورة"
+        />
+
+        {useImageUpload ? (
+          <ImageInput<CreateProductFormValues>
+            name="image"
+            label="الصورة"
+            placeholder="اختر صورة من الجهاز"
+          />
+        ) : (
+          <Input<CreateProductFormValues>
+            name="image"
+            label="رابط الصورة"
+            placeholder="https://example.com/image.jpg"
+          />
+        )}
+      </div>
 
       <Input<CreateProductFormValues>
         name="price"

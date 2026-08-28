@@ -6,8 +6,10 @@ import { UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/button";
 import { Form } from "@/components/form";
+import { ImageInput } from "@/components/image-input";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
+import { Switch } from "@/components/switch";
 import { useToast } from "@/components/toaster";
 
 import { buildCategoryOptions } from "@/features/admin/categories/create/Graph";
@@ -23,6 +25,7 @@ const EditProductForm = ({ product, categories }: IProps) => {
     useState<UseFormReturn<EditProductFormValues> | null>(null);
 
   const [loading, setLoading] = useState(false);
+  const [useImageUpload, setUseImageUpload] = useState(false);
 
   const categoryOptions = useMemo(
     () => buildCategoryOptions(categories),
@@ -67,7 +70,7 @@ const EditProductForm = ({ product, categories }: IProps) => {
       resolver={zodResolver(editProductSchema)}
       defaultValues={defaultValues}
       onFormReady={setFormMethods}
-      className="flex h-fit min-w-0 flex-1 flex-col gap-3 border border-background-second bg-background p-3 shadow-sm lg:max-w-96 lg:gap-4 lg:p-4"
+      className="flex h-fit min-w-0 flex-1 flex-col gap-3 border border-background-second bg-background p-3 shadow-sm lg:max-w-96 lg:gap-4"
     >
       <Select<EditProductFormValues>
         name="categoryId"
@@ -88,11 +91,27 @@ const EditProductForm = ({ product, categories }: IProps) => {
         placeholder="وصف مختصر للمنتج"
       />
 
-      <Input<EditProductFormValues>
-        name="image"
-        label="رابط الصورة"
-        placeholder="https://example.com/image.jpg"
-      />
+      <div className="flex flex-col gap-3">
+        <Switch
+          checked={useImageUpload}
+          onCheckedChange={setUseImageUpload}
+          label="طريقة إضافة الصورة"
+        />
+
+        {useImageUpload ? (
+          <ImageInput<EditProductFormValues>
+            name="image"
+            label="الصورة"
+            placeholder="اختر صورة من الجهاز"
+          />
+        ) : (
+          <Input<EditProductFormValues>
+            name="image"
+            label="رابط الصورة"
+            placeholder="https://example.com/image.jpg"
+          />
+        )}
+      </div>
 
       <Input<EditProductFormValues>
         name="price"
