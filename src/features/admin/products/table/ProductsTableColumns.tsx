@@ -8,6 +8,7 @@ import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
 
 import { Product } from "./types";
+import { DeleteProductButton } from "./deleteProduct";
 
 export const productsTableColumns: TableColumn<Product>[] = [
   {
@@ -80,6 +81,8 @@ export const productsTableColumns: TableColumn<Product>[] = [
             <Pen className="size-4 lg:size-5" />
           </Button>
         </Link>
+
+        <DeleteProductButton id={product.id} />
       </div>
     ),
   },
