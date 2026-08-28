@@ -1,16 +1,14 @@
-"use client";
-
 import { Table } from "@/components/table";
-
-import { IProps } from "./types";
+import { getCategories } from "./categories.service";
 import { categoriesTableColumns } from "./CategoriesTableColumns";
 
-const CategoriesTable = ({ categories }: IProps) => {
+const CategoriesTable = async () => {
+  const categories = await getCategories();
+
   return (
     <Table
       data={categories}
       columns={categoriesTableColumns}
-      keyExtractor={(category) => category.id}
       emptyMessage="لا يوجد تصنيفات"
     />
   );

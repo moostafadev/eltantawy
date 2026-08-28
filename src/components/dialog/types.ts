@@ -2,8 +2,8 @@ import { ReactNode } from "react";
 
 export interface DialogOptions {
   title?: string;
-  content: ReactNode;
   size?: "md" | "lg" | "xl";
+  children: ReactNode;
 }
 
 export interface DialogContextValue {

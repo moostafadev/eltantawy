@@ -59,7 +59,7 @@ const Input = <T extends FieldValues>({
         <label
           htmlFor={name}
           className={`text-sm font-medium ${
-            error ? "text-main" : "text-foreground"
+            error ? "text-danger" : "text-foreground"
           }`}
         >
           {label}
@@ -83,7 +83,7 @@ const Input = <T extends FieldValues>({
             onClick={() => setShowPassword((prev) => !prev)}
             className="absolute left-0 top-0 h-full bg-main/80 "
             color="MAIN"
-            size="xs"
+            size="icon"
           >
             {showPassword ? (
               <EyeOff className="size-4" />
@@ -95,7 +95,7 @@ const Input = <T extends FieldValues>({
       </div>
 
       {errorMessage && (
-        <span className="text-xs font-medium text-main">{errorMessage}</span>
+        <span className="text-xs font-medium text-danger">{errorMessage}</span>
       )}
     </div>
   );

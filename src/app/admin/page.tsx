@@ -29,7 +29,7 @@ const AdminDashboard = async () => {
   ];
 
   return (
-    <div className="w-full space-y-6">
+    <div className="flex flex-col gap-3 lg:gap-4">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold">لوحة التحكم</h1>

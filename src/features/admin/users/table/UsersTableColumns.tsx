@@ -1,3 +1,5 @@
+"use client";
+
 import { Tag } from "@/components/tag";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";

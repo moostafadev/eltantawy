@@ -7,7 +7,7 @@ import Link from "next/link";
 const HeaderAdmin = ({ isOpen }: IPropsHeader) => {
   return (
     <header
-      className={`z-40 fixed top-0 left-0 ${isOpen ? "w-[calc(100%-16rem)]" : "w-[calc(100%-4rem)]"} duration-300 h-16 bg-background/30 backdrop-blur-md shadow-sm border-b border-b-background-second/20 flex items-center justify-between gap-3 py-1 px-3 lg:px-4`}
+      className={`z-40 fixed top-0 left-0 ${isOpen ? "w-[calc(100%-16rem)]" : "w-[calc(100%-4rem)]"} duration-300 h-16 bg-background/30 backdrop-blur-md shadow-sm border-b border-b-background-second/20 flex items-center justify-between gap-3 p-3 lg:p-4`}
     >
       <div className="flex items-center gap-3 mr-auto">
         <Link href={"/profile"}>

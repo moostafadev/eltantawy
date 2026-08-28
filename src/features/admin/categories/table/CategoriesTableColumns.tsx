@@ -1,11 +1,12 @@
-import { TableColumn } from "@/components/table/types";
+"use client";
 
+import { TableColumn } from "@/components/table/types";
 import { Category } from "./types";
 import { toArabicNums } from "@/utils/toArabicNums";
 import { Button } from "@/components/button";
 import Link from "next/link";
 import { Eye, Pen } from "lucide-react";
-import DeleteCategoryButton from "./DeleteCategoryButton";
+import { DeleteCategoryButton } from "./deleteCategory";
 
 export const categoriesTableColumns: TableColumn<Category>[] = [
   {
@@ -72,7 +73,7 @@ export const categoriesTableColumns: TableColumn<Category>[] = [
           </Button>
         </Link>
         <Link href={`/admin/products/categories/${category.id}/edit`}>
-          <Button size="icon" color="INFO" variant="outline">
+          <Button size="icon" color="INFO" variant="soft">
             <Pen className="size-4 lg:size-5" />
           </Button>
         </Link>

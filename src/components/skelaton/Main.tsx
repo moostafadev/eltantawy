@@ -1,22 +1,22 @@
-import { IProps } from "./types";
 import { getColor } from "./lib";
+import { IProps } from "./types";
 
 const Skeleton = ({
   color = "MAIN",
   count = 1,
   width,
-  height,
-  className,
+  height = 16,
+  className = "",
 }: IProps) => {
   return (
     <>
-      {Array.from({ length: count }).map((_, i) => (
+      {Array.from({ length: count }).map((_, index) => (
         <div
-          key={i}
-          className={`${getColor(color)} ${height && `h-[${height}px]`} w-full animate-pulse p-2 ${className}`}
+          key={index}
+          className={`animate-pulse ${getColor(color)} ${className}`}
           style={{
-            height: height ? `${height}px` : undefined,
-            width: width ? `${width}px` : undefined,
+            width: width ? `${width}px` : "100%",
+            height: `${height}px`,
           }}
         />
       ))}

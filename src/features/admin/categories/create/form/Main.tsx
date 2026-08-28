@@ -69,7 +69,7 @@ const CreateCategoryForm = ({ categories }: IProps) => {
       resolver={zodResolver(createCategorySchema)}
       defaultValues={defaultValues}
       onFormReady={setFormMethods}
-      className="flex h-fit min-w-0 flex-1 flex-col gap-4 border border-background-second bg-background p-3 shadow-sm md:p-4 lg:max-w-96 lg:p-6"
+      className="flex h-fit min-w-0 flex-1 flex-col gap-3 lg:gap-4 border border-background-second bg-background p-3 shadow-sm lg:p-4 lg:max-w-96"
     >
       <Select<CreateCategoryFormValues>
         name="parentId"
@@ -99,7 +99,7 @@ const CreateCategoryForm = ({ categories }: IProps) => {
 
       <Button
         type="submit"
-        color="MAIN"
+        color="SUCCESS"
         loading={loading}
         className="mt-auto mr-auto w-fit"
       >

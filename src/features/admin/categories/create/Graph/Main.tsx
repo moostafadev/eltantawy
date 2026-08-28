@@ -42,16 +42,16 @@ const CategoryGraph = ({ categories, selectedId }: IGraphProps) => {
 
   return (
     <section className="flex-1 overflow-hidden border border-background-second bg-background shadow-sm">
-      <div className="flex items-center justify-between border-b border-background-second bg-muted/30 px-5 py-4">
-        <div>
+      <div className="flex items-center justify-between gap-1 lg:gap-1.5 flex-wrap border-b border-background-second bg-muted/30 p-3 lg:p-4">
+        <div className="flex flex-col gap-1 lg:gap-1.5">
           <h2 className="text-sm font-semibold">هيكل التصنيف</h2>
 
-          <p className="mt-1 text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             التصنيفات التابعة لـ {selectedCategory.title}
           </p>
         </div>
 
-        <div className="flex size-9 items-center justify-center bg-main/10 text-main">
+        <div className="flex size-9 items-center justify-center bg-main/10 text-main mr-auto">
           <FolderTree className="size-4" />
         </div>
       </div>

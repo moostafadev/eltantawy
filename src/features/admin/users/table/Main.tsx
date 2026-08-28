@@ -1,15 +1,15 @@
-"use client";
-
 import { Table } from "@/components/table";
-import { IProps } from "./types";
-import { usersTableColumns } from "./UsersTableColumns";
 
-const UsersTable = ({ users }: IProps) => {
+import { usersTableColumns } from "./UsersTableColumns";
+import { getUsers } from "./user.service";
+
+const UsersTable = async () => {
+  const users = await getUsers();
+
   return (
     <Table
       data={users}
       columns={usersTableColumns}
-      keyExtractor={(user) => user.id}
       emptyMessage="لا يوجد مستخدمين"
     />
   );

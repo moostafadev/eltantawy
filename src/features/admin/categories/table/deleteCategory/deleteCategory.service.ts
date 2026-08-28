@@ -4,10 +4,10 @@ import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 
-const deleteChildren = async (parentId: string) => {
+const deleteCategoryTree = async (categoryId: string) => {
   const children = await prisma.category.findMany({
     where: {
-      parentId,
+      parentId: categoryId,
     },
     select: {
       id: true,
@@ -15,12 +15,21 @@ const deleteChildren = async (parentId: string) => {
   });
 
   for (const child of children) {
-    await deleteChildren(child.id);
+    await deleteCategoryTree(child.id);
   }
+
+  await prisma.product.updateMany({
+    where: {
+      categoryId,
+    },
+    data: {
+      categoryId: null,
+    },
+  });
 
   await prisma.category.delete({
     where: {
-      id: parentId,
+      id: categoryId,
     },
   });
 };
@@ -43,13 +52,13 @@ export const deleteCategoryAction = async (id: string) => {
       };
     }
 
-    await deleteChildren(id);
+    await deleteCategoryTree(id);
 
     revalidatePath("/admin/products/categories");
 
     return {
       success: true,
-      message: "تم حذف التصنيف وجميع التصنيفات التابعة له",
+      message: "تم حذف التصنيف وجميع التصنيفات الفرعية",
     };
   } catch (error) {
     console.error("DELETE_CATEGORY_ERROR:", error);

@@ -13,7 +13,7 @@ const Example = () => {
           openDialog({
             title: "بيانات المستخدم",
             size: "md",
-            content: (
+            children: (
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
                   هذا محتوى الـ dialog

@@ -55,9 +55,9 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
 
         <Link
           href={`/admin/products/categories/${category.id}/edit`}
-          className="mr-auto"
+          className="mr-auto self-end"
         >
-          <Button color="INFO" size="sm" variant="outline">
+          <Button color="INFO" size="sm" variant="soft">
             <Pencil className="size-4" />
             <span>تعديل التصنيف</span>
           </Button>

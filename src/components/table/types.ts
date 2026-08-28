@@ -10,7 +10,8 @@ export interface TableColumn<T> {
 export interface TableProps<T> {
   data: T[];
   columns: TableColumn<T>[];
-  keyExtractor?: (item: T, index: number) => string;
   emptyMessage?: string;
+  loading?: boolean;
+  loadingRows?: number;
   className?: string;
 }

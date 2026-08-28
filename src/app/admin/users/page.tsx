@@ -1,10 +1,11 @@
-import { getUsers, UsersTable } from "@/features/admin/users/table";
+import { Suspense } from "react";
+import { Table } from "@/components/table";
+import { UsersTable } from "@/features/admin/users/table";
+import { usersTableColumns } from "@/features/admin/users/table/UsersTableColumns";
 
 const UsersPage = async () => {
-  const users = await getUsers();
-
   return (
-    <div dir="rtl" className="space-y-6">
+    <div className="flex flex-col gap-3 lg:gap-4">
       <div>
         <h1 className="text-2xl font-bold">المستخدمين</h1>
 
@@ -13,7 +14,18 @@ const UsersPage = async () => {
         </p>
       </div>
 
-      <UsersTable users={users} />
+      <Suspense
+        fallback={
+          <Table
+            data={[]}
+            columns={usersTableColumns}
+            loading
+            loadingRows={8}
+          />
+        }
+      >
+        <UsersTable />
+      </Suspense>
     </div>
   );
 };

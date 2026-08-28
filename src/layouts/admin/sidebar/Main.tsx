@@ -94,13 +94,13 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
     <aside
       className={`z-50 ${
         isOpen ? "w-3xs" : "w-16"
-      } bg-background duration-300 flex flex-col items-center py-4 fixed top-0 right-0 h-full overflow-hidden shadow-sm border-l border-l-background-second/20 `}
+      } bg-background duration-300 flex flex-col gap-3 lg:gap-4 items-center py-3 lg:py-4 fixed top-0 right-0 h-full overflow-hidden shadow-sm border-l border-l-background-second/20 `}
     >
       {/* Toggle */}
       <Button
         size="icon"
         color="MAIN"
-        className={`fixed ${isOpen ? "right-68" : "right-20"} top-4 lg:top-4 z-50`}
+        className={`fixed ${isOpen ? "right-68" : "right-20"} top-3.5 lg:top-4.5 z-50`}
         onClick={() => setIsOpen((open) => !open)}
       >
         {isOpen ? <X /> : <Menu />}
@@ -120,20 +120,20 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
         onClick={() => setIsOpen(false)}
         className={`flex items-center justify-center max-w-40 ${
           isOpen ? "mx-3 lg:mx-4" : "mx-1"
-        } pb-4 border-b border-b-background-second `}
+        } pb-3 lg:pb-4 border-b border-b-background-second `}
       >
         <Image
           src="/logo-2.png"
           alt="الطنطاوي"
           width={500}
           height={500}
-          className="max-w-full h-auto object-cover"
+          className="max-w-full max-h-30 lg:max-h-full w-auto object-cover"
           priority
         />
       </Link>
 
       {/* Navigation */}
-      <nav className="py:3 lg:py-4 w-full flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
+      <nav className="w-full flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin">
         <ul className="w-full flex flex-col gap-1">{renderNav()}</ul>
       </nav>
 

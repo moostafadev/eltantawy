@@ -19,7 +19,7 @@ const sizes = {
 
 const Dialog = ({
   title,
-  content,
+  children,
   size = "md",
   onClose,
   closing = false,
@@ -42,19 +42,15 @@ const Dialog = ({
     <div
       dir="rtl"
       onMouseDown={onClose}
-      className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-3 backdrop-blur-sm ${
-        closing ? "animate-dialog-out" : "animate-dialog-in"
-      }`}
+      className={`fixed inset-0 z-9999 flex items-center justify-center bg-black/40 p-3 backdrop-blur-sm ${closing ? "animate-dialog-out" : "animate-dialog-in"}`}
     >
       <div
         onMouseDown={(e) => e.stopPropagation()}
-        className={`relative w-full shrink-0 ${sizes[size]} border border-border bg-background p-4 shadow-md ${
-          closing ? "animate-dialog-content-out" : "animate-dialog-content-in"
-        }`}
+        className={`relative w-full shrink-0 ${sizes[size]} border border-border bg-background p-4 shadow-md ${closing ? "animate-dialog-content-out" : "animate-dialog-content-in"}`}
       >
         {title && (
-          <div className="mb-5 flex items-center justify-between gap-3 lg:gap-4 flex-wrap">
-            <h2 className="lg:text-lg font-bold text-foreground">{title}</h2>
+          <div className="mb-5 flex flex-wrap items-center justify-between gap-3 lg:gap-4">
+            <h2 className="font-bold text-foreground lg:text-lg">{title}</h2>
 
             <Button
               type="button"
@@ -69,7 +65,7 @@ const Dialog = ({
           </div>
         )}
 
-        {content}
+        {children}
       </div>
     </div>
   );
