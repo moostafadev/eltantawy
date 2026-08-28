@@ -79,6 +79,12 @@ export const getCategoriesForParentSelect = async () => {
       id: true,
       title: true,
       parentId: true,
+      _count: {
+        select: {
+          products: true,
+          children: true,
+        },
+      },
     },
   });
 };
@@ -89,6 +95,12 @@ export const getCategoriesForGraph = async () => {
       id: true,
       title: true,
       parentId: true,
+      _count: {
+        select: {
+          products: true,
+          children: true,
+        },
+      },
     },
   });
 };

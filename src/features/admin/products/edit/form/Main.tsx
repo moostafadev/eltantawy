@@ -12,8 +12,6 @@ import { Select } from "@/components/select";
 import { Switch } from "@/components/switch";
 import { useToast } from "@/components/toaster";
 
-import { buildCategoryOptions } from "@/features/admin/categories/create/Graph";
-
 import { editProductSchema } from "./schema";
 import { EditProductFormValues, IProps } from "../types";
 import { editProductAction } from "./editProduct.service";
@@ -27,10 +25,16 @@ const EditProductForm = ({ product, categories }: IProps) => {
   const [loading, setLoading] = useState(false);
   const [useImageUpload, setUseImageUpload] = useState(false);
 
-  const categoryOptions = useMemo(
-    () => buildCategoryOptions(categories),
-    [categories],
-  );
+  const categoryOptions = useMemo(() => {
+    const leafCategories = categories.filter(
+      (category) => !categories.some((item) => item.parentId === category.id),
+    );
+
+    return leafCategories.map((category) => ({
+      value: category.id,
+      label: category.title,
+    }));
+  }, [categories]);
 
   const defaultValues: EditProductFormValues = {
     title: product.title,
@@ -70,7 +74,7 @@ const EditProductForm = ({ product, categories }: IProps) => {
       resolver={zodResolver(editProductSchema)}
       defaultValues={defaultValues}
       onFormReady={setFormMethods}
-      className="flex h-fit min-w-0 flex-1 flex-col gap-3 border border-background-second bg-background p-3 shadow-sm lg:max-w-96 lg:gap-4"
+      className="flex h-fit min-w-0 flex-1 flex-col gap-3 border border-background-second bg-background p-3 shadow-sm lg:max-w-96 lg:gap-4 lg:p-4"
     >
       <Select<EditProductFormValues>
         name="categoryId"

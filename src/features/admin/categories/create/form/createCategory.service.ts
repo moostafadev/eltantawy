@@ -42,6 +42,11 @@ export const createCategoryAction = async (values: unknown) => {
         },
         select: {
           id: true,
+          _count: {
+            select: {
+              products: true,
+            },
+          },
         },
       });
 
@@ -49,6 +54,13 @@ export const createCategoryAction = async (values: unknown) => {
         return {
           success: false,
           message: "التصنيف الأب غير موجود",
+        };
+      }
+
+      if (parentCategory._count.products > 0) {
+        return {
+          success: false,
+          message: "لا يمكن إضافة تصنيف داخل تصنيف يحتوي على منتجات",
         };
       }
     }

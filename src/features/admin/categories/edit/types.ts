@@ -1,5 +1,3 @@
-import { CategoryParent } from "../create/Graph/types";
-
 export interface Category {
   id: string;
   title: string;
@@ -8,7 +6,16 @@ export interface Category {
   parentId: string | null;
 }
 
+export interface CategoryOption {
+  id: string;
+  title: string;
+  parentId: string | null;
+  _count: {
+    products: number;
+  };
+}
+
 export interface IProps {
   category: Category;
-  categories: CategoryParent[];
+  categories: CategoryOption[];
 }

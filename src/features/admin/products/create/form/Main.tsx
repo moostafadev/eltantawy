@@ -39,10 +39,36 @@ const CreateProductForm = ({ categories }: IProps) => {
   const [loading, setLoading] = useState(false);
   const [useImageUpload, setUseImageUpload] = useState(true);
 
-  const categoryOptions = useMemo(
-    () => buildCategoryOptions(categories),
-    [categories],
-  );
+  const categoryOptions = useMemo(() => {
+    const parentIds = new Set(
+      categories
+        .map((category) => category.parentId)
+        .filter((parentId): parentId is string => Boolean(parentId)),
+    );
+
+    const leafCategories = categories.filter(
+      (category) => !parentIds.has(category.id),
+    );
+
+    const getCategoryPath = (categoryId: string): string => {
+      const category = categories.find((item) => item.id === categoryId);
+
+      if (!category) return "";
+
+      if (!category.parentId) {
+        return category.title;
+      }
+
+      const parentPath = getCategoryPath(category.parentId);
+
+      return parentPath ? `${parentPath} / ${category.title}` : category.title;
+    };
+
+    return leafCategories.map((category) => ({
+      value: category.id,
+      label: getCategoryPath(category.id),
+    }));
+  }, [categories]);
 
   const handleSubmit = async (values: CreateProductFormValues) => {
     setLoading(true);

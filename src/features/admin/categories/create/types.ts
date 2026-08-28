@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { createCategorySchema } from "./form/schema";
 
 type CreateCategoryFormValues = z.infer<typeof createCategorySchema>;
@@ -7,6 +8,10 @@ interface ICategoryParent {
   id: string;
   title: string;
   parentId: string | null;
+  _count: {
+    products: number;
+    children: number;
+  };
 }
 
 interface IProps {

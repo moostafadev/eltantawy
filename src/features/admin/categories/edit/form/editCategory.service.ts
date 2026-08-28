@@ -18,6 +18,29 @@ export const editCategoryAction = async (id: string, values: unknown) => {
   const { title, desc, image, parentId } = result.data;
 
   try {
+    const category = await prisma.category.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!category) {
+      return {
+        success: false,
+        message: "التصنيف غير موجود",
+      };
+    }
+
+    if (parentId === id) {
+      return {
+        success: false,
+        message: "لا يمكن أن يكون التصنيف أبًا لنفسه",
+      };
+    }
+
     const exists = await prisma.category.findFirst({
       where: {
         title,
@@ -26,6 +49,9 @@ export const editCategoryAction = async (id: string, values: unknown) => {
           id,
         },
       },
+      select: {
+        id: true,
+      },
     });
 
     if (exists) {
@@ -33,6 +59,36 @@ export const editCategoryAction = async (id: string, values: unknown) => {
         success: false,
         message: "هذا التصنيف موجود بالفعل",
       };
+    }
+
+    if (parentId) {
+      const parentCategory = await prisma.category.findUnique({
+        where: {
+          id: parentId,
+        },
+        select: {
+          id: true,
+          _count: {
+            select: {
+              products: true,
+            },
+          },
+        },
+      });
+
+      if (!parentCategory) {
+        return {
+          success: false,
+          message: "التصنيف الأب غير موجود",
+        };
+      }
+
+      if (parentCategory._count.products > 0) {
+        return {
+          success: false,
+          message: "لا يمكن وضع التصنيف داخل تصنيف يحتوي على منتجات",
+        };
+      }
     }
 
     await prisma.category.update({
@@ -54,7 +110,9 @@ export const editCategoryAction = async (id: string, values: unknown) => {
       success: true,
       message: "تم تعديل التصنيف بنجاح",
     };
-  } catch {
+  } catch (error) {
+    console.error("EDIT_CATEGORY_ERROR:", error);
+
     return {
       success: false,
       message: "حدث خطأ أثناء تعديل التصنيف",

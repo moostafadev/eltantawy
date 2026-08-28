@@ -34,10 +34,13 @@ const EditCategoryForm = ({ category, categories }: IProps) => {
   const [loading, setLoading] = useState(false);
   const [useImageUpload, setUseImageUpload] = useState(false);
 
-  const categoryOptions = useMemo(
-    () => buildCategoryOptions(categories),
-    [categories],
-  );
+  const categoryOptions = useMemo(() => {
+    const availableCategories = categories.filter(
+      (item) => item.id !== category.id && item._count.products === 0,
+    );
+
+    return buildCategoryOptions(availableCategories);
+  }, [categories, category.id]);
 
   const defaultValues: FormValues = {
     title: category.title,

@@ -9,6 +9,7 @@ import { Form } from "@/components/form";
 import { ImageInput } from "@/components/image-input";
 import { Input } from "@/components/input";
 import { Select } from "@/components/select";
+import { Switch } from "@/components/switch";
 import { useToast } from "@/components/toaster";
 
 import { createCategoryAction } from "./createCategory.service";
@@ -16,7 +17,6 @@ import { createCategorySchema } from "./schema";
 import { buildCategoryOptions } from "../Graph";
 import { CreateCategoryFormValues, IProps } from "../types";
 import { useCategoryCreateActions } from "../store";
-import { Switch } from "@/components/switch";
 
 const defaultValues: CreateCategoryFormValues = {
   title: "",
@@ -35,10 +35,13 @@ const CreateCategoryForm = ({ categories }: IProps) => {
   const [loading, setLoading] = useState(false);
   const [useImageUpload, setUseImageUpload] = useState(true);
 
-  const categoryOptions = useMemo(
-    () => buildCategoryOptions(categories),
-    [categories],
-  );
+  const categoryOptions = useMemo(() => {
+    const availableCategories = categories.filter(
+      (category) => category._count.products === 0,
+    );
+
+    return buildCategoryOptions(availableCategories);
+  }, [categories]);
 
   const handleSubmit = async (values: CreateCategoryFormValues) => {
     setLoading(true);
