@@ -2,7 +2,7 @@ import { Breadcrumb } from "@/components/breadcrumb";
 import { Create } from "@/features/admin/categories/create";
 import { getCategoriesForParentSelect } from "@/features/admin/categories/table";
 
-const CreateCategoryPage = async () => {
+const CreateCategory = async () => {
   const categories = await getCategoriesForParentSelect();
 
   return (
@@ -34,4 +34,4 @@ const CreateCategoryPage = async () => {
   );
 };
 
-export default CreateCategoryPage;
+export default CreateCategory;

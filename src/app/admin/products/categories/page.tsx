@@ -7,7 +7,7 @@ import { CategoriesTable } from "@/features/admin/categories/table";
 import { Table } from "@/components/table";
 import { categoriesTableColumns } from "@/features/admin/categories/table/CategoriesTableColumns";
 
-const CategoriesPage = async () => {
+const Categories = async () => {
   return (
     <div className="flex flex-col gap-3 lg:gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -46,4 +46,4 @@ const CategoriesPage = async () => {
   );
 };
 
-export default CategoriesPage;
+export default Categories;

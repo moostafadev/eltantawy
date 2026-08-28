@@ -5,13 +5,13 @@ import {
   getOneCategory,
 } from "@/features/admin/categories/table";
 
-interface EditCategoryPageProps {
+interface EditCategoryProps {
   params: Promise<{
     id: string;
   }>;
 }
 
-const EditCategoryPage = async ({ params }: EditCategoryPageProps) => {
+const EditCategory = async ({ params }: EditCategoryProps) => {
   const { id } = await params;
 
   const [category, categories] = await Promise.all([
@@ -58,4 +58,4 @@ const EditCategoryPage = async ({ params }: EditCategoryPageProps) => {
   );
 };
 
-export default EditCategoryPage;
+export default EditCategory;

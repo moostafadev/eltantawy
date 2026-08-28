@@ -8,13 +8,13 @@ import {
 import { Pencil } from "lucide-react";
 import Link from "next/link";
 
-interface CategoryPageProps {
+interface CategoryProps {
   params: Promise<{
     id: string;
   }>;
 }
 
-const CategoryPage = async ({ params }: CategoryPageProps) => {
+const Category = async ({ params }: CategoryProps) => {
   const { id } = await params;
 
   const [category, categories] = await Promise.all([
@@ -69,4 +69,4 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
   );
 };
 
-export default CategoryPage;
+export default Category;
