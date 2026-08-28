@@ -23,13 +23,23 @@ export const getOneProduct = async (id: string) => {
     where: {
       id,
     },
-    include: {
+    select: {
+      id: true,
+      title: true,
+      desc: true,
+      image: true,
+      price: true,
+      discountPrice: true,
+      unit: true,
+      categoryId: true,
       category: {
         select: {
           id: true,
           title: true,
         },
       },
+      createdAt: true,
+      updatedAt: true,
     },
   });
 };
