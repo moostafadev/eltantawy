@@ -7,10 +7,15 @@ import { SubItemsProps } from "./types";
 const SubItems = ({ items }: SubItemsProps) => {
   const pathName = usePathname();
 
+  // اختار أكثر لينك تحديدًا (الأطول) يطابق المسار الحالي
+  const activeLink = items
+    .filter(({ link }) => pathName === link || pathName.startsWith(`${link}/`))
+    .sort((a, b) => b.link.length - a.link.length)[0]?.link;
+
   return (
     <ul className="flex flex-col gap-1 mt-1 max-w-full">
       {items.map(({ icon: Icon, link, title, isActive }) => {
-        const isCurrent = pathName === link;
+        const isCurrent = link === activeLink;
 
         return (
           <li key={link} className="w-full">
@@ -32,7 +37,6 @@ const SubItems = ({ items }: SubItemsProps) => {
                 `}
             >
               <Icon className="size-4 shrink-0" />
-
               <span>{title}</span>
             </Link>
           </li>

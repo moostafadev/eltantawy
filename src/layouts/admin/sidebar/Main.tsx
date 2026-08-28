@@ -17,7 +17,12 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
   const [openItems, setOpenItems] = useState<string[]>([]);
 
   const activeParents = sidebarData
-    .filter((item) => item.items.some((subItem) => subItem.link === pathName))
+    .filter((item) =>
+      item.items.some(
+        (subItem) =>
+          pathName === subItem.link || pathName.startsWith(`${subItem.link}/`),
+      ),
+    )
     .map((item) => item.link);
 
   const toggleItem = (link: string) => {
@@ -37,7 +42,10 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
 
       const isCurrent = pathName === link;
 
-      const hasActiveChild = items.some((item) => item.link === pathName);
+      const hasActiveChild = items.some(
+        (item) =>
+          pathName === item.link || pathName.startsWith(`${item.link}/`),
+      );
 
       return (
         <li key={link} className="w-full">
