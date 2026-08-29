@@ -142,6 +142,58 @@
       transform: scale(0.95) translateY(10px);
     }
   }
+
+  @keyframes cart-pop {
+    0% {
+      transform: scale(0.7) rotate(-8deg);
+    }
+
+    45% {
+      transform: scale(1.2) rotate(5deg);
+    }
+
+    70% {
+      transform: scale(0.95) rotate(-2deg);
+    }
+
+    100% {
+      transform: scale(1) rotate(0);
+    }
+  }
+
+  @keyframes cart-attention {
+    0%,
+    70%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+
+    75% {
+      transform: translateY(-3px) scale(1.08);
+    }
+
+    80% {
+      transform: translateY(0) scale(1);
+    }
+
+    85% {
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    90% {
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes cart-remove {
+    0% {
+      transform: scale(1.15);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
 }
 
 @utility container {
