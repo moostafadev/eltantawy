@@ -8,10 +8,12 @@ import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { ProductCardProps } from "./types";
 import ProductPrice from "./ProductPrice";
+import AddToCartDialog from "../cart/AddToCartDialog";
+import { useDialog } from "@/components/dialog";
 
 const ProductCard = ({ product, className = "" }: ProductCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
+  const { openDialog } = useDialog();
 
   const unitLabel = product.unit === "KG" ? "كيلو" : "قطعة";
 
@@ -62,17 +64,16 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
           size="icon"
           color="SUCCESS"
           variant="soft"
-          onClick={() => setIsInCart((prev) => !prev)}
-          aria-label={isInCart ? "إزالة من السلة" : "إضافة إلى السلة"}
+          onClick={() =>
+            openDialog({
+              title: "إضافة إلى السلة",
+              size: "md",
+              children: <AddToCartDialog product={product} />,
+            })
+          }
+          aria-label="إضافة إلى السلة"
         >
-          <ShoppingCart
-            key={isInCart ? "added" : "removed"}
-            className={`size-4 ${
-              isInCart
-                ? "fill-current animate-[cart-pop_400ms_ease-out]"
-                : "animate-[cart-attention_3s_ease-in-out_infinite]"
-            }`}
-          />
+          <ShoppingCart className="size-4 animate-[cart-attention_3s_ease-in-out_infinite]" />
         </Button>
       </div>
 
