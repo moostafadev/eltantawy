@@ -31,14 +31,26 @@ const isValidCartItem = (item: unknown): item is CartItem => {
 
   const value = item as Record<string, unknown>;
 
-  return (
-    typeof value.productId === "string" &&
-    value.productId.length > 0 &&
-    typeof value.qty === "number" &&
-    Number.isFinite(value.qty) &&
-    value.qty > 0 &&
-    (value.unit === "KG" || value.unit === "PIECE")
-  );
+  if (
+    typeof value.productId !== "string" ||
+    !value.productId.length ||
+    typeof value.qty !== "number" ||
+    !Number.isFinite(value.qty) ||
+    value.qty <= 0 ||
+    (value.unit !== "KG" && value.unit !== "PIECE")
+  ) {
+    return false;
+  }
+
+  if (value.unit === "PIECE" && !Number.isInteger(value.qty)) {
+    return false;
+  }
+
+  if (value.unit === "KG" && value.qty % 0.5 !== 0) {
+    return false;
+  }
+
+  return true;
 };
 
 export const serializeCart = (cart: Cart) => {

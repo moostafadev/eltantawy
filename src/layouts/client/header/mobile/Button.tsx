@@ -10,13 +10,14 @@ const ButtonMobile = ({ isOpen, setIsOpen }: IProps) => {
       type="button"
       onClick={() => setIsOpen((prev) => !prev)}
       color="MAIN"
-      size="xs"
+      variant="soft"
+      size="icon"
       className="lg:hidden"
     >
       {isOpen ? (
-        <X className="text-background" size={24} strokeWidth={1.75} />
+        <X size={24} strokeWidth={1.75} />
       ) : (
-        <Menu className="text-background" size={24} strokeWidth={1.75} />
+        <Menu size={24} strokeWidth={1.75} />
       )}
     </Button>
   );

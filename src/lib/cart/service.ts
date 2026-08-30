@@ -2,7 +2,11 @@ import { cookies } from "next/headers";
 
 import { prisma } from "../prisma";
 
-import { CART_COOKIE_NAME, CART_COOKIE_OPTIONS } from "./constants";
+import {
+  CART_COOKIE_NAME,
+  CART_COOKIE_OPTIONS,
+  CART_DELIVERY_FEE,
+} from "./constants";
 
 import {
   addCartItem,
@@ -33,7 +37,7 @@ export class CartService {
     productId: string;
     qty: number;
     unit: CartUnit;
-  }) {
+  }): Promise<HydratedCart> {
     const { productId, qty, unit } = data;
 
     this.validateQuantity(qty, unit);
@@ -66,10 +70,13 @@ export class CartService {
 
     await this.saveCart(updatedCart);
 
-    return updatedCart;
+    return this.getHydratedCart();
   }
 
-  static async updateItem(data: { productId: string; qty: number }) {
+  static async updateItem(data: {
+    productId: string;
+    qty: number;
+  }): Promise<HydratedCart> {
     const cart = await this.getCart();
 
     const item = cart.items.find(
@@ -104,40 +111,38 @@ export class CartService {
 
     await this.saveCart(updatedCart);
 
-    return updatedCart;
+    return this.getHydratedCart();
   }
 
-  static async removeItem(productId: string) {
+  static async removeItem(productId: string): Promise<HydratedCart> {
     const cart = await this.getCart();
+
+    const itemExists = cart.items.some((item) => item.productId === productId);
+
+    if (!itemExists) {
+      throw new Error("المنتج غير موجود في السلة");
+    }
 
     const updatedCart = removeCartItem(cart, productId);
 
     await this.saveCart(updatedCart);
 
-    return updatedCart;
+    return this.getHydratedCart();
   }
 
-  static async clear() {
+  static async clear(): Promise<HydratedCart> {
     const updatedCart = clearCart();
 
     await this.saveCart(updatedCart);
 
-    return updatedCart;
+    return this.getHydratedCart();
   }
 
   static async getHydratedCart(): Promise<HydratedCart> {
     const cart = await this.getCart();
 
     if (!cart.items.length) {
-      return {
-        items: [],
-        subtotal: 0,
-        discount: 0,
-        deliveryFee: 0,
-        total: 0,
-        itemCount: 0,
-        quantity: 0,
-      };
+      return this.createEmptyHydratedCart();
     }
 
     const productIds = [...new Set(cart.items.map((item) => item.productId))];
@@ -191,21 +196,8 @@ export class CartService {
       });
     }
 
-    /*
-     * If products were deleted or their units changed,
-     * they will not be included in the hydrated cart.
-     */
-
     if (!items.length) {
-      return {
-        items: [],
-        subtotal: 0,
-        discount: 0,
-        deliveryFee: 0,
-        total: 0,
-        itemCount: 0,
-        quantity: 0,
-      };
+      return this.createEmptyHydratedCart();
     }
 
     const subtotal = items.reduce(
@@ -218,7 +210,7 @@ export class CartService {
       0,
     );
 
-    const deliveryFee = 50;
+    const deliveryFee = CART_DELIVERY_FEE;
 
     const total = subtotal - discount + deliveryFee;
 
@@ -234,6 +226,18 @@ export class CartService {
       total,
       itemCount,
       quantity,
+    };
+  }
+
+  private static createEmptyHydratedCart(): HydratedCart {
+    return {
+      items: [],
+      subtotal: 0,
+      discount: 0,
+      deliveryFee: 0,
+      total: 0,
+      itemCount: 0,
+      quantity: 0,
     };
   }
 

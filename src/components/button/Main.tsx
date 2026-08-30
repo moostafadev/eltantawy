@@ -17,7 +17,7 @@ const Button = ({
     <button
       {...props}
       disabled={loading || props.disabled}
-      className={`${getColor(color, variant)} ${getSize(size)} inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap font-medium shadow-sm transition-all duration-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`${getColor(color, variant)} ${getSize(size)} inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap font-medium hover:shadow-sm transition-all duration-300 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
     >
       {loading ? <Spin className="size-5" /> : children}
     </button>

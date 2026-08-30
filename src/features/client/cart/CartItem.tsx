@@ -2,33 +2,25 @@
 
 import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 
 import { Button } from "@/components/button";
-import { removeFromCartAction, updateCartItemAction } from "@/lib/cart/actions";
 import { CartItemWithProduct } from "@/lib/cart/types";
+import { useCart } from "@/lib/cart/provider";
 
 interface CartItemProps {
   item: CartItemWithProduct;
 }
 
 const CartItem = ({ item }: CartItemProps) => {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const { updateQuantity, removeItem, isItemUpdating } = useCart();
+
+  const isUpdating = isItemUpdating(item.productId);
 
   const isKg = item.unit === "KG";
   const step = isKg ? 0.5 : 1;
 
   const increment = () => {
-    startTransition(async () => {
-      await updateCartItemAction({
-        productId: item.productId,
-        qty: item.qty + step,
-      });
-
-      router.refresh();
-    });
+    updateQuantity(item.productId, item.qty + step);
   };
 
   const decrement = () => {
@@ -36,26 +28,19 @@ const CartItem = ({ item }: CartItemProps) => {
       return;
     }
 
-    startTransition(async () => {
-      await updateCartItemAction({
-        productId: item.productId,
-        qty: item.qty - step,
-      });
-
-      router.refresh();
-    });
+    updateQuantity(item.productId, item.qty - step);
   };
 
-  const remove = () => {
-    startTransition(async () => {
-      await removeFromCartAction(item.productId);
+  const hasDiscount =
+    item.product.discountPrice !== null &&
+    item.product.discountPrice < item.product.price;
 
-      router.refresh();
-    });
-  };
+  const displayTotal = item.price * item.qty;
+
+  const originalTotal = item.product.price * item.qty;
 
   return (
-    <article className="flex gap-3 border-b border-border py-3 lg:py-4 last:border-b-0 sm:gap-4">
+    <article className="flex gap-3 border-b border-border py-3 last:border-b-0 sm:gap-4 lg:py-4">
       <div className="relative size-20 shrink-0 overflow-hidden bg-muted sm:size-24">
         {item.product.image ? (
           <Image
@@ -66,7 +51,7 @@ const CartItem = ({ item }: CartItemProps) => {
             className="object-cover"
           />
         ) : (
-          <div className="flex size-full items-center justify-center text-muted-foreground">
+          <div className="flex size-full items-center justify-center text-xs text-muted-foreground">
             لا توجد صورة
           </div>
         )}
@@ -78,7 +63,7 @@ const CartItem = ({ item }: CartItemProps) => {
             <h3 className="truncate font-semibold">{item.product.title}</h3>
 
             <p className="mt-1 text-xs text-muted-foreground">
-              {isKg ? "كيلو" : "قطعة"}
+              {isKg ? "بالكيلو" : "بالقطعة"}
             </p>
           </div>
 
@@ -87,8 +72,9 @@ const CartItem = ({ item }: CartItemProps) => {
             size="icon"
             color="DANGER"
             variant="ghost"
-            onClick={remove}
-            disabled={isPending}
+            onClick={() => removeItem(item.productId)}
+            loading={isUpdating}
+            disabled={isUpdating}
             aria-label="حذف المنتج"
           >
             <Trash2 className="size-4" />
@@ -103,15 +89,25 @@ const CartItem = ({ item }: CartItemProps) => {
               color="MAIN"
               variant="soft"
               onClick={decrement}
-              disabled={isPending || item.qty <= step}
+              disabled={isUpdating || item.qty <= step}
               aria-label="تقليل الكمية"
+              className="transition-transform active:scale-90"
             >
               <Minus className="size-3.5" />
             </Button>
 
-            <span className="min-w-14 text-center text-sm font-semibold">
-              {item.qty.toLocaleString("ar-EG")} {isKg ? "كجم" : "قطعة"}
-            </span>
+            <div className="flex min-w-16 items-center justify-center gap-1 text-sm font-semibold">
+              <span
+                key={item.qty}
+                className="animate-[quantity-pop_150ms_ease-out]"
+              >
+                {item.qty.toLocaleString("ar-EG")}
+              </span>
+
+              <span className="text-xs font-normal text-muted-foreground">
+                {isKg ? "كجم" : "قطعة"}
+              </span>
+            </div>
 
             <Button
               type="button"
@@ -119,8 +115,9 @@ const CartItem = ({ item }: CartItemProps) => {
               color="MAIN"
               variant="soft"
               onClick={increment}
-              disabled={isPending}
+              disabled={isUpdating}
               aria-label="زيادة الكمية"
+              className="transition-transform active:scale-90"
             >
               <Plus className="size-3.5" />
             </Button>
@@ -128,15 +125,14 @@ const CartItem = ({ item }: CartItemProps) => {
 
           <div className="text-left">
             <p className="font-bold text-main">
-              {item.total.toLocaleString("ar-EG")} ج.م
+              {displayTotal.toLocaleString("ar-EG")} ج.م
             </p>
 
-            {item.product.discountPrice !== null &&
-              item.product.discountPrice < item.product.price && (
-                <p className="text-xs text-muted-foreground line-through">
-                  {(item.product.price * item.qty).toLocaleString("ar-EG")} ج.م
-                </p>
-              )}
+            {hasDiscount && (
+              <p className="text-xs text-muted-foreground line-through">
+                {originalTotal.toLocaleString("ar-EG")} ج.م
+              </p>
+            )}
           </div>
         </div>
       </div>

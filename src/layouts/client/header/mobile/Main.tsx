@@ -21,13 +21,13 @@ const NavbarMobile = ({ isOpen, setIsOpen }: IProps) => {
           isOpen ? "bottom-16" : "-bottom-full"
         }`}
       >
-        <ul className="flex flex-col gap-1 px-6 py-4 text-lg">
+        <ul className="flex flex-col gap-1 px-3 py-2">
           {navLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`flex items-center gap-4 py-3 ${
+                className={`flex items-center gap-3 py-2 ${
                   pathname === link.href ? "text-main" : "text-foreground/80"
                 }`}
               >
