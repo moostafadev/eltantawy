@@ -15,7 +15,7 @@ const Products = () => {
           <h1 className="text-2xl font-bold">المنتجات</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">
-            إدارة منتجات المتجر
+            إدارة منتجات الموقع
           </p>
         </div>
 
