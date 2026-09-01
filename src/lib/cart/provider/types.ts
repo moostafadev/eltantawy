@@ -1,9 +1,4 @@
-import { ProductCardProduct } from "@/features/client/product-card/types";
-import { CartItemWithProduct, HydratedCart } from "@/lib/cart/types";
-
-export interface AddToCartDialogProps {
-  product: ProductCardProduct;
-}
+import { CartUnit, CartItemWithProduct, HydratedCart } from "../types";
 
 export interface CartProviderProps {
   children: React.ReactNode;
@@ -11,23 +6,25 @@ export interface CartProviderProps {
 }
 
 export interface CartContextValue {
+  cart: HydratedCart;
+
   items: CartItemWithProduct[];
 
-  subtotal: number;
-  discount: number;
-  deliveryFee: number;
-  total: number;
-
-  itemCount: number;
-  quantity: number;
+  syncCart(cart: HydratedCart): void;
 
   isUpdating: boolean;
 
   updatingItems: Record<string, boolean>;
 
-  isItemUpdating: (productId: string) => boolean;
+  isItemUpdating(key: string): boolean;
 
-  updateQuantity: (productId: string, quantity: number) => void;
+  addItem(data: {
+    productId: string;
+    qty: number;
+    unit: CartUnit;
+  }): Promise<void>;
 
-  removeItem: (productId: string) => void;
+  updateItem(productId: string, unit: CartUnit, qty: number): Promise<void>;
+
+  removeItem(productId: string, unit: CartUnit): Promise<void>;
 }

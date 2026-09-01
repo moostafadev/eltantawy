@@ -1,57 +1,37 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 import { CartService } from "./service";
+
 import { CartUnit } from "./types";
 
-export const addToCartAction = async (data: {
+export async function addToCartAction(data: {
   productId: string;
+
   qty: number;
+
   unit: CartUnit;
-}) => {
-  const cart = await CartService.addItem(data);
+}) {
+  return CartService.addItem(data);
+}
 
-  revalidatePath("/cart");
-
-  return {
-    success: true,
-    cart,
-  };
-};
-
-export const updateCartItemAction = async (data: {
+export async function updateCartItemAction(data: {
   productId: string;
+
+  unit: CartUnit;
+
   qty: number;
-}) => {
-  const cart = await CartService.updateItem(data);
+}) {
+  return CartService.updateItem(data);
+}
 
-  revalidatePath("/cart");
+export async function removeFromCartAction(data: {
+  productId: string;
 
-  return {
-    success: true,
-    cart,
-  };
-};
+  unit: CartUnit;
+}) {
+  return CartService.removeItem(data.productId, data.unit);
+}
 
-export const removeFromCartAction = async (productId: string) => {
-  const cart = await CartService.removeItem(productId);
-
-  revalidatePath("/cart");
-
-  return {
-    success: true,
-    cart,
-  };
-};
-
-export const clearCartAction = async () => {
-  const cart = await CartService.clear();
-
-  revalidatePath("/cart");
-
-  return {
-    success: true,
-    cart,
-  };
-};
+export async function clearCartAction() {
+  return CartService.clear();
+}

@@ -73,7 +73,7 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
           }
           aria-label="إضافة إلى السلة"
         >
-          <ShoppingCart className="size-4 animate-[cart-attention_3s_ease-in-out_infinite]" />
+          <ShoppingCart className="size-4 animate-cart-attention" />
         </Button>
       </div>
 

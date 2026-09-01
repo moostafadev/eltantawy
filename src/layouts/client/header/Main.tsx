@@ -13,6 +13,8 @@ import {
 import { ButtonMobile, NavbarMobile } from "./mobile";
 import Navbar from "./Navbar";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/lib/cart/provider";
+import { toArabicNums } from "@/utils/toArabicNums";
 
 interface HeaderProps {
   isScrolled: boolean;
@@ -20,6 +22,9 @@ interface HeaderProps {
 
 const Header = ({ isScrolled }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { cart } = useCart();
+
+  const quantity = cart.itemCount;
 
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
@@ -80,7 +85,7 @@ const Header = ({ isScrolled }: HeaderProps) => {
           <div className="flex items-center gap-2">
             <Link
               href="/cart"
-              className="-m-2.5 flex size-10 lg:size-11 items-center justify-center"
+              className="-m-2.5 relative flex size-10 lg:size-11 items-center justify-center"
               onClick={() => setIsMenuOpen(false)}
             >
               <ShoppingCart
@@ -88,6 +93,12 @@ const Header = ({ isScrolled }: HeaderProps) => {
                 size={22}
                 strokeWidth={1.75}
               />
+
+              {quantity > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex min-w-4.5 h-4.5 items-center justify-center rounded-full bg-main px-0.5 text-[11px] font-bold text-white shadow-sm ring-2 ring-background animate-cart-badge">
+                  {quantity > 99 ? toArabicNums("99+") : toArabicNums(quantity)}
+                </span>
+              )}
             </Link>
             {/* User */}
             {isAuthLoading ? (

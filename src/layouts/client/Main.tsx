@@ -1,29 +1,20 @@
-"use client";
-
 import { ReactNode } from "react";
-import { usePathname } from "next/navigation";
 
-import { Header } from "./header";
-import useScroll from "@/hooks/useScroll";
+import { DialogProvider } from "@/components/dialog";
+import { CartProvider } from "@/lib/cart/provider";
+import { CartService } from "@/lib/cart/service";
 
-const LayoutClient = ({ children }: { children: ReactNode }) => {
-  const pathname = usePathname();
-  const isScrolled = useScroll();
+import Wrapper from "./Wrapper";
 
-  if (pathname.startsWith("/admin")) {
-    return <>{children}</>;
-  }
+const LayoutClient = async ({ children }: { children: ReactNode }) => {
+  const cart = await CartService.getHydratedCart();
 
   return (
-    <>
-      <Header isScrolled={isScrolled} />
-
-      <main
-        className={`${isScrolled ? "mb-16 lg:mb-0 lg:mt-16" : "mb-20 lg:mb-0 lg:mt-20"} flex-col flex items-stretch w-full min-h-[calc(100dvh-5rem)] transition-[margin] duration-300`}
-      >
-        {children}
-      </main>
-    </>
+    <CartProvider initialCart={cart}>
+      <DialogProvider>
+        <Wrapper>{children}</Wrapper>
+      </DialogProvider>
+    </CartProvider>
   );
 };
 

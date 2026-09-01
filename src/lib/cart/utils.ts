@@ -1,26 +1,30 @@
-import { Cart, CartItem } from "./types";
+import { Cart, CartItem, CartUnit } from "./types";
 
-export const EMPTY_CART: Cart = {
+export const EMPTY_CART = (): Cart => ({
   items: [],
+});
+
+export const getCartItemKey = (productId: string, unit: CartUnit) => {
+  return `${productId}-${unit}`;
 };
 
 export const parseCart = (value?: string): Cart => {
   if (!value) {
-    return EMPTY_CART;
+    return EMPTY_CART();
   }
 
   try {
     const parsed = JSON.parse(value);
 
     if (!parsed || !Array.isArray(parsed.items)) {
-      return EMPTY_CART;
+      return EMPTY_CART();
     }
 
     return {
       items: parsed.items.filter(isValidCartItem),
     };
   } catch {
-    return EMPTY_CART;
+    return EMPTY_CART();
   }
 };
 
@@ -33,7 +37,7 @@ const isValidCartItem = (item: unknown): item is CartItem => {
 
   if (
     typeof value.productId !== "string" ||
-    !value.productId.length ||
+    value.productId.length === 0 ||
     typeof value.qty !== "number" ||
     !Number.isFinite(value.qty) ||
     value.qty <= 0 ||
@@ -58,56 +62,62 @@ export const serializeCart = (cart: Cart) => {
 };
 
 export const addCartItem = (cart: Cart, item: CartItem): Cart => {
-  const existingItem = cart.items.find(
-    (cartItem) =>
-      cartItem.productId === item.productId && cartItem.unit === item.unit,
+  const exists = cart.items.find(
+    (current) =>
+      current.productId === item.productId && current.unit === item.unit,
   );
 
-  if (!existingItem) {
+  if (!exists) {
     return {
       items: [...cart.items, item],
     };
   }
 
   return {
-    items: cart.items.map((cartItem) =>
-      cartItem.productId === item.productId && cartItem.unit === item.unit
-        ? {
-            ...cartItem,
-            qty: cartItem.qty + item.qty,
-          }
-        : cartItem,
-    ),
+    items: cart.items.map((current) => {
+      if (current.productId === item.productId && current.unit === item.unit) {
+        return {
+          ...current,
+
+          qty: current.qty + item.qty,
+        };
+      }
+
+      return current;
+    }),
   };
 };
 
 export const updateCartItem = (
   cart: Cart,
   productId: string,
+  unit: CartUnit,
   qty: number,
 ): Cart => {
-  if (qty <= 0) {
-    return removeCartItem(cart, productId);
-  }
-
   return {
-    items: cart.items.map((item) =>
-      item.productId === productId
-        ? {
-            ...item,
-            qty,
-          }
-        : item,
+    items: cart.items.map((item) => {
+      if (item.productId === productId && item.unit === unit) {
+        return {
+          ...item,
+          qty,
+        };
+      }
+
+      return item;
+    }),
+  };
+};
+
+export const removeCartItem = (
+  cart: Cart,
+  productId: string,
+  unit: CartUnit,
+): Cart => {
+  return {
+    items: cart.items.filter(
+      (item) => !(item.productId === productId && item.unit === unit),
     ),
   };
 };
 
-export const removeCartItem = (cart: Cart, productId: string): Cart => {
-  return {
-    items: cart.items.filter((item) => item.productId !== productId),
-  };
-};
-
-export const clearCart = (): Cart => {
-  return EMPTY_CART;
-};
+export const clearCart = (): Cart => EMPTY_CART();

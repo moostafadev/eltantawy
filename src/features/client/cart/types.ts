@@ -8,18 +8,36 @@ export interface AddToCartDialogProps {
 
 export interface CartProviderProps {
   children: React.ReactNode;
+
   initialCart: HydratedCart;
 }
 
 export interface CartContextValue {
+  cart: HydratedCart;
+
   items: CartItemWithProduct[];
+
   subtotal: number;
+
   discount: number;
+
   deliveryFee: number;
+
   total: number;
+
   itemCount: number;
+
   quantity: number;
+
+  syncCart: (cart: HydratedCart) => void;
+
   isUpdating: boolean;
-  updateQuantity: (productId: string, quantity: number) => void;
-  removeItem: (productId: string) => void;
+
+  updatingItems: Record<string, boolean>;
+
+  isItemUpdating(productId: string): boolean;
+
+  updateQuantity(productId: string, quantity: number): void;
+
+  removeItem(productId: string): void;
 }

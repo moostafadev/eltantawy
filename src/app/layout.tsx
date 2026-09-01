@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
+
 import { Layout } from "@/layouts/client";
 import { AuthProvider } from "@/context/AuthContext";
 import { ToastProvider } from "@/components/toaster";
-import { DialogProvider } from "@/components/dialog";
 
 const fontFamily = Cairo({
   variable: "--font-cairo",
@@ -27,9 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex flex-col">
         <AuthProvider>
           <ToastProvider>
-            <DialogProvider>
-              <Layout>{children}</Layout>
-            </DialogProvider>
+            <Layout>{children}</Layout>
           </ToastProvider>
         </AuthProvider>
       </body>
