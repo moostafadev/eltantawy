@@ -24,7 +24,7 @@ const Profile = async () => {
   }
 
   return (
-    <div className="flex flex-1 items-stretch bg-background-second/20 py-8">
+    <div className="flex flex-1 items-stretch bg-background-second/20 py-6 lg:py-8">
       <div className="container">
         <div className="flex w-full flex-col gap-4">
           <div className="flex flex-col gap-2">

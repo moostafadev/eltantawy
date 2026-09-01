@@ -16,7 +16,7 @@ const CartSummary = () => {
   const { subtotal, discount, deliveryFee, total } = cart;
 
   return (
-    <aside className="flex h-fit flex-col gap-3 border border-border bg-background p-3 lg:gap-4 lg:p-4">
+    <aside className="flex h-fit flex-col gap-3 border border-border bg-background p-3 lg:gap-4 lg:p-4 lg:sticky lg:top-20">
       <h2 className="text-lg font-bold">ملخص السلة</h2>
 
       <div className="flex flex-col gap-3 text-sm lg:gap-4">
