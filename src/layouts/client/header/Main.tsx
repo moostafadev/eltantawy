@@ -32,13 +32,11 @@ const Header = ({ isScrolled }: HeaderProps) => {
 
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
-  // تسجيل موضع أيقونة السلة كهدف نهاية الطيران
   useEffect(() => {
     registerCartTarget(cartIconRef.current);
     return () => registerCartTarget(null);
   }, []);
 
-  // لما العنصر "يهبط" على الأيقونة، اعمل نبضة استقبال
   useEffect(() => {
     return onCartLanded(() => {
       setIsBumping(true);

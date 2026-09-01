@@ -43,7 +43,7 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
             </span>
           )}
 
-        <Button
+        {/* <Button
           type="button"
           className="absolute left-2 top-2 size-7 backdrop-blur-sm lg:size-8 flex items-center justify-center rounded-full"
           size="icon"
@@ -53,7 +53,7 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
           aria-label={isFavorite ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
         >
           <Heart className={`size-4 ${isFavorite ? "fill-current" : ""}`} />
-        </Button>
+        </Button> */}
 
         <Button
           type="button"
