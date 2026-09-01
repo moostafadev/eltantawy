@@ -1,7 +1,7 @@
-import { BadgePercent, Layers, TrendingUp } from "lucide-react";
+import { BadgePercent, Layers, Package } from "lucide-react";
 
 export const navLinks = [
-  { href: "/top-selling", label: "الأكثر مبيعًا", icon: TrendingUp },
+  { href: "/products", label: "المنتجات", icon: Package },
   { href: "/categories", label: "التصنيفات", icon: Layers },
   { href: "/offers", label: "العروض", icon: BadgePercent },
 ];

@@ -17,7 +17,7 @@ interface CategoryTreeProps {
 
 const CategoryTree = ({ categories }: CategoryTreeProps) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
       {categories.map((category) => (
         <CategoryNodeItem key={category.id} category={category} level={0} />
       ))}
@@ -50,10 +50,14 @@ const CategoryNodeItem = ({ category, level }: CategoryNodeItemProps) => {
           onClick={() => {
             if (canOpen) {
               setOpen((value) => !value);
+
+              if (!hasProducts) {
+                setShowProducts(false);
+              }
             }
           }}
           disabled={!canOpen}
-          className="flex w-full items-center gap-3 p-3 text-start transition-colors hover:bg-main/5 disabled:cursor-default lg:p-4 cursor-pointer"
+          className="flex w-full cursor-pointer items-center gap-3 p-3 text-start transition-colors hover:bg-main/5 disabled:cursor-default lg:p-4"
         >
           <div
             className={`relative flex shrink-0 items-center justify-center overflow-hidden bg-muted ${
@@ -84,7 +88,7 @@ const CategoryNodeItem = ({ category, level }: CategoryNodeItemProps) => {
               </h2>
 
               {category.totalProductsCount > 0 && (
-                <span className="rounded-full bg-main/10 px-2 py-0.5 text-xs font-medium text-main">
+                <span className="bg-main/10 px-2 py-0.5 text-xs font-medium text-main">
                   {category.totalProductsCount} منتج
                 </span>
               )}
@@ -113,7 +117,7 @@ const CategoryNodeItem = ({ category, level }: CategoryNodeItemProps) => {
         </button>
 
         {open && (
-          <div className="border-t border-border bg-muted/20 p-3 lg:p-4">
+          <div className="animate-dialog-content-in border-t border-border bg-muted/20 p-3 lg:p-4">
             <div className="flex flex-col gap-3">
               {hasProducts && (
                 <button
@@ -127,12 +131,16 @@ const CategoryNodeItem = ({ category, level }: CategoryNodeItemProps) => {
                 >
                   <div className="flex items-center gap-2">
                     <Package className="size-4" />
-
                     <span>عرض منتجات {category.title}</span>
                   </div>
 
-                  <span className="text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     {category.productsCount} منتج
+                    <ChevronDown
+                      className={`size-3.5 transition-transform duration-300 ${
+                        showProducts ? "rotate-180" : ""
+                      }`}
+                    />
                   </span>
                 </button>
               )}

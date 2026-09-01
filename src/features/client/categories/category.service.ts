@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 export const getCategoriesForStore = async () => {
   const categories = await prisma.category.findMany({
     orderBy: {
-      title: "asc",
+      title: "desc",
     },
     select: {
       id: true,

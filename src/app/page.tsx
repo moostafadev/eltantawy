@@ -104,7 +104,7 @@ const Page = async () => {
           </Carousel>
 
           <Link href="/products" className="mx-auto">
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="ghost">
               عرض جميع المنتجات
             </Button>
           </Link>

@@ -64,7 +64,7 @@ const Header = ({ isScrolled }: HeaderProps) => {
     <>
       <header
         className={`fixed bottom-0 lg:top-0 border-t border-t-background-second/20 lg:border-b lg:border-b-background-second/20 z-50 flex w-full justify-center bg-background transition-[height,box-shadow] duration-300 ${
-          isScrolled
+          isScrolled && !isMenuOpen
             ? "h-16 shadow-sm bg-background/50 backdrop-blur-sm"
             : "h-20"
         }`}
