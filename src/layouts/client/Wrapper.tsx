@@ -19,11 +19,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
       <Header isScrolled={isScrolled} />
 
       <main
-        className={`
-          ${isScrolled ? "mb-16 lg:mb-0 lg:mt-16" : "mb-20 lg:mb-0 lg:mt-20"}
-          flex flex-col items-stretch w-full min-h-[calc(100dvh-5rem)]
-          transition-[margin] duration-300
-        `}
+        className={`${isScrolled ? "mb-16 lg:mb-0 lg:mt-16" : "mb-20 lg:mb-0 lg:mt-20"} flex flex-col items-stretch w-full min-h-[calc(100dvh-5rem)] transition-[margin] duration-300`}
       >
         {children}
       </main>

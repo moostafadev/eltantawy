@@ -9,7 +9,7 @@ const ProductPrice = ({ price, discountPrice }: ProductPriceProps) => {
   const currentPrice = hasDiscount ? discountPrice : price;
 
   return (
-    <div className="flex flex-wrap items-baseline gap-2">
+    <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
       <span className="text-base font-bold text-main">
         {currentPrice.toLocaleString("ar-EG")} ج.م
       </span>

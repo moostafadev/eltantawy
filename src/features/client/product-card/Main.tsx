@@ -8,8 +8,8 @@ import { Button } from "@/components/button";
 import { Card } from "@/components/card";
 import { ProductCardProps } from "./types";
 import ProductPrice from "./ProductPrice";
-import AddToCartDialog from "../cart/AddToCartDialog";
 import { useDialog } from "@/components/dialog";
+import { AddToCartDialog } from "../cart";
 
 const ProductCard = ({ product, className = "" }: ProductCardProps) => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -19,9 +19,8 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
 
   return (
     <Card
-      className={`group relative flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-main/30 hover:shadow-md ${className}`}
+      className={`group relative flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-main/20 hover:shadow-sm ${className}`}
     >
-      {/* Image */}
       <div className="relative aspect-square w-full overflow-hidden bg-muted">
         {product.image ? (
           <Image
@@ -44,7 +43,6 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
             </span>
           )}
 
-        {/* Favorite */}
         <Button
           type="button"
           className="absolute left-2 top-2 size-7 backdrop-blur-sm lg:size-8 flex items-center justify-center rounded-full"
@@ -57,7 +55,6 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
           <Heart className={`size-4 ${isFavorite ? "fill-current" : ""}`} />
         </Button>
 
-        {/* Cart */}
         <Button
           type="button"
           className="absolute bottom-2 left-2 flex size-7 items-center justify-center backdrop-blur-sm transition-all duration-200 lg:size-8"
@@ -77,13 +74,11 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
         </Button>
       </div>
 
-      {/* Content */}
-      <div className="flex flex-1 flex-col gap-1 p-3 lg:gap-2 lg:p-4">
+      <div className="flex flex-1 flex-col gap-1 p-2 lg:gap-2 lg:p-3">
         <div className="min-w-0 flex flex-col gap-0.5 lg:gap-1.5">
           <h3 className="text-base font-semibold transition-colors group-hover:text-main lg:text-lg">
             {product.title}
           </h3>
-
           <span className="block text-xs text-muted-foreground">
             {unitLabel}
           </span>

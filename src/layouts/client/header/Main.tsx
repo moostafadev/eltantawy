@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CircleUserRound,
   ShoppingCart,
@@ -15,6 +15,8 @@ import Navbar from "./Navbar";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/lib/cart/provider";
 import { toArabicNums } from "@/utils/toArabicNums";
+import { registerCartTarget, onCartLanded } from "@/lib/cart/flyToCart";
+import CartFlyLayer from "@/features/client/cart/CartFlyLayer";
 
 interface HeaderProps {
   isScrolled: boolean;
@@ -23,14 +25,29 @@ interface HeaderProps {
 const Header = ({ isScrolled }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cart } = useCart();
-
   const quantity = cart.itemCount;
+
+  const [isBumping, setIsBumping] = useState(false);
+  const cartIconRef = useRef<HTMLAnchorElement | null>(null);
 
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
+  // تسجيل موضع أيقونة السلة كهدف نهاية الطيران
+  useEffect(() => {
+    registerCartTarget(cartIconRef.current);
+    return () => registerCartTarget(null);
+  }, []);
+
+  // لما العنصر "يهبط" على الأيقونة، اعمل نبضة استقبال
+  useEffect(() => {
+    return onCartLanded(() => {
+      setIsBumping(true);
+      window.setTimeout(() => setIsBumping(false), 420);
+    });
+  }, []);
+
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? "hidden" : "";
-
     return () => {
       document.body.style.overflow = "";
     };
@@ -38,18 +55,11 @@ const Header = ({ isScrolled }: HeaderProps) => {
 
   useEffect(() => {
     if (!isMenuOpen) return;
-
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setIsMenuOpen(false);
-      }
+      if (e.key === "Escape") setIsMenuOpen(false);
     };
-
     document.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-    };
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [isMenuOpen]);
 
   return (
@@ -84,23 +94,33 @@ const Header = ({ isScrolled }: HeaderProps) => {
 
           <div className="flex items-center gap-2">
             <Link
+              ref={cartIconRef}
               href="/cart"
               className="-m-2.5 relative flex size-10 lg:size-11 items-center justify-center"
               onClick={() => setIsMenuOpen(false)}
             >
               <ShoppingCart
-                className="text-foreground transition-colors hover:text-main"
+                className={`text-foreground transition-transform duration-300 hover:text-main ${
+                  isBumping
+                    ? "scale-125 -rotate-6 text-main"
+                    : quantity > 0
+                      ? "animate-cart-attention"
+                      : ""
+                }`}
                 size={22}
                 strokeWidth={1.75}
               />
 
               {quantity > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex min-w-4.5 h-4.5 items-center justify-center rounded-full bg-main px-0.5 text-[11px] font-bold text-white shadow-sm ring-2 ring-background animate-cart-badge">
+                <span
+                  key={quantity}
+                  className="absolute -right-0.5 -top-0.5 flex min-w-4.5 h-4.5 items-center justify-center rounded-full bg-main px-0.5 text-[11px] font-bold text-white shadow-sm ring-2 ring-main/30 animate-cart-badge"
+                >
                   {quantity > 99 ? toArabicNums("99+") : toArabicNums(quantity)}
                 </span>
               )}
             </Link>
-            {/* User */}
+
             {isAuthLoading ? (
               <div className="flex size-10 lg:size-11 items-center justify-center">
                 <LoaderCircle
@@ -135,6 +155,7 @@ const Header = ({ isScrolled }: HeaderProps) => {
       </header>
 
       <NavbarMobile isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+      <CartFlyLayer />
     </>
   );
 };

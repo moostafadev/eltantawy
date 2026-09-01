@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import { Check, Minus, Plus, ShoppingCart } from "lucide-react";
+import { useRef, useState } from "react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/button";
 import { useDialog } from "@/components/dialog";
 import { useCart } from "@/lib/cart/provider";
+import { flyToCart } from "@/lib/cart/flyToCart";
 
 import { AddToCartDialogProps } from "./types";
 
@@ -17,8 +17,9 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
 
   const [quantity, setQuantity] = useState(1);
   const [mode, setMode] = useState<"KG" | "HALF_KG">("KG");
-  const [isAdded, setIsAdded] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const addButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const isKg = product.unit === "KG";
 
@@ -47,7 +48,11 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
         unit: product.unit as "KG" | "PIECE",
       });
 
-      setIsAdded(true);
+      // لازم تتنفذ قبل closeDialog عشان تاخد مكان الزرار
+      // قبل ما الـ Dialog يتشال من الـ DOM
+      flyToCart(addButtonRef.current, product.image ?? undefined);
+
+      closeDialog();
     } finally {
       setIsLoading(false);
     }
@@ -81,23 +86,7 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
         </div>
       </div>
 
-      {isAdded && (
-        <div className="flex gap-3 border border-success/20 bg-success/5 p-3">
-          <div className="flex size-9 items-center justify-center rounded-full bg-success/10 text-success">
-            <Check />
-          </div>
-
-          <div>
-            <p className="font-semibold">تمت الإضافة للسلة</p>
-
-            <p className="text-sm text-muted-foreground">
-              يمكنك متابعة التسوق أو الذهاب للسلة
-            </p>
-          </div>
-        </div>
-      )}
-
-      {!isAdded && isKg && (
+      {isKg && (
         <div className="space-y-2">
           <p className="text-sm font-medium">طريقة الإضافة</p>
 
@@ -125,45 +114,43 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
         </div>
       )}
 
-      {!isAdded && (
-        <div className="space-y-2">
-          <p className="text-sm font-medium">الكمية</p>
+      <div className="space-y-2">
+        <p className="text-sm font-medium">الكمية</p>
 
-          <div className="flex items-center justify-center gap-4">
-            <Button
-              type="button"
-              size="icon"
-              variant="soft"
-              color="MAIN"
-              onClick={decrement}
-              disabled={quantity <= step || isLoading}
-            >
-              <Minus />
-            </Button>
+        <div className="flex items-center justify-center gap-4">
+          <Button
+            type="button"
+            size="icon"
+            variant="soft"
+            color="MAIN"
+            onClick={decrement}
+            disabled={quantity <= step || isLoading}
+          >
+            <Minus />
+          </Button>
 
-            <div className="min-w-24 text-center">
-              <strong className="text-2xl">
-                {quantity.toLocaleString("ar-EG")}
-              </strong>
+          <div className="min-w-24 text-center">
+            <strong className="text-2xl">
+              {quantity.toLocaleString("ar-EG")}
+            </strong>
 
-              <span className="mr-1 text-sm text-muted-foreground">
-                {isKg ? "كيلو" : "قطعة"}
-              </span>
-            </div>
-
-            <Button
-              type="button"
-              size="icon"
-              variant="soft"
-              color="MAIN"
-              onClick={increment}
-              disabled={isLoading}
-            >
-              <Plus />
-            </Button>
+            <span className="mr-1 text-sm text-muted-foreground">
+              {isKg ? "كيلو" : "قطعة"}
+            </span>
           </div>
+
+          <Button
+            type="button"
+            size="icon"
+            variant="soft"
+            color="MAIN"
+            onClick={increment}
+            disabled={isLoading}
+          >
+            <Plus />
+          </Button>
         </div>
-      )}
+      </div>
 
       <div className="flex flex-col gap-2 sm:flex-row">
         <Button
@@ -177,26 +164,18 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
           متابعة التسوق
         </Button>
 
-        {!isAdded ? (
-          <Button
-            type="button"
-            className="flex-1"
-            variant="soft"
-            color="SUCCESS"
-            onClick={handleAdd}
-            loading={isLoading}
-          >
-            <ShoppingCart className="size-4" />
-            إضافة للسلة
-          </Button>
-        ) : (
-          <Link href="/cart" onClick={closeDialog} className="flex-1">
-            <Button className="w-full" variant="soft" color="SUCCESS">
-              <ShoppingCart className="size-4" />
-              الذهاب للسلة
-            </Button>
-          </Link>
-        )}
+        <Button
+          ref={addButtonRef}
+          type="button"
+          className="flex-1"
+          variant="soft"
+          color="SUCCESS"
+          onClick={handleAdd}
+          loading={isLoading}
+        >
+          <ShoppingCart className="size-4" />
+          إضافة للسلة
+        </Button>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Store } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/button";
@@ -32,13 +32,26 @@ const CartPage = () => {
         </header>
 
         {cart.items.length === 0 ? (
-          <div className="flex min-h-80 flex-col items-center justify-center">
-            <ShoppingCart className="size-10" />
+          <div className="flex min-h-112 flex-col items-center justify-center gap-5 px-4 text-center lg:gap-6">
+            <div className="flex size-20 items-center justify-center bg-main/10 text-main lg:size-24">
+              <ShoppingCart className="size-9 lg:size-11" strokeWidth={1.5} />
+            </div>
 
-            <h2>السلة فارغة</h2>
+            <div className="flex flex-col gap-1.5">
+              <h2 className="text-lg font-semibold text-foreground lg:text-xl">
+                السلة فارغة
+              </h2>
+
+              <p className="text-sm text-muted-foreground">
+                لسه مضفتش أي منتجات، تصفح المتجر وابدأ تسوقك دلوقتي
+              </p>
+            </div>
 
             <Link href="/">
-              <Button>اضف المنتجات</Button>
+              <Button color="MAIN" className="mt-1 gap-2">
+                <Store className="size-4" />
+                تصفح المنتجات
+              </Button>
             </Link>
           </div>
         ) : (
