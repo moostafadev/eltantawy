@@ -15,6 +15,8 @@ const ProductsPage = async () => {
       price: true,
       discountPrice: true,
       unit: true,
+      saleType: true,
+      weightOptions: true,
     },
   });
 

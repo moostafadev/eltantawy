@@ -29,6 +29,8 @@ export const getCategoriesForStore = async () => {
           price: true,
           discountPrice: true,
           unit: true,
+          saleType: true,
+          weightOptions: true,
         },
       },
     },

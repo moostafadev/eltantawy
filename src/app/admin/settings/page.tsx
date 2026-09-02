@@ -14,7 +14,7 @@ const settingsSections = [
     description: "إدارة كوبونات الخصم وخصومات العملاء",
     href: "/admin/settings/discounts",
     icon: Percent,
-    isActive: false,
+    isActive: true,
   },
 ];
 

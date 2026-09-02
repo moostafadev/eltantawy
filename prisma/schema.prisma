@@ -22,6 +22,17 @@ enum ProductSaleType {
   WEIGHT_RANGE
 }
 
+enum DiscountType {
+  COUPON
+  ALL_CUSTOMERS
+  REGISTERED_ONLY
+}
+
+enum DiscountValueType {
+  PERCENTAGE
+  FIXED
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -109,6 +120,31 @@ model DeliveryZone {
   parentId String?        @db.ObjectId
   parent   DeliveryZone?  @relation("DeliveryZoneHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children DeliveryZone[] @relation("DeliveryZoneHierarchy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Discount {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  type DiscountType
+
+  code String? @unique
+
+  valueType DiscountValueType
+  value     Float
+
+  minOrderAmount    Float?
+  maxDiscountAmount Float?
+
+  usageLimit Int?
+  usageCount Int @default(0)
+
+  startDate DateTime?
+  endDate   DateTime?
+
+  isActive Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
