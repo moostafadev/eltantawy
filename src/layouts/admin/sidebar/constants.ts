@@ -6,6 +6,7 @@ import {
   Settings,
   ShoppingCart,
   Tags,
+  Truck,
   Users,
 } from "lucide-react";
 import { SidebarItem } from "./types";
@@ -72,7 +73,15 @@ export const sidebarData: SidebarItem[] = [
     link: "/admin/settings",
     title: "الإعدادات",
     icon: Settings,
-    items: [],
-    isActive: false,
+    items: [
+      {
+        link: "/admin/settings/delivery",
+        title: "مناطق التوصيل",
+        icon: Truck,
+        items: [],
+        isActive: true,
+      },
+    ],
+    isActive: true,
   },
 ];
