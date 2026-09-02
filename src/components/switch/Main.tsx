@@ -9,6 +9,23 @@ import {
 
 import { IProps } from "./types";
 
+/**
+ * Toggle switch with two usage modes:
+ *
+ * 1. **Controlled** (no `name`, or `checked` is passed): plain on/off
+ *    toggle driven by `checked` / `onCheckedChange`.
+ * 2. **Form-connected** (`name` is passed, `checked` omitted): reads and
+ *    writes a boolean field through `react-hook-form`. Must be used
+ *    inside a `<Form>` in this mode.
+ *
+ * @example
+ * // Controlled
+ * <Switch checked={useImageUpload} onCheckedChange={setUseImageUpload} label="Upload method" />
+ *
+ * @example
+ * // Form-connected
+ * <Switch<ProductForm> name="isActive" label="Active" />
+ */
 const Switch = <T extends FieldValues>({
   name,
   label,

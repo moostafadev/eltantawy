@@ -4,6 +4,13 @@ interface Props extends HTMLAttributes<SVGElement> {
   size?: number | string;
 }
 
+/**
+ * Spinning loading indicator (SVG). Used inside `Button` when `loading`
+ * is true, and standalone on route `loading.tsx` pages.
+ *
+ * @example
+ * <Spin size={32} className="text-main" />
+ */
 const Spin = ({ size = 24, className = "", ...props }: Props) => {
   return (
     <svg

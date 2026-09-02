@@ -18,6 +18,10 @@ interface Props {
   children: ReactNode;
 }
 
+/**
+ * Global dialog provider. Mount once near the root of the app so any
+ * descendant component can open a dialog via `useDialog()`.
+ */
 const DialogProvider = ({ children }: Props) => {
   const [dialog, setDialog] = useState<DialogOptions | null>(null);
   const [closing, setClosing] = useState(false);
@@ -53,6 +57,18 @@ const DialogProvider = ({ children }: Props) => {
   );
 };
 
+/**
+ * Hook to open/close the global dialog. Must be used inside `DialogProvider`.
+ *
+ * @example
+ * const { openDialog, closeDialog } = useDialog();
+ *
+ * openDialog({
+ *   title: "Confirm delete",
+ *   size: "md",
+ *   children: <ConfirmDeleteDialog onCancel={closeDialog} />,
+ * });
+ */
 export const useDialog = () => {
   const context = useContext(DialogContext);
 

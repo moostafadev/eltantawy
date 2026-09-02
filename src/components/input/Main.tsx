@@ -15,6 +15,17 @@ import {
   sanitizePhoneNumber,
 } from "./lib";
 
+/**
+ * `react-hook-form`-connected text input. Must be used inside a `<Form>`.
+ *
+ * - `type="password"` adds a show/hide toggle button.
+ * - `type="tel"` strips non-digit characters as the user types.
+ * - `type="number"` renders as text internally (see `lib.ts`) and strips
+ *   invalid characters, keeping at most one leading minus and one dot.
+ *
+ * @example
+ * <Input<LoginForm> name="email" label="Email" placeholder="you@mail.com" />
+ */
 const Input = <T extends FieldValues>({
   name,
   label,

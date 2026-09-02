@@ -1,6 +1,13 @@
 import { getColor } from "./lib";
 import { IProps } from "./types";
 
+/**
+ * Pulsing placeholder block used while data is loading. Renders `count`
+ * blocks of `width` × `height` pixels (width defaults to 100%).
+ *
+ * @example
+ * <Skeleton width={120} height={20} color="MAIN" />
+ */
 const Skeleton = ({
   color = "MAIN",
   count = 1,

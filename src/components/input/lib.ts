@@ -16,13 +16,19 @@ export const isNumberType = (type: string) => {
   return type === INPUT_TYPES.NUMBER;
 };
 
+/**
+ * Resolves the native `<input type>` to render.
+ *
+ * Password fields toggle between "password" and "text" via `showPassword`.
+ * Number fields render as "text" instead of the native "number" type to
+ * avoid the browser's built-in validation, which rejects decimal points
+ * on some system locales.
+ */
 export const getInputType = (type: string, showPassword: boolean) => {
   if (isPasswordType(type)) {
     return showPassword ? "text" : "password";
   }
 
-  // نستخدم text بدل number الأصلي عشان نتفادى الـ native validation
-  // بتاع المتصفح اللي بيرفض النقطة العشرية حسب لغة النظام
   if (isNumberType(type)) {
     return "text";
   }
@@ -34,17 +40,18 @@ export const sanitizePhoneNumber = (value: string) => {
   return value.replace(/\D/g, "");
 };
 
+/**
+ * Sanitizes free-typed text for a numeric field: keeps digits, allows a
+ * single leading minus sign, and allows a single decimal point.
+ */
 export const sanitizeNumber = (value: string) => {
-  // اسمح بالأرقام، إشارة سالب في البداية فقط، ونقطة عشرية واحدة فقط
   let sanitized = value.replace(/[^\d.-]/g, "");
 
-  // اسمح بإشارة السالب في البداية فقط
   sanitized =
     sanitized[0] === "-"
       ? "-" + sanitized.slice(1).replace(/-/g, "")
       : sanitized.replace(/-/g, "");
 
-  // اسمح بنقطة عشرية واحدة فقط
   const firstDotIndex = sanitized.indexOf(".");
 
   if (firstDotIndex !== -1) {

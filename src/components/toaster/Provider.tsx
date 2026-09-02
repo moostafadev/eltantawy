@@ -19,6 +19,15 @@ interface ToastProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Global toast provider. Mount once near the root of the app so any
+ * descendant component can push toasts via `useToast()`.
+ *
+ * Timers pause while the user hovers a toast and resume on mouse leave;
+ * a `loading` toast has no timer and must be dismissed manually (e.g. by
+ * calling `toast.success`/`toast.error` after the async task settles,
+ * or `removeToast(id)`).
+ */
 const ToastProvider = ({ children }: ToastProviderProps) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
@@ -182,6 +191,14 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
   );
 };
 
+/**
+ * Hook to push/dismiss toasts. Must be used inside `ToastProvider`.
+ *
+ * @example
+ * const { toast } = useToast();
+ * toast.success("تم الحفظ بنجاح.");
+ * toast.error(result.message);
+ */
 export const useToast = () => {
   const context = useContext(ToastContext);
 

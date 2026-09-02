@@ -6,6 +6,14 @@ import { TableProps } from "./types";
 import { Skeleton } from "@/components/skeleton";
 import Spin from "@/components/icons/Spin";
 
+/**
+ * Generic data table. Columns are described via `TableColumn<T>[]`
+ * (`key`, `title`, optional `render`). Pass `loading` with `loadingRows`
+ * to show skeleton rows instead of `data` while fetching.
+ *
+ * @example
+ * <Table data={products} columns={productsTableColumns} emptyMessage="لا يوجد منتجات" />
+ */
 const Table = <T,>({
   data,
   columns,
@@ -20,7 +28,6 @@ const Table = <T,>({
     >
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-200 border-collapse text-sm">
-          {/* Header */}
           <thead>
             <tr className="bg-background-second/20">
               {columns.map((column) => (
@@ -38,7 +45,6 @@ const Table = <T,>({
             </tr>
           </thead>
 
-          {/* Body */}
           <tbody>
             {loading ? (
               Array.from({ length: loadingRows }).map((_, rowIndex) => (
@@ -100,7 +106,6 @@ const Table = <T,>({
         </table>
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between border-t border-background-second/50 bg-background-second/5 px-2 py-1.5 lg:px-5 lg:py-2.5">
         <div className="mr-auto flex items-center gap-2 text-xs text-foreground/60 lg:text-sm">
           <div className="flex size-7 items-center justify-center bg-main/10 text-main">

@@ -7,6 +7,18 @@ import Spin from "../icons/Spin";
 import { getCardStyles, getColor, getSize } from "./lib";
 import { IProps } from "./types";
 
+/**
+ * Generic button used across the whole app.
+ *
+ * Supports the shared `COLOR` and `BUTTON_VARIANT` palettes, a `loading`
+ * state that swaps children for a spinner, and a `variant="card"` mode
+ * used to render a selectable card-like button (see `selected`).
+ *
+ * @example
+ * <Button color="SUCCESS" variant="soft" loading={isSubmitting}>
+ *   Save
+ * </Button>
+ */
 const Button = forwardRef<HTMLButtonElement, IProps>(
   (
     {

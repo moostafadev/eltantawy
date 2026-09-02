@@ -19,6 +19,12 @@ interface ToasterProps {
   resumeToast: (id: string) => void;
 }
 
+/**
+ * Internal toast list renderer, mounted by `ToastProvider`. Not meant to
+ * be used directly — push toasts through `useToast()` instead.
+ *
+ * Supports swipe-to-dismiss (drag a toast horizontally past ~100px).
+ */
 const Toaster = ({
   toasts,
   removeToast,

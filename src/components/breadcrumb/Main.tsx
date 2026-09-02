@@ -6,6 +6,21 @@ import { ChevronLeft, Home } from "lucide-react";
 import { BreadcrumbProps } from "./types";
 import { usePathname } from "next/navigation";
 
+/**
+ * Breadcrumb navigation trail.
+ *
+ * Renders a home icon followed by the given `items`. The last item is
+ * rendered as bold, non-clickable text (the current page). Any other
+ * item renders as a link when it has an `href`, otherwise as plain text.
+ *
+ * @example
+ * <Breadcrumb
+ *   items={[
+ *     { label: "Categories", href: "/admin/products/categories" },
+ *     { label: "Create category" },
+ *   ]}
+ * />
+ */
 const Breadcrumb = ({ items, className = "" }: BreadcrumbProps) => {
   const pathName = usePathname();
   return (
@@ -14,7 +29,6 @@ const Breadcrumb = ({ items, className = "" }: BreadcrumbProps) => {
       className={`w-full overflow-hidden ${className}`}
     >
       <ol className="flex min-w-0 items-center gap-1.5 text-sm sm:gap-2">
-        {/* Home */}
         <li className="flex shrink-0 items-center">
           <Link
             href={pathName.startsWith("/admin") ? "/admin" : "/"}

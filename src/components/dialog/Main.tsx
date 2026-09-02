@@ -17,6 +17,12 @@ const sizes = {
   xl: "max-w-xl",
 };
 
+/**
+ * Internal dialog view rendered by `DialogProvider`.
+ *
+ * Not meant to be used directly — open dialogs through `useDialog().openDialog(...)`
+ * instead. Closes on `Escape` and on backdrop click.
+ */
 const Dialog = ({
   title,
   children,

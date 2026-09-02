@@ -11,6 +11,19 @@ import { useEffect, useRef, useState } from "react";
 
 import { IProps } from "./types";
 
+/**
+ * `react-hook-form`-connected custom dropdown select. Must be used inside
+ * a `<Form>`. Closes on outside click; use `onValueChange` to react to
+ * selection changes outside the form state (e.g. syncing another field).
+ *
+ * @example
+ * <Select<ProductForm>
+ *   name="categoryId"
+ *   label="Category"
+ *   placeholder="Choose a category"
+ *   options={categoryOptions}
+ * />
+ */
 const Select = <T extends FieldValues>({
   name,
   label,

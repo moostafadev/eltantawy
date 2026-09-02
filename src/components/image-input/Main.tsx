@@ -13,6 +13,17 @@ import {
 import { Button } from "../button";
 import { IProps } from "./types";
 
+/**
+ * `react-hook-form`-connected image field. Uploads the picked file to
+ * `/api/upload/image` (Cloudinary) and stores the returned URL as the
+ * field value. Must be used inside a `<Form>`.
+ *
+ * Validates file type (image only) and max size (5MB) client-side before
+ * uploading.
+ *
+ * @example
+ * <ImageInput<ProductForm> name="image" label="Product image" />
+ */
 const ImageInput = <T extends FieldValues>({
   name,
   label,

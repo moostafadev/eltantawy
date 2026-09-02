@@ -3,6 +3,13 @@
 import { getColor, getSize } from "./lib";
 import { TagProps } from "./types";
 
+/**
+ * Small rounded status/label pill. Uses the shared `COLOR` palette with
+ * `solid` / `soft` / `outline` variants.
+ *
+ * @example
+ * <Tag color="SUCCESS" variant="soft" size="sm">موثق</Tag>
+ */
 const Tag = ({
   children,
   color = "NEUTRAL",
