@@ -17,6 +17,8 @@ import { useCart } from "@/lib/cart/provider";
 import { toArabicNums } from "@/utils/toArabicNums";
 import { registerCartTarget, onCartLanded } from "@/lib/cart/flyToCart";
 import CartFlyLayer from "@/features/client/cart/CartFlyLayer";
+import { Heart } from "lucide-react"; // ضيفها جنب باقي الأيقونات
+import { useFavorites } from "@/lib/favorites/provider";
 
 interface HeaderProps {
   isScrolled: boolean;
@@ -31,6 +33,8 @@ const Header = ({ isScrolled }: HeaderProps) => {
   const cartIconRef = useRef<HTMLAnchorElement | null>(null);
 
   const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { favorites } = useFavorites();
+  const favoritesCount = favorites.count;
 
   useEffect(() => {
     registerCartTarget(cartIconRef.current);
@@ -91,6 +95,25 @@ const Header = ({ isScrolled }: HeaderProps) => {
           <Navbar />
 
           <div className="flex items-center gap-2">
+            <Link
+              href="/favorites"
+              className="-m-2.5 relative flex size-10 lg:size-11 items-center justify-center"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <Heart
+                className="text-foreground transition-colors hover:text-main"
+                size={22}
+                strokeWidth={1.75}
+              />
+
+              {favoritesCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 flex min-w-4.5 h-4.5 items-center justify-center rounded-full bg-main px-0.5 text-[11px] font-bold text-white shadow-sm ring-2 ring-main/30">
+                  {favoritesCount > 99
+                    ? toArabicNums("99+")
+                    : toArabicNums(favoritesCount)}
+                </span>
+              )}
+            </Link>
             <Link
               ref={cartIconRef}
               href="/cart"

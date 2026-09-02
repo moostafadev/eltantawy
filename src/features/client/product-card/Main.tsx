@@ -2,7 +2,6 @@
 
 import { Heart, Package, ShoppingCart } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
 
 import { Button } from "@/components/button";
 import { Card } from "@/components/card";
@@ -10,12 +9,16 @@ import { ProductCardProps } from "./types";
 import ProductPrice from "./ProductPrice";
 import { useDialog } from "@/components/dialog";
 import { AddToCartDialog } from "../cart";
+import { useFavorites } from "@/lib/favorites/provider";
 
 const ProductCard = ({ product, className = "" }: ProductCardProps) => {
-  const [isFavorite, setIsFavorite] = useState(false);
   const { openDialog } = useDialog();
+  const { isFavorite, isItemUpdating, toggleFavorite } = useFavorites();
 
   const unitLabel = product.unit === "KG" ? "كيلو" : "قطعة";
+
+  const favorite = isFavorite(product.id);
+  const isFavoriteLoading = isItemUpdating(product.id);
 
   return (
     <Card
@@ -43,17 +46,18 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
             </span>
           )}
 
-        {/* <Button
+        <Button
           type="button"
-          className="absolute left-2 top-2 size-7 backdrop-blur-sm lg:size-8 flex items-center justify-center rounded-full"
+          className="absolute left-2 top-2 flex size-7 items-center justify-center backdrop-blur-sm lg:size-8"
           size="icon"
-          color="MAIN"
-          variant="ghost"
-          onClick={() => setIsFavorite((prev) => !prev)}
-          aria-label={isFavorite ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
+          color={favorite ? "DANGER" : "MAIN"}
+          variant={favorite ? "soft" : "ghost"}
+          loading={isFavoriteLoading}
+          onClick={() => toggleFavorite(product.id)}
+          aria-label={favorite ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
         >
-          <Heart className={`size-4 ${isFavorite ? "fill-current" : ""}`} />
-        </Button> */}
+          <Heart className={`size-4 ${favorite ? "fill-current" : ""}`} />
+        </Button>
 
         <Button
           type="button"
