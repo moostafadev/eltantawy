@@ -6,6 +6,13 @@ export interface Favorites {
   items: FavoriteItem[];
 }
 
+export interface FavoriteWeightOption {
+  id: string;
+  name: string;
+  minWeight: number;
+  maxWeight: number;
+}
+
 export interface FavoriteProduct {
   id: string;
   title: string;
@@ -13,6 +20,8 @@ export interface FavoriteProduct {
   price: number;
   discountPrice: number | null;
   unit: "KG" | "PIECE";
+  saleType: "NORMAL" | "WEIGHT_RANGE";
+  weightOptions: FavoriteWeightOption[];
 }
 
 export interface HydratedFavorites {

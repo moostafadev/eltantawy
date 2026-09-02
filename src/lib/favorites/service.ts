@@ -93,6 +93,15 @@ export class FavoritesService {
         price: true,
         discountPrice: true,
         unit: true,
+        saleType: true,
+        weightOptions: {
+          select: {
+            id: true,
+            name: true,
+            minWeight: true,
+            maxWeight: true,
+          },
+        },
       },
     });
 
