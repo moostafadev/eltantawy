@@ -1,11 +1,13 @@
 import { BUTTON_VARIANT, COLOR } from "@/constants/types";
 import { TSize } from "./types";
 
+type ColorVariant = Exclude<BUTTON_VARIANT, "card">;
+
 export const getColor = (
   color: COLOR = "NEUTRAL",
-  variant: BUTTON_VARIANT = "solid",
+  variant: ColorVariant = "solid",
 ) => {
-  const colors: Record<COLOR, Record<BUTTON_VARIANT, string>> = {
+  const colors: Record<COLOR, Record<ColorVariant, string>> = {
     MAIN: {
       solid: "bg-main text-main-foreground hover:bg-main/90",
       soft: "bg-main/10 text-main hover:bg-main/15",
@@ -58,6 +60,12 @@ export const getColor = (
   };
 
   return colors[color]?.[variant] ?? colors.NEUTRAL.solid;
+};
+
+export const getCardStyles = (selected: boolean) => {
+  return selected
+    ? "border-main bg-main/5 shadow-sm text-main"
+    : "border-border bg-background text-foreground hover:border-main/40 hover:bg-main/5";
 };
 
 export const getSize = (size: TSize) => {

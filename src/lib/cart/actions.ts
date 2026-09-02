@@ -10,6 +10,8 @@ export async function addToCartAction(data: {
   qty: number;
 
   unit: CartUnit;
+
+  weightOptionId?: string;
 }) {
   return CartService.addItem(data);
 }
@@ -20,6 +22,8 @@ export async function updateCartItemAction(data: {
   unit: CartUnit;
 
   qty: number;
+
+  weightOptionId?: string;
 }) {
   return CartService.updateItem(data);
 }
@@ -28,8 +32,10 @@ export async function removeFromCartAction(data: {
   productId: string;
 
   unit: CartUnit;
+
+  weightOptionId?: string;
 }) {
-  return CartService.removeItem(data.productId, data.unit);
+  return CartService.removeItem(data.productId, data.unit, data.weightOptionId);
 }
 
 export async function clearCartAction() {

@@ -31,11 +31,20 @@ export const getOneProduct = async (id: string) => {
       price: true,
       discountPrice: true,
       unit: true,
+      saleType: true,
       categoryId: true,
       category: {
         select: {
           id: true,
           title: true,
+        },
+      },
+      weightOptions: {
+        select: {
+          id: true,
+          name: true,
+          minWeight: true,
+          maxWeight: true,
         },
       },
       createdAt: true,

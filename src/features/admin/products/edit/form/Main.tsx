@@ -2,7 +2,8 @@
 
 import { memo, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UseFormReturn } from "react-hook-form";
+import { UseFormReturn, useFieldArray, useFormContext } from "react-hook-form";
+import { Plus, X } from "lucide-react";
 
 import { Button } from "@/components/button";
 import { Form } from "@/components/form";
@@ -15,6 +16,89 @@ import { useToast } from "@/components/toaster";
 import { editProductSchema } from "./schema";
 import { EditProductFormValues, IProps } from "../types";
 import { editProductAction } from "./editProduct.service";
+
+const WeightOptionsFields = () => {
+  const { control, watch } = useFormContext<EditProductFormValues>();
+
+  const saleType = watch("saleType");
+
+  const { fields, append, remove } = useFieldArray<EditProductFormValues>({
+    control,
+    name: "weightOptions",
+  });
+
+  if (saleType !== "WEIGHT_RANGE") return null;
+
+  return (
+    <div className="flex flex-col gap-3 border border-background-second p-3">
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-medium">خيارات الوزن</p>
+
+        <Button
+          type="button"
+          size="sm"
+          color="INFO"
+          variant="soft"
+          onClick={() => append({ name: "", minWeight: "", maxWeight: "" })}
+        >
+          <Plus className="size-4" />
+          <span>إضافة خيار</span>
+        </Button>
+      </div>
+
+      {fields.length === 0 && (
+        <p className="text-xs text-muted-foreground">
+          لا توجد خيارات وزن، قم بإضافة خيار واحد على الأقل
+        </p>
+      )}
+
+      {fields.map((field, index) => (
+        <div
+          key={field.id}
+          className="flex flex-col gap-2 border border-background-second/60 p-2"
+        >
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-medium text-muted-foreground">
+              خيار {index + 1}
+            </p>
+
+            <Button
+              type="button"
+              size="icon"
+              color="DANGER"
+              variant="outline"
+              onClick={() => remove(index)}
+            >
+              <X className="size-4" />
+            </Button>
+          </div>
+
+          <Input<EditProductFormValues>
+            name={`weightOptions.${index}.name`}
+            label="اسم الخيار"
+            placeholder="مثال: نصف كيلو"
+          />
+
+          <div className="grid grid-cols-2 gap-2">
+            <Input<EditProductFormValues>
+              name={`weightOptions.${index}.minWeight`}
+              label="الوزن الأدنى (كجم)"
+              type="number"
+              placeholder="مثال: 0.5"
+            />
+
+            <Input<EditProductFormValues>
+              name={`weightOptions.${index}.maxWeight`}
+              label="الوزن الأعلى (كجم)"
+              type="number"
+              placeholder="مثال: 1"
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const EditProductForm = ({ product, categories }: IProps) => {
   const { toast } = useToast();
@@ -45,6 +129,13 @@ const EditProductForm = ({ product, categories }: IProps) => {
       product.discountPrice !== null ? String(product.discountPrice) : "",
     unit: product.unit,
     categoryId: product.categoryId ?? "",
+    saleType: product.saleType,
+    weightOptions: product.weightOptions.map((option) => ({
+      id: option.id,
+      name: option.name,
+      minWeight: option.minWeight,
+      maxWeight: option.maxWeight,
+    })),
   };
 
   const handleSubmit = async (values: EditProductFormValues) => {
@@ -136,16 +227,22 @@ const EditProductForm = ({ product, categories }: IProps) => {
         label="الوحدة"
         placeholder="اختر الوحدة"
         options={[
-          {
-            value: "KG",
-            label: "كيلوجرام",
-          },
-          {
-            value: "PIECE",
-            label: "قطعة",
-          },
+          { value: "KG", label: "كيلوجرام" },
+          { value: "PIECE", label: "قطعة" },
         ]}
       />
+
+      <Select<EditProductFormValues>
+        name="saleType"
+        label="نوع البيع"
+        placeholder="اختر نوع البيع"
+        options={[
+          { value: "NORMAL", label: "عادي" },
+          { value: "WEIGHT_RANGE", label: "نطاق وزن" },
+        ]}
+      />
+
+      <WeightOptionsFields />
 
       <Button
         type="submit"

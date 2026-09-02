@@ -100,6 +100,11 @@ const Product = async ({ params }: ProductProps) => {
             />
 
             <ProductItem
+              label="نوع البيع"
+              value={product.saleType === "WEIGHT_RANGE" ? "نطاق وزن" : "عادي"}
+            />
+
+            <ProductItem
               label="تاريخ الإنشاء"
               value={new Date(product.createdAt).toLocaleDateString("ar-EG")}
             />
@@ -111,6 +116,37 @@ const Product = async ({ params }: ProductProps) => {
                 {product.desc || "لا يوجد وصف للمنتج"}
               </p>
             </div>
+
+            {product.saleType === "WEIGHT_RANGE" && (
+              <div className="flex flex-col gap-2 border-b border-background-second/60 p-3 sm:col-span-2 lg:gap-2.5 lg:p-4">
+                <p className="text-xs font-medium text-muted-foreground">
+                  خيارات الوزن
+                </p>
+
+                {product.weightOptions.length === 0 ? (
+                  <p className="text-sm font-medium text-foreground">
+                    لا توجد خيارات وزن
+                  </p>
+                ) : (
+                  <div className="flex flex-col gap-2">
+                    {product.weightOptions.map((option) => (
+                      <div
+                        key={option.id}
+                        className="flex flex-wrap items-center justify-between gap-2 border border-background-second/60 p-2"
+                      >
+                        <span className="text-sm font-medium text-foreground">
+                          {option.name}
+                        </span>
+
+                        <span className="text-xs text-muted-foreground">
+                          من {option.minWeight} كجم إلى {option.maxWeight} كجم
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
 

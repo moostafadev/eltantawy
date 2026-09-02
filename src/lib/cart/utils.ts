@@ -4,8 +4,14 @@ export const EMPTY_CART = (): Cart => ({
   items: [],
 });
 
-export const getCartItemKey = (productId: string, unit: CartUnit) => {
-  return `${productId}-${unit}`;
+export const getCartItemKey = (
+  productId: string,
+  unit: CartUnit,
+  weightOptionId?: string,
+) => {
+  return weightOptionId
+    ? `${productId}-${unit}-${weightOptionId}`
+    : `${productId}-${unit}`;
 };
 
 export const parseCart = (value?: string): Cart => {
@@ -46,6 +52,19 @@ const isValidCartItem = (item: unknown): item is CartItem => {
     return false;
   }
 
+  if (
+    value.weightOptionId !== undefined &&
+    (typeof value.weightOptionId !== "string" ||
+      value.weightOptionId.length === 0)
+  ) {
+    return false;
+  }
+
+  // منتجات نطاق الوزن: qty تمثل عدد العبوات، لازم رقم صحيح موجب
+  if (value.weightOptionId) {
+    return Number.isInteger(value.qty);
+  }
+
   if (value.unit === "PIECE" && !Number.isInteger(value.qty)) {
     return false;
   }
@@ -61,10 +80,22 @@ export const serializeCart = (cart: Cart) => {
   return JSON.stringify(cart);
 };
 
+const isSameItem = (
+  current: CartItem,
+  productId: string,
+  unit: CartUnit,
+  weightOptionId?: string,
+) => {
+  return (
+    current.productId === productId &&
+    current.unit === unit &&
+    current.weightOptionId === weightOptionId
+  );
+};
+
 export const addCartItem = (cart: Cart, item: CartItem): Cart => {
-  const exists = cart.items.find(
-    (current) =>
-      current.productId === item.productId && current.unit === item.unit,
+  const exists = cart.items.find((current) =>
+    isSameItem(current, item.productId, item.unit, item.weightOptionId),
   );
 
   if (!exists) {
@@ -75,7 +106,7 @@ export const addCartItem = (cart: Cart, item: CartItem): Cart => {
 
   return {
     items: cart.items.map((current) => {
-      if (current.productId === item.productId && current.unit === item.unit) {
+      if (isSameItem(current, item.productId, item.unit, item.weightOptionId)) {
         return {
           ...current,
 
@@ -93,10 +124,11 @@ export const updateCartItem = (
   productId: string,
   unit: CartUnit,
   qty: number,
+  weightOptionId?: string,
 ): Cart => {
   return {
     items: cart.items.map((item) => {
-      if (item.productId === productId && item.unit === unit) {
+      if (isSameItem(item, productId, unit, weightOptionId)) {
         return {
           ...item,
           qty,
@@ -112,10 +144,11 @@ export const removeCartItem = (
   cart: Cart,
   productId: string,
   unit: CartUnit,
+  weightOptionId?: string,
 ): Cart => {
   return {
     items: cart.items.filter(
-      (item) => !(item.productId === productId && item.unit === unit),
+      (item) => !isSameItem(item, productId, unit, weightOptionId),
     ),
   };
 };

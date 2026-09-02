@@ -14,16 +14,19 @@ interface CartItemProps {
 const CartItem = ({ item }: CartItemProps) => {
   const { updateItem, removeItem, isItemUpdating } = useCart();
 
-  const key = `${item.productId}-${item.unit}`;
+  const key = `${item.productId}-${item.unit}-${item.weightOptionId ?? ""}`;
 
   const isUpdating = isItemUpdating(key);
 
   const isKg = item.unit === "KG";
 
-  const step = isKg ? 0.5 : 1;
+  const isWeightRange = item.isApprox && Boolean(item.weightOption);
+
+  // منتجات نطاق الوزن: الكمية دايمًا عدد عبوات صحيح (خطوة 1)
+  const step = isWeightRange ? 1 : isKg ? 0.5 : 1;
 
   const increment = () => {
-    updateItem(item.productId, item.unit, item.qty + step);
+    updateItem(item.productId, item.unit, item.qty + step, item.weightOptionId);
   };
 
   const decrement = () => {
@@ -31,11 +34,11 @@ const CartItem = ({ item }: CartItemProps) => {
       return;
     }
 
-    updateItem(item.productId, item.unit, item.qty - step);
+    updateItem(item.productId, item.unit, item.qty - step, item.weightOptionId);
   };
 
   const remove = () => {
-    removeItem(item.productId, item.unit);
+    removeItem(item.productId, item.unit, item.weightOptionId);
   };
 
   const hasDiscount =
@@ -68,7 +71,11 @@ const CartItem = ({ item }: CartItemProps) => {
             <h3 className="truncate font-semibold">{item.product.title}</h3>
 
             <p className="mt-1 text-xs text-muted-foreground">
-              {isKg ? "بالكيلو" : "بالقطعة"}
+              {isWeightRange
+                ? item.weightOption!.name
+                : isKg
+                  ? "بالكيلو"
+                  : "بالقطعة"}
             </p>
           </div>
 
@@ -103,7 +110,7 @@ const CartItem = ({ item }: CartItemProps) => {
               {item.qty.toLocaleString("ar-EG")}
 
               <span className="mr-1 text-xs font-normal text-muted-foreground">
-                {isKg ? "كجم" : "قطعة"}
+                {isWeightRange ? "" : isKg ? "كجم" : "قطعة"}
               </span>
             </div>
 
@@ -119,17 +126,30 @@ const CartItem = ({ item }: CartItemProps) => {
             </Button>
           </div>
 
-          <div className="text-left">
-            <p className="font-bold text-main">
-              {item.total.toLocaleString("ar-EG")}
-              ج.م
-            </p>
+          <div className="text-left mr-auto">
+            {isWeightRange ? (
+              <>
+                <p className="font-bold text-main">
+                  {item.minTotal!.toLocaleString("ar-EG")} -{" "}
+                  {item.maxTotal!.toLocaleString("ar-EG")} ج.م
+                </p>
 
-            {hasDiscount && (
-              <p className="text-xs text-muted-foreground line-through">
-                {originalTotal.toLocaleString("ar-EG")}
-                ج.م
-              </p>
+                <p className="text-xs text-muted-foreground">تقريبي</p>
+              </>
+            ) : (
+              <>
+                <p className="font-bold text-main">
+                  {item.total.toLocaleString("ar-EG")}
+                  ج.م
+                </p>
+
+                {hasDiscount && (
+                  <p className="text-xs text-muted-foreground line-through">
+                    {originalTotal.toLocaleString("ar-EG")}
+                    ج.م
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>

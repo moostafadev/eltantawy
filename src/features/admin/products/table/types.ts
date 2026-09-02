@@ -1,4 +1,4 @@
-import { ProductUnit } from "@prisma/client";
+import { ProductUnit, ProductSaleType } from "@prisma/client";
 
 export interface Product {
   id: string;
@@ -8,6 +8,7 @@ export interface Product {
   price: number;
   discountPrice: number | null;
   unit: ProductUnit;
+  saleType: ProductSaleType;
   categoryId: string | null;
   category: {
     id: string;

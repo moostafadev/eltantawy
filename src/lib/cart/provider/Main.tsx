@@ -20,7 +20,10 @@ import { CartUnit, HydratedCart } from "../types";
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-const getKey = (productId: string, unit: CartUnit) => `${productId}-${unit}`;
+const getKey = (productId: string, unit: CartUnit, weightOptionId?: string) =>
+  weightOptionId
+    ? `${productId}-${unit}-${weightOptionId}`
+    : `${productId}-${unit}`;
 
 const CartProvider = ({ children, initialCart }: CartProviderProps) => {
   const [cart, setCart] = useState<HydratedCart>(initialCart);
@@ -41,7 +44,12 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
   }, []);
 
   const addItem = useCallback(
-    async (data: { productId: string; qty: number; unit: CartUnit }) => {
+    async (data: {
+      productId: string;
+      qty: number;
+      unit: CartUnit;
+      weightOptionId?: string;
+    }) => {
       const result = await addToCartAction(data);
 
       syncCart(result);
@@ -50,8 +58,13 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
   );
 
   const updateItem = useCallback(
-    async (productId: string, unit: CartUnit, qty: number) => {
-      const key = getKey(productId, unit);
+    async (
+      productId: string,
+      unit: CartUnit,
+      qty: number,
+      weightOptionId?: string,
+    ) => {
+      const key = getKey(productId, unit, weightOptionId);
 
       markUpdating(key, true);
 
@@ -60,6 +73,7 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
           productId,
           unit,
           qty,
+          weightOptionId,
         });
 
         syncCart(result);
@@ -71,8 +85,8 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
   );
 
   const removeItem = useCallback(
-    async (productId: string, unit: CartUnit) => {
-      const key = getKey(productId, unit);
+    async (productId: string, unit: CartUnit, weightOptionId?: string) => {
+      const key = getKey(productId, unit, weightOptionId);
 
       markUpdating(key, true);
 
@@ -80,6 +94,7 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
         const result = await removeFromCartAction({
           productId,
           unit,
+          weightOptionId,
         });
 
         syncCart(result);

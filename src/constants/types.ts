@@ -7,4 +7,4 @@ export type COLOR =
   | "INFO"
   | "NEUTRAL";
 
-export type BUTTON_VARIANT = "solid" | "soft" | "outline" | "ghost";
+export type BUTTON_VARIANT = "solid" | "soft" | "outline" | "ghost" | "card";

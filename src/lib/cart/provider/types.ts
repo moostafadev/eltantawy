@@ -22,9 +22,19 @@ export interface CartContextValue {
     productId: string;
     qty: number;
     unit: CartUnit;
+    weightOptionId?: string;
   }): Promise<void>;
 
-  updateItem(productId: string, unit: CartUnit, qty: number): Promise<void>;
+  updateItem(
+    productId: string,
+    unit: CartUnit,
+    qty: number,
+    weightOptionId?: string,
+  ): Promise<void>;
 
-  removeItem(productId: string, unit: CartUnit): Promise<void>;
+  removeItem(
+    productId: string,
+    unit: CartUnit,
+    weightOptionId?: string,
+  ): Promise<void>;
 }

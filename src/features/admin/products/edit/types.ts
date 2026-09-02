@@ -11,6 +11,13 @@ export interface ProductCategory {
   title: string;
 }
 
+export interface ProductWeightOption {
+  id: string;
+  name: string;
+  minWeight: number;
+  maxWeight: number;
+}
+
 export interface Product {
   id: string;
   title: string;
@@ -19,6 +26,8 @@ export interface Product {
   price: number;
   discountPrice: number | null;
   unit: "KG" | "PIECE";
+  saleType: "NORMAL" | "WEIGHT_RANGE";
+  weightOptions: ProductWeightOption[];
   categoryId: string | null;
   category: ProductCategory | null;
   createdAt: Date;

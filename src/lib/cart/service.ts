@@ -40,9 +40,9 @@ export class CartService {
     qty: number;
 
     unit: CartUnit;
-  }): Promise<HydratedCart> {
-    this.validateQuantity(data.qty, data.unit);
 
+    weightOptionId?: string;
+  }): Promise<HydratedCart> {
     const product = await prisma.product.findUnique({
       where: {
         id: data.productId,
@@ -51,6 +51,12 @@ export class CartService {
       select: {
         id: true,
         unit: true,
+        saleType: true,
+        weightOptions: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
 
@@ -61,6 +67,10 @@ export class CartService {
     if (product.unit !== data.unit) {
       throw new Error("وحدة المنتج غير صحيحة");
     }
+
+    this.validateWeightOption(product, data.weightOptionId);
+
+    this.validateQuantity(data.qty, data.unit, Boolean(data.weightOptionId));
 
     const cart = await this.getCart();
 
@@ -77,13 +87,18 @@ export class CartService {
     unit: CartUnit;
 
     qty: number;
+
+    weightOptionId?: string;
   }): Promise<HydratedCart> {
-    this.validateQuantity(data.qty, data.unit);
+    this.validateQuantity(data.qty, data.unit, Boolean(data.weightOptionId));
 
     const cart = await this.getCart();
 
     const exists = cart.items.some(
-      (item) => item.productId === data.productId && item.unit === data.unit,
+      (item) =>
+        item.productId === data.productId &&
+        item.unit === data.unit &&
+        item.weightOptionId === data.weightOptionId,
     );
 
     if (!exists) {
@@ -95,6 +110,7 @@ export class CartService {
       data.productId,
       data.unit,
       data.qty,
+      data.weightOptionId,
     );
 
     await this.saveCart(updatedCart);
@@ -105,10 +121,11 @@ export class CartService {
   static async removeItem(
     productId: string,
     unit: CartUnit,
+    weightOptionId?: string,
   ): Promise<HydratedCart> {
     const cart = await this.getCart();
 
-    const updatedCart = removeCartItem(cart, productId, unit);
+    const updatedCart = removeCartItem(cart, productId, unit, weightOptionId);
 
     await this.saveCart(updatedCart);
 
@@ -144,6 +161,15 @@ export class CartService {
         price: true,
         discountPrice: true,
         unit: true,
+        saleType: true,
+        weightOptions: {
+          select: {
+            id: true,
+            name: true,
+            minWeight: true,
+            maxWeight: true,
+          },
+        },
       },
     });
 
@@ -158,23 +184,69 @@ export class CartService {
         continue;
       }
 
-      const price =
+      const unitPrice =
         product.discountPrice !== null && product.discountPrice < product.price
           ? product.discountPrice
           : product.price;
 
-      items.push({
-        ...item,
+      const weightOption = item.weightOptionId
+        ? product.weightOptions.find(
+            (option) => option.id === item.weightOptionId,
+          )
+        : undefined;
 
-        product: {
-          ...product,
-          unit: product.unit as CartUnit,
-        },
+      const isApprox =
+        product.saleType === "WEIGHT_RANGE" && Boolean(weightOption);
 
-        price,
+      const baseProduct = {
+        id: product.id,
+        title: product.title,
+        image: product.image,
+        price: product.price,
+        discountPrice: product.discountPrice,
+        unit: product.unit as CartUnit,
+        saleType: product.saleType,
+      };
 
-        total: price * item.qty,
-      });
+      if (isApprox && weightOption) {
+        const avgWeight = (weightOption.minWeight + weightOption.maxWeight) / 2;
+
+        const minTotal = unitPrice * weightOption.minWeight * item.qty;
+        const maxTotal = unitPrice * weightOption.maxWeight * item.qty;
+        const avgTotal = unitPrice * avgWeight * item.qty;
+
+        items.push({
+          ...item,
+
+          product: baseProduct,
+
+          price: unitPrice,
+
+          total: avgTotal,
+
+          isApprox: true,
+
+          weightOption,
+
+          minTotal,
+
+          maxTotal,
+        });
+      } else {
+        const total = unitPrice * item.qty;
+
+        items.push({
+          ...item,
+
+          product: baseProduct,
+
+          price: unitPrice,
+
+          total,
+
+          isApprox: false,
+        });
+      }
     }
 
     if (!items.length) {
@@ -182,16 +254,33 @@ export class CartService {
     }
 
     const subtotal = items.reduce(
-      (sum, item) => sum + item.product.price * item.qty,
+      (sum, item) =>
+        sum + item.product.price * item.qty * this.weightMultiplier(item),
       0,
     );
 
     const discount = items.reduce(
-      (sum, item) => sum + (item.product.price - item.price) * item.qty,
+      (sum, item) =>
+        sum +
+        (item.product.price - item.price) *
+          item.qty *
+          this.weightMultiplier(item),
+      0,
+    );
+
+    const minTotal = items.reduce(
+      (sum, item) => sum + (item.isApprox ? item.minTotal! : item.total),
+      0,
+    );
+
+    const maxTotal = items.reduce(
+      (sum, item) => sum + (item.isApprox ? item.maxTotal! : item.total),
       0,
     );
 
     const deliveryFee = CART_DELIVERY_FEE;
+
+    const hasApproxItems = items.some((item) => item.isApprox);
 
     return {
       items,
@@ -207,7 +296,25 @@ export class CartService {
       itemCount: items.length,
 
       quantity: items.reduce((sum, item) => sum + item.qty, 0),
+
+      hasApproxItems,
+
+      minTotal: minTotal + deliveryFee,
+
+      maxTotal: maxTotal + deliveryFee,
     };
+  }
+
+  /**
+   * لعناصر نطاق الوزن: بنستخدم متوسط الوزن كمضاعف لحساب الـ subtotal/discount
+   * لعناصر البيع العادي: المضاعف 1 (بدون تأثير)
+   */
+  private static weightMultiplier(item: CartItemWithProduct) {
+    if (!item.isApprox || !item.weightOption) {
+      return 1;
+    }
+
+    return (item.weightOption.minWeight + item.weightOption.maxWeight) / 2;
   }
 
   private static emptyCart(): HydratedCart {
@@ -225,12 +332,49 @@ export class CartService {
       itemCount: 0,
 
       quantity: 0,
+
+      hasApproxItems: false,
+
+      minTotal: 0,
+
+      maxTotal: 0,
     };
   }
 
-  private static validateQuantity(qty: number, unit: CartUnit) {
+  private static validateWeightOption(
+    product: { saleType: string; weightOptions: { id: string }[] },
+    weightOptionId?: string,
+  ) {
+    if (product.saleType === "WEIGHT_RANGE") {
+      if (!weightOptionId) {
+        throw new Error("يجب اختيار خيار الوزن");
+      }
+
+      const exists = product.weightOptions.some(
+        (option) => option.id === weightOptionId,
+      );
+
+      if (!exists) {
+        throw new Error("خيار الوزن غير صحيح");
+      }
+    }
+  }
+
+  private static validateQuantity(
+    qty: number,
+    unit: CartUnit,
+    isWeightRange: boolean,
+  ) {
     if (!Number.isFinite(qty) || qty <= 0) {
       throw new Error("الكمية غير صحيحة");
+    }
+
+    if (isWeightRange) {
+      if (!Number.isInteger(qty)) {
+        throw new Error("عدد العبوات يجب أن يكون رقم صحيح");
+      }
+
+      return;
     }
 
     if (unit === "PIECE" && !Number.isInteger(qty)) {

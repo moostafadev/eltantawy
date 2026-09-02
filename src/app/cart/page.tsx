@@ -5,8 +5,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/button";
 import { CartItem, CartSummary } from "@/features/client/cart";
-
 import { useCart } from "@/lib/cart/provider";
+import { getCartItemKey } from "@/lib/cart/utils";
 
 const CartPage = () => {
   const { cart } = useCart();
@@ -47,7 +47,11 @@ const CartPage = () => {
               <section className="border border-border px-3 lg:px-4 bg-background h-fit">
                 {cart.items.map((item) => (
                   <CartItem
-                    key={`${item.productId}-${item.unit}`}
+                    key={getCartItemKey(
+                      item.productId,
+                      item.unit,
+                      item.weightOptionId,
+                    )}
                     item={item}
                   />
                 ))}

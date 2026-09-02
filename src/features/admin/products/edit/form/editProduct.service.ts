@@ -16,8 +16,17 @@ export const editProductAction = async (id: string, values: unknown) => {
     };
   }
 
-  const { title, desc, image, price, discountPrice, unit, categoryId } =
-    result.data;
+  const {
+    title,
+    desc,
+    image,
+    price,
+    discountPrice,
+    unit,
+    categoryId,
+    saleType,
+    weightOptions,
+  } = result.data;
 
   try {
     const product = await prisma.product.findUnique({
@@ -69,6 +78,18 @@ export const editProductAction = async (id: string, values: unknown) => {
             : discountPrice,
         unit,
         categoryId: categoryId || null,
+        saleType,
+        weightOptions: {
+          deleteMany: {},
+          create:
+            saleType === "WEIGHT_RANGE" && weightOptions?.length
+              ? weightOptions.map((option) => ({
+                  name: option.name,
+                  minWeight: option.minWeight,
+                  maxWeight: option.maxWeight,
+                }))
+              : [],
+        },
       },
     });
 

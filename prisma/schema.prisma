@@ -17,6 +17,11 @@ enum ProductUnit {
   PIECE
 }
 
+enum ProductSaleType {
+  NORMAL
+  WEIGHT_RANGE
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -56,20 +61,39 @@ model Category {
 }
 
 model Product {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  title         String
-  desc          String?
-  image         String?
+  title String
+  desc String?
+  image String?
 
-  price         Float
+  price Float
   discountPrice Float?
 
-  unit          ProductUnit
+  unit ProductUnit
 
-  categoryId    String?   @db.ObjectId
-  category      Category? @relation(fields: [categoryId], references: [id])
+  saleType ProductSaleType @default(NORMAL)
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  weightOptions ProductWeightOption[]
+
+  categoryId String? @db.ObjectId
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductWeightOption {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  productId String @db.ObjectId
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  name String
+
+  minWeight Float
+  maxWeight Float
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

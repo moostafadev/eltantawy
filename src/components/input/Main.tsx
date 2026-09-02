@@ -8,8 +8,10 @@ import { Button } from "../button";
 import { IProps } from "./types";
 import {
   getInputType,
+  isNumberType,
   isPasswordType,
   isPhoneType,
+  sanitizeNumber,
   sanitizePhoneNumber,
 } from "./lib";
 
@@ -40,6 +42,7 @@ const Input = <T extends FieldValues>({
 
   const isPassword = isPasswordType(type);
   const isPhone = isPhoneType(type);
+  const isNumber = isNumberType(type);
 
   const inputType = getInputType(type, showPassword);
 
@@ -48,6 +51,8 @@ const Input = <T extends FieldValues>({
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (isPhone) {
       event.target.value = sanitizePhoneNumber(event.target.value);
+    } else if (isNumber) {
+      event.target.value = sanitizeNumber(event.target.value);
     }
 
     onChange(event);
@@ -71,7 +76,8 @@ const Input = <T extends FieldValues>({
           id={name}
           type={inputType}
           placeholder={placeholder}
-          inputMode={isPhone ? "numeric" : undefined}
+          inputMode={isPhone || isNumber ? "decimal" : undefined}
+          autoComplete={isNumber ? "off" : undefined}
           className={`relative w-full border border-main/20 bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-all duration-200 focus:border-main/60 focus:shadow-md focus:ring-2 focus:ring-main/15 disabled:cursor-not-allowed disabled:opacity-50 ${isPassword ? "pl-11" : "px-3"} `}
           {...registerProps}
           onChange={handleChange}

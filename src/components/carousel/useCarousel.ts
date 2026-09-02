@@ -1,6 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { toLogicalScrollLeft, toNativeScrollLeft } from "./rtlScroll";
 
 interface UseCarouselProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -24,6 +26,16 @@ export const useCarousel = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleItems, setVisibleItems] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+
+  // بنستخدمهم عشان نتجاهل حدث الـ scroll الجاي من كود عندنا (زرار/أوتوبلاي)
+  // ونستنى بس الـ scroll الجاي فعليًا من سحب المستخدم يدويًا.
+  const isProgrammaticScroll = useRef(false);
+  const programmaticScrollTimeout = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+  const scrollDebounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   const maxIndex = Math.max(0, totalItems - visibleItems);
   const totalMoves = maxIndex + 1;
@@ -85,6 +97,23 @@ export const useCarousel = ({
     return () => cancelAnimationFrame(frame);
   }, [children, updateCarousel]);
 
+  /**
+   * مسافة عنصر واحد (عرض العنصر + الفراغ بينه وبين اللي بعده).
+   * كل العناصر بنفس العرض (flex-basis ثابتة)، فالاعتماد على أول عنصر كافي.
+   */
+  const getItemStep = useCallback((container: HTMLElement) => {
+    const items = Array.from(container.children) as HTMLElement[];
+
+    const firstItem = items[0];
+
+    if (!firstItem) return 0;
+
+    const styles = getComputedStyle(container);
+    const gap = parseFloat(styles.columnGap || styles.gap || "0");
+
+    return firstItem.getBoundingClientRect().width + gap;
+  }, []);
+
   const scrollToIndex = useCallback(
     (index: number) => {
       const container = containerRef.current;
@@ -111,26 +140,31 @@ export const useCarousel = ({
 
       if (nextIndex === currentIndex) return;
 
-      const currentItem = items[currentIndex];
+      const step = getItemStep(container);
 
-      if (!currentItem) return;
+      // بنحسب موضع مطلق (مش نسبي) عشان نتفادى تراكم الأخطاء
+      // لو المستخدم ضغط زرار قبل ما الأنيميشن اللي قبله يخلص.
+      const targetLogicalOffset = nextIndex * step;
 
-      const styles = getComputedStyle(container);
-      const gap = parseFloat(styles.columnGap || styles.gap || "0");
+      isProgrammaticScroll.current = true;
 
-      const itemWidth = currentItem.getBoundingClientRect().width;
-      const distance = itemWidth + gap;
+      if (programmaticScrollTimeout.current) {
+        clearTimeout(programmaticScrollTimeout.current);
+      }
 
-      const isMovingNext = nextIndex > currentIndex;
-
-      container.scrollBy({
-        left: isMovingNext ? -distance : distance,
+      container.scrollTo({
+        left: toNativeScrollLeft(container, targetLogicalOffset),
         behavior: "smooth",
       });
 
+      // fallback للمتصفحات اللي مش بتدعم حدث "scrollend"
+      programmaticScrollTimeout.current = setTimeout(() => {
+        isProgrammaticScroll.current = false;
+      }, 600);
+
       setCurrentIndex(nextIndex);
     },
-    [containerRef, currentIndex, visibleItems, loop],
+    [containerRef, currentIndex, visibleItems, loop, getItemStep],
   );
 
   const scrollNext = useCallback(() => {
@@ -144,6 +178,67 @@ export const useCarousel = ({
 
     scrollToIndex(currentIndex - 1);
   }, [currentIndex, loop, scrollToIndex]);
+
+  /*
+   * تتبّع سحب المستخدم اليدوي (touch/trackpad) وتحديث currentIndex
+   * تبعًا لموضع السكرول الفعلي، مش بس تبعًا لضغط الأزرار أو الأوتوبلاي.
+   */
+  useEffect(() => {
+    const container = containerRef.current;
+
+    if (!container) return;
+
+    const handleScroll = () => {
+      // تجاهل الأحداث الناتجة عن سكرول برمجي (زرار/أوتوبلاي)
+      if (isProgrammaticScroll.current) return;
+
+      if (scrollDebounceTimeout.current) {
+        clearTimeout(scrollDebounceTimeout.current);
+      }
+
+      scrollDebounceTimeout.current = setTimeout(() => {
+        const step = getItemStep(container);
+
+        if (!step) return;
+
+        const logicalOffset = toLogicalScrollLeft(container);
+
+        const nearestIndex = Math.round(logicalOffset / step);
+
+        const max = Math.max(0, totalItems - visibleItems);
+
+        setCurrentIndex(Math.max(0, Math.min(nearestIndex, max)));
+      }, 120);
+    };
+
+    const handleScrollEnd = () => {
+      isProgrammaticScroll.current = false;
+
+      if (programmaticScrollTimeout.current) {
+        clearTimeout(programmaticScrollTimeout.current);
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+
+    // "scrollend" مش مدعوم في كل المتصفحات (زي Safari القديم)،
+    // لكن لو موجود بيدينا دقة أعلى؛ وإلا هنعتمد على الـ fallback timeout
+    // الموجود جوه scrollToIndex.
+    container.addEventListener("scrollend", handleScrollEnd);
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      container.removeEventListener("scrollend", handleScrollEnd);
+
+      if (scrollDebounceTimeout.current) {
+        clearTimeout(scrollDebounceTimeout.current);
+      }
+
+      if (programmaticScrollTimeout.current) {
+        clearTimeout(programmaticScrollTimeout.current);
+      }
+    };
+  }, [containerRef, getItemStep, totalItems, visibleItems]);
 
   useEffect(() => {
     if (!autoPlay) return;

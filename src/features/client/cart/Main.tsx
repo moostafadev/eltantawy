@@ -13,7 +13,15 @@ const CartSummary = () => {
 
   const { cart, isUpdating } = useCart();
 
-  const { subtotal, discount, deliveryFee, total } = cart;
+  const {
+    subtotal,
+    discount,
+    deliveryFee,
+    total,
+    hasApproxItems,
+    minTotal,
+    maxTotal,
+  } = cart;
 
   return (
     <aside className="flex h-fit flex-col gap-3 border border-border bg-background p-3 lg:gap-4 lg:p-4 lg:sticky lg:top-20">
@@ -67,6 +75,12 @@ const CartSummary = () => {
 
             {isUpdating ? (
               <Skeleton width={100} height={25} />
+            ) : hasApproxItems ? (
+              <strong className="text-lg text-main">
+                {minTotal.toLocaleString("ar-EG")} -{" "}
+                {maxTotal.toLocaleString("ar-EG")}
+                ج.م
+              </strong>
             ) : (
               <strong className="text-xl text-main">
                 {total.toLocaleString("ar-EG")}
@@ -74,6 +88,12 @@ const CartSummary = () => {
               </strong>
             )}
           </div>
+
+          {hasApproxItems && !isUpdating && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              الإجمالي تقريبي، بيتحدد بدقة حسب الوزن الفعلي وقت التسليم
+            </p>
+          )}
         </div>
       </div>
 

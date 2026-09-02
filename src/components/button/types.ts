@@ -10,4 +10,5 @@ export interface IProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: BUTTON_VARIANT;
   size?: TSize;
   loading?: boolean;
+  selected?: boolean;
 }

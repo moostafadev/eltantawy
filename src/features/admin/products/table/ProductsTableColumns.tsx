@@ -56,6 +56,16 @@ export const productsTableColumns: TableColumn<Product>[] = [
   },
 
   {
+    key: "saleType",
+    title: <div className="flex justify-center">نوع البيع</div>,
+    render: (product) => (
+      <span className="flex justify-center">
+        {product.saleType === "WEIGHT_RANGE" ? "نطاق وزن" : "عادي"}
+      </span>
+    ),
+  },
+
+  {
     key: "createdAt",
     title: <div className="flex justify-end">تاريخ الإنشاء</div>,
     render: (product) => (

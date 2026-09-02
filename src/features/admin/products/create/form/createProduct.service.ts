@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+
 import { createProductSchema } from "./schema";
 
 export const createProductAction = async (values: unknown) => {
@@ -15,8 +16,17 @@ export const createProductAction = async (values: unknown) => {
     };
   }
 
-  const { title, desc, image, price, discountPrice, unit, categoryId } =
-    result.data;
+  const {
+    title,
+    desc,
+    image,
+    price,
+    discountPrice,
+    unit,
+    categoryId,
+    saleType,
+    weightOptions,
+  } = result.data;
 
   try {
     if (categoryId) {
@@ -46,6 +56,17 @@ export const createProductAction = async (values: unknown) => {
         discountPrice: discountPrice ? Number(discountPrice) : null,
         unit,
         categoryId: categoryId || null,
+        saleType,
+        weightOptions:
+          saleType === "WEIGHT_RANGE" && weightOptions?.length
+            ? {
+                create: weightOptions.map((option) => ({
+                  name: option.name,
+                  minWeight: Number(option.minWeight),
+                  maxWeight: Number(option.maxWeight),
+                })),
+              }
+            : undefined,
       },
     });
 
