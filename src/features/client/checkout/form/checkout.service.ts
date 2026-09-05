@@ -7,6 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { verifyAccessToken } from "@/lib/auth";
 import { CartService } from "@/lib/cart/service";
 import { withOrderNumberRetry } from "@/lib/order/generateOrderNumber";
+import { resend } from "@/lib/resend";
+import { orderConfirmationEmail } from "@/lib/emails/order-confirmation-email";
 
 import { checkoutSchema } from "../schema";
 
@@ -68,6 +70,33 @@ export const createOrderAction = async (values: unknown) => {
       };
     }
 
+    const currentUser = await getCurrentUser();
+
+    /*
+     * ================================
+     * منع الطلب برقم هاتف مسجل لحساب مستخدم آخر
+     * ================================
+     *
+     * لو الرقم المُدخل مسجل بالفعل لحساب، ومش نفس المستخدم الحالي
+     * (سواء كان Guest أو مسجل دخول بحساب مختلف)، نرفض الطلب
+     */
+    const existingPhoneOwner = await prisma.user.findUnique({
+      where: {
+        phone: customerPhone,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (existingPhoneOwner && existingPhoneOwner.id !== currentUser?.id) {
+      return {
+        success: false,
+        message:
+          "رقم الهاتف هذا مسجل بحساب بالفعل، يرجى تسجيل الدخول لإتمام الطلب",
+      };
+    }
+
     const zone = await prisma.deliveryZone.findUnique({
       where: {
         id: deliveryZoneId,
@@ -91,8 +120,6 @@ export const createOrderAction = async (values: unknown) => {
 
     const total =
       cart.subtotal - cart.discount - cart.discountAmount + deliveryFee;
-
-    const currentUser = await getCurrentUser();
 
     const order = await withOrderNumberRetry((orderNumber) =>
       prisma.order.create({
@@ -135,9 +162,33 @@ export const createOrderAction = async (values: unknown) => {
               total: item.total,
             })),
           },
+
+          statusHistory: {
+            create: {
+              status: "PENDING",
+            },
+          },
         },
         select: {
+          id: true,
           orderNumber: true,
+          customerName: true,
+          customerEmail: true,
+          deliveryZoneTitle: true,
+          addressLine: true,
+          total: true,
+          items: {
+            select: {
+              title: true,
+              qty: true,
+              unit: true,
+              weightOptionName: true,
+              isApprox: true,
+              total: true,
+              minTotal: true,
+              maxTotal: true,
+            },
+          },
         },
       }),
     );
@@ -145,6 +196,45 @@ export const createOrderAction = async (values: unknown) => {
     await CartService.clear();
 
     revalidatePath("/admin/orders");
+    revalidatePath("/profile/orders");
+
+    /*
+     * ================================
+     * إرسال إيميل تأكيد الطلب
+     * ================================
+     *
+     * لو فشل الإرسال، الطلب يفضل ناجح ومنرجعش خطأ للمستخدم،
+     * الإيميل مجرد إشعار إضافي مش جزء أساسي من نجاح العملية
+     */
+    if (order.customerEmail) {
+      try {
+        const { error } = await resend.emails.send({
+          from: process.env.RESEND_FROM_EMAIL!,
+          to: [order.customerEmail],
+          subject: `تم استلام طلبك #${order.orderNumber} - الطنطاوي`,
+          html: orderConfirmationEmail({
+            customerName: order.customerName,
+            orderNumber: order.orderNumber,
+            items: order.items,
+            subtotal: cart.subtotal,
+            productsDiscount: cart.discount,
+            discountAmount: cart.discountAmount,
+            couponCode: cart.couponCode,
+            deliveryFee,
+            total: order.total,
+            addressLine: order.addressLine,
+            deliveryZoneTitle: order.deliveryZoneTitle,
+            hasAccount: Boolean(currentUser),
+          }),
+        });
+
+        if (error) {
+          console.error("ORDER_CONFIRMATION_EMAIL_ERROR:", error);
+        }
+      } catch (emailError) {
+        console.error("ORDER_CONFIRMATION_EMAIL_ERROR:", emailError);
+      }
+    }
 
     return {
       success: true,

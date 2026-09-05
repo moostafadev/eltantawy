@@ -151,6 +151,28 @@ export async function POST(request: Request) {
 
     /*
      * ================================
+     * ربط الطلبات القديمة (Guest) بنفس الإيميل بحساب المستخدم
+     * ================================
+     *
+     * بيتم بعد التحقق من الإيميل مش وقت التسجيل مباشرة، عشان
+     * نضمن إن الإيميل فعلًا ملك المستخدم قبل ما نربط له بيانات قديمة
+     */
+    try {
+      await prisma.order.updateMany({
+        where: {
+          userId: null,
+          customerEmail: updatedUser.email,
+        },
+        data: {
+          userId: updatedUser.id,
+        },
+      });
+    } catch (linkError) {
+      console.error("LINK_GUEST_ORDERS_ERROR:", linkError);
+    }
+
+    /*
+     * ================================
      * Create authentication tokens
      * ================================
      */

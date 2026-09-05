@@ -3,11 +3,14 @@ import {
   Package,
   Percent,
   Plus,
+  ReceiptText,
+  RotateCcw,
   ShoppingCart,
   Tags,
   TrendingUp,
   Truck,
   Users,
+  Wallet,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -17,69 +20,8 @@ import { COLOR } from "@/constants/types";
 import { prisma } from "@/lib/prisma";
 import { toArabicNums } from "@/utils/toArabicNums";
 
-/**
- * كل لون بيرجع مجموعة كلاسات ثابتة (accent bar / خلفية الأيقونة / لون
- * الأيقونة / ظل عند الـ hover) عشان نتجنب بناء class names ديناميكية
- * (Tailwind محتاج الـ class تكون literal في الكود عشان تتكتشف).
- */
-const getStatColorClasses = (color: COLOR) => {
-  switch (color) {
-    case "SUCCESS":
-      return {
-        accent: "bg-success",
-        iconBg: "bg-success/10",
-        iconText: "text-success",
-        hoverBorder: "hover:border-success/30",
-        hoverShadow: "hover:shadow-success/10",
-      };
-
-    case "WARNING":
-      return {
-        accent: "bg-warning",
-        iconBg: "bg-warning/10",
-        iconText: "text-warning",
-        hoverBorder: "hover:border-warning/30",
-        hoverShadow: "hover:shadow-warning/10",
-      };
-
-    case "DANGER":
-      return {
-        accent: "bg-danger",
-        iconBg: "bg-danger/10",
-        iconText: "text-danger",
-        hoverBorder: "hover:border-danger/30",
-        hoverShadow: "hover:shadow-danger/10",
-      };
-
-    case "INFO":
-      return {
-        accent: "bg-info",
-        iconBg: "bg-info/10",
-        iconText: "text-info",
-        hoverBorder: "hover:border-info/30",
-        hoverShadow: "hover:shadow-info/10",
-      };
-
-    case "SECONDARY":
-      return {
-        accent: "bg-foreground",
-        iconBg: "bg-background-second/50",
-        iconText: "text-foreground",
-        hoverBorder: "hover:border-border",
-        hoverShadow: "hover:shadow-md",
-      };
-
-    case "MAIN":
-    default:
-      return {
-        accent: "bg-main",
-        iconBg: "bg-main/10",
-        iconText: "text-main",
-        hoverBorder: "hover:border-main/30",
-        hoverShadow: "hover:shadow-main/10",
-      };
-  }
-};
+import { getStatColorClasses } from "./statColors";
+import { getSalesSummary } from "./sales";
 
 const AdminDashboard = async () => {
   const [
@@ -89,6 +31,7 @@ const AdminDashboard = async () => {
     deliveryZonesCount,
     discountsCount,
     activeDiscountsCount,
+    salesSummary,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.product.count(),
@@ -96,7 +39,49 @@ const AdminDashboard = async () => {
     prisma.deliveryZone.count(),
     prisma.discount.count(),
     prisma.discount.count({ where: { isActive: true } }),
+    getSalesSummary(),
   ]);
+
+  /*
+   * الأداء المالي: أهم مؤشرات المبيعات والمرتجعات، بتتعرض في أعلى
+   * الصفحة بشكل بارز لأنها أهم بيانات لصاحب الموقع
+   */
+  const financialStats: {
+    title: string;
+    value: string;
+    icon: typeof Wallet;
+    description: string;
+    color: COLOR;
+  }[] = [
+    {
+      title: "صافي المبيعات",
+      value: `${toArabicNums(String(salesSummary.totalSales))} ج.م`,
+      icon: Wallet,
+      description: "طلبات تم توصيلها بعد خصم المرتجعات",
+      color: "SUCCESS",
+    },
+    {
+      title: "الطلبات المكتملة",
+      value: toArabicNums(salesSummary.deliveredOrdersCount),
+      icon: Package,
+      description: "إجمالي الطلبات التي تم توصيلها",
+      color: "INFO",
+    },
+    {
+      title: "متوسط قيمة الطلب",
+      value: `${toArabicNums(String(Math.round(salesSummary.averageOrderValue)))} ج.م`,
+      icon: TrendingUp,
+      description: "متوسط قيمة الطلب الواحد المكتمل",
+      color: "MAIN",
+    },
+    {
+      title: "قيمة المرتجعات",
+      value: `${toArabicNums(String(salesSummary.totalReturnsAmount))} ج.م`,
+      icon: RotateCcw,
+      description: `${toArabicNums(salesSummary.returnsRequestsCount)} طلب إرجاع إجمالًا`,
+      color: "DANGER",
+    },
+  ];
 
   /*
    * أهم 3 مؤشرات بيعكسوا نشاط الموقع، بتتعرض بشكل بارز
@@ -255,6 +240,68 @@ const AdminDashboard = async () => {
           نظرة عامة على أداء الموقع وإحصائياته
         </p>
       </div>
+
+      {/* Financial Performance (Sales & Returns) */}
+      <section className="flex flex-col gap-3 lg:gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <div className="flex size-9 shrink-0 items-center justify-center bg-success/10 text-success">
+              <ReceiptText className="size-4.5" />
+            </div>
+
+            <h2 className="font-bold">الأداء المالي</h2>
+          </div>
+
+          <Link
+            href="/admin/sales"
+            className="flex items-center gap-1 text-xs font-medium text-main hover:underline"
+          >
+            <span>عرض تفاصيل المبيعات</span>
+            <ArrowLeft className="size-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+          {financialStats.map(
+            ({ title, value, icon: Icon, description, color }) => {
+              const styles = getStatColorClasses(color);
+
+              return (
+                <div
+                  key={title}
+                  className={`group relative overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
+                >
+                  <span
+                    className={`absolute inset-x-0 top-0 h-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
+                  />
+
+                  <div className="flex items-start justify-between gap-3 lg:gap-4">
+                    <div className="flex min-w-0 flex-col gap-1">
+                      <p className="text-sm font-medium text-muted-foreground">
+                        {title}
+                      </p>
+
+                      <p className="text-2xl font-bold tracking-tight tabular-nums lg:text-3xl">
+                        {value}
+                      </p>
+
+                      <p className="text-xs text-muted-foreground">
+                        {description}
+                      </p>
+                    </div>
+
+                    <div
+                      className={`flex size-12 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${styles.iconBg} ${styles.iconText}`}
+                    >
+                      <Icon className="size-6" />
+                    </div>
+                  </div>
+                </div>
+              );
+            },
+          )}
+        </div>
+      </section>
 
       {/* Featured Stats */}
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:gap-4">

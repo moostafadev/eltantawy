@@ -1,6 +1,8 @@
 import { Skeleton } from "@/components/skeleton";
 import { COLOR } from "@/constants/types";
 
+const financialColors: COLOR[] = ["SUCCESS", "INFO", "MAIN", "DANGER"];
+
 const featuredColors: COLOR[] = ["INFO", "SUCCESS", "DANGER"];
 
 const secondaryColors: COLOR[] = ["WARNING", "MAIN"];
@@ -22,6 +24,43 @@ const AdminDashboardSkeleton = () => {
         <Skeleton width={180} height={32} className="max-w-full" />
         <Skeleton width={300} height={20} className="max-w-full" />
       </div>
+
+      {/* Financial Performance */}
+      <section className="flex flex-col gap-3 lg:gap-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Skeleton width={36} height={36} color="SUCCESS" />
+            <Skeleton width={110} height={20} />
+          </div>
+
+          <Skeleton width={130} height={14} />
+        </div>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+          {financialColors.map((color, index) => (
+            <div
+              key={index}
+              className="relative overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm lg:p-5"
+            >
+              <Skeleton
+                height={4}
+                color={color}
+                className="absolute inset-x-0 top-0"
+              />
+
+              <div className="flex items-start justify-between gap-3 lg:gap-4">
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <Skeleton width={100} height={16} />
+                  <Skeleton width={90} height={32} />
+                  <Skeleton width={140} height={12} />
+                </div>
+
+                <Skeleton width={48} height={48} color={color} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Featured Stats */}
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:gap-4">

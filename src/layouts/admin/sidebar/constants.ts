@@ -69,15 +69,15 @@ export const sidebarData: SidebarItem[] = [
     title: "المبيعات",
     icon: ChartNoAxesCombined,
     items: [],
-    isActive: false,
+    isActive: true,
   },
-  {
-    link: "/admin/inventory",
-    title: "المخزون",
-    icon: Boxes,
-    items: [],
-    isActive: false,
-  },
+  // {
+  //   link: "/admin/inventory",
+  //   title: "المخزون",
+  //   icon: Boxes,
+  //   items: [],
+  //   isActive: false,
+  // },
   {
     link: "/admin/settings",
     title: "الإعدادات",
