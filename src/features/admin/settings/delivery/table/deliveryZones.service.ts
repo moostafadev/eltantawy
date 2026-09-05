@@ -89,3 +89,32 @@ export const getDeliveryZonesForGraph = async () => {
     },
   });
 };
+
+/**
+ * المناطق القابلة للاختيار فعليًا في صفحة الـ Checkout:
+ * نشطة، وليها تكلفة توصيل محددة (يعني منطقة نهائية مش أب لمناطق فرعية)
+ */
+export const getActiveDeliveryZonesForCheckout = async () => {
+  const zones = await prisma.deliveryZone.findMany({
+    where: {
+      isActive: true,
+      cost: {
+        not: null,
+      },
+    },
+    orderBy: {
+      title: "asc",
+    },
+    select: {
+      id: true,
+      title: true,
+      cost: true,
+    },
+  });
+
+  return zones.map((zone) => ({
+    id: zone.id,
+    title: zone.title,
+    cost: zone.cost as number,
+  }));
+};

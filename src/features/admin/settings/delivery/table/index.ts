@@ -4,4 +4,5 @@ export {
   getDeliveryZonesForParentSelect,
   getDeliveryZonesForGraph,
   getOneDeliveryZone,
+  getActiveDeliveryZonesForCheckout,
 } from "./deliveryZones.service";

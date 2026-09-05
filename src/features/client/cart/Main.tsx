@@ -126,6 +126,7 @@ const CartSummary = () => {
           color="MAIN"
           variant="solid"
           disabled={isUpdating}
+          onClick={() => router.push("/checkout")}
         >
           متابعة الطلب
           <ArrowLeft className="size-4" />

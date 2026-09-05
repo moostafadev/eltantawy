@@ -33,6 +33,32 @@ enum DiscountValueType {
   FIXED
 }
 
+enum DiscountSource {
+  COUPON
+  ALL_CUSTOMERS
+  REGISTERED_ONLY
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH_ON_DELIVERY
+}
+
+enum ReturnStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REFUNDED
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -50,6 +76,8 @@ model User {
 
   emailVerificationCodeHash String?
   emailVerificationExpiresAt DateTime?
+
+  orders Order[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -121,6 +149,8 @@ model DeliveryZone {
   parent   DeliveryZone?  @relation("DeliveryZoneHierarchy", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   children DeliveryZone[] @relation("DeliveryZoneHierarchy")
 
+  orders Order[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -148,4 +178,107 @@ model Discount {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+
+
+model Order {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  orderNumber Int @unique
+
+  userId String? @db.ObjectId
+  user   User?   @relation(fields: [userId], references: [id])
+
+  customerName  String
+  customerPhone String
+  customerEmail String?
+
+  items OrderItem[]
+
+  returns OrderReturn[]
+
+  deliveryZoneId    String?       @db.ObjectId
+  deliveryZone      DeliveryZone? @relation(fields: [deliveryZoneId], references: [id])
+  deliveryZoneTitle String
+  deliveryFee       Float
+
+  addressLine String
+  notes       String?
+
+  subtotal              Float
+  productsDiscount      Float           @default(0)
+  couponCode            String?
+  discountAmount        Float           @default(0)
+  appliedDiscountSource DiscountSource?
+  total                 Float
+
+  refundedAmount Float @default(0)
+
+  paymentMethod PaymentMethod @default(CASH_ON_DELIVERY)
+
+  status OrderStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  orderId String @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+
+  title String
+  image String?
+  unit  ProductUnit
+  price Float
+
+  qty Float
+
+  weightOptionId   String?
+  weightOptionName String?
+  isApprox         Boolean @default(false)
+  minTotal         Float?
+  maxTotal         Float?
+
+  total Float
+
+  returnedQty Float @default(0)
+
+  returnItems OrderReturnItem[]
+
+  createdAt DateTime @default(now())
+}
+
+model OrderReturn {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  orderId String @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  items OrderReturnItem[]
+
+  reason String
+  refundAmount Float
+
+  status ReturnStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderReturnItem {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  returnId String      @db.ObjectId
+  return   OrderReturn @relation(fields: [returnId], references: [id], onDelete: Cascade)
+
+  orderItemId String    @db.ObjectId
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id])
+
+  qty    Float
+  amount Float
 }
