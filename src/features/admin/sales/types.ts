@@ -15,6 +15,14 @@ export interface MonthlySales {
   value: number;
 }
 
+export interface MonthlySalesRow extends MonthlySales {
+  /**
+   * نسبة التغيير عن الشهر السابق (%). null لأول شهر في القائمة
+   * أو لو قيمة الشهر السابق صفر (تفاديًا للقسمة على صفر)
+   */
+  change: number | null;
+}
+
 export interface TopProduct {
   productId: string;
   title: string;

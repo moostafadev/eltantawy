@@ -47,15 +47,19 @@ const SalesSkeleton = () => {
             <Skeleton width={40} height={40} color="SUCCESS" />
           </div>
 
-          <div className="flex flex-1 items-end justify-between gap-2 lg:gap-3">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 lg:gap-3">
             {Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={index}
-                className="flex flex-1 flex-col items-center gap-2"
+                className="flex flex-col gap-2 border border-background-second/20 bg-background p-3 shadow-sm"
               >
-                <Skeleton width={30} height={12} />
-                <Skeleton height={120} className="w-full" />
-                <Skeleton width={30} height={12} />
+                <div className="flex items-center justify-between gap-2">
+                  <Skeleton width={30} height={12} />
+                  <Skeleton width={24} height={24} />
+                </div>
+
+                <Skeleton width={60} height={22} />
+                <Skeleton width={40} height={12} />
               </div>
             ))}
           </div>
@@ -78,6 +82,19 @@ const SalesSkeleton = () => {
           </div>
         </section>
       </div>
+
+      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="border-b border-border pb-3 lg:pb-4">
+          <Skeleton width={150} height={20} />
+          <Skeleton className="mt-1" width={260} height={14} />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton key={index} height={36} />
+          ))}
+        </div>
+      </section>
 
       <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
         <div className="border-b border-border pb-3 lg:pb-4">

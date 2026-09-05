@@ -7,15 +7,10 @@ import {
   Wallet,
 } from "lucide-react";
 
+import { Table } from "@/components/table";
+import { Tag } from "@/components/tag";
 import { toArabicNums } from "@/utils/toArabicNums";
 import { COLOR } from "@/constants/types";
-import {
-  ChartCard,
-  LineChart,
-  DonutChart,
-  BarChart,
-  DonutChartDataPoint,
-} from "@/components/charts";
 
 import { getStatColorClasses } from "../statColors";
 import {
@@ -23,6 +18,10 @@ import {
   getSalesSummary,
   getTopProducts,
 } from "./sales.service";
+import { buildMonthlyRows } from "./lib";
+import MonthlyCards from "./MonthlyCards";
+import { monthlyTableColumns } from "./MonthlyTableColumns";
+import { topProductsColumns } from "./TopProductsColumns";
 
 const Sales = async () => {
   const [summary, monthlySales, topProducts] = await Promise.all([
@@ -30,6 +29,8 @@ const Sales = async () => {
     getMonthlySales(),
     getTopProducts(),
   ]);
+
+  const monthlyRows = buildMonthlyRows(monthlySales);
 
   const mainStats: {
     title: string;
@@ -68,41 +69,28 @@ const Sales = async () => {
     },
   ];
 
-  /*
-   * بيانات الرسم البياني الدائري لتوزيع حالات المرتجعات
-   */
-  const returnsChartData: DonutChartDataPoint[] = (
-    [
-      {
-        label: "قيد المراجعة",
-        value: summary.pendingReturnsCount,
-        color: "WARNING" as COLOR,
-      },
-      {
-        label: "تمت الموافقة",
-        value: summary.approvedReturnsCount,
-        color: "INFO" as COLOR,
-      },
-      {
-        label: "تم الاسترجاع",
-        value: summary.refundedReturnsCount,
-        color: "SUCCESS" as COLOR,
-      },
-      {
-        label: "مرفوض",
-        value: summary.rejectedReturnsCount,
-        color: "DANGER" as COLOR,
-      },
-    ] satisfies DonutChartDataPoint[]
-  ).filter((item) => item.value > 0);
-
-  /*
-   * بيانات الرسم البياني العمودي لأفضل المنتجات مبيعًا
-   */
-  const topProductsChartData = topProducts.map((product) => ({
-    label: product.title,
-    value: product.total,
-  }));
+  const returnsBreakdown: {
+    label: string;
+    value: number;
+    color: "WARNING" | "INFO" | "SUCCESS" | "DANGER";
+  }[] = [
+    {
+      label: "قيد المراجعة",
+      value: summary.pendingReturnsCount,
+      color: "WARNING",
+    },
+    {
+      label: "تمت الموافقة",
+      value: summary.approvedReturnsCount,
+      color: "INFO",
+    },
+    {
+      label: "تم الاسترجاع",
+      value: summary.refundedReturnsCount,
+      color: "SUCCESS",
+    },
+    { label: "مرفوض", value: summary.rejectedReturnsCount, color: "DANGER" },
+  ];
 
   return (
     <div className="flex flex-col gap-3 lg:gap-4">
@@ -154,47 +142,91 @@ const Sales = async () => {
       </section>
 
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
-        {/* Monthly Sales Chart */}
-        <ChartCard
-          title="المبيعات الشهرية"
-          description="صافي المبيعات خلال آخر 6 أشهر"
-          icon={ReceiptText}
-          color="SUCCESS"
-          className="lg:col-span-2"
-        >
-          <LineChart
-            data={monthlySales}
-            color="SUCCESS"
-            height={240}
-            suffix=" ج.م"
-          />
-        </ChartCard>
+        {/* Monthly Sales Cards */}
+        <section className="flex flex-col gap-4 border border-background-second/20 bg-background p-3 shadow-sm lg:col-span-2 lg:p-4">
+          <div className="flex items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
+            <div>
+              <h2 className="font-bold">المبيعات الشهرية</h2>
+
+              <p className="mt-1 text-sm text-muted-foreground">
+                صافي المبيعات ونسبة التغيير خلال آخر 6 أشهر
+              </p>
+            </div>
+
+            <div className="flex size-10 shrink-0 items-center justify-center bg-success/10 text-success">
+              <ReceiptText className="size-5" />
+            </div>
+          </div>
+
+          <MonthlyCards data={monthlyRows} />
+        </section>
 
         {/* Returns Breakdown */}
-        <ChartCard
-          title="حالة المرتجعات"
-          description={`${toArabicNums(summary.returnsRequestsCount)} طلب إرجاع إجمالًا`}
-          icon={PercentCircle}
-          color="DANGER"
-        >
-          <DonutChart data={returnsChartData} />
-        </ChartCard>
+        <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+          <div className="flex items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
+            <div>
+              <h2 className="font-bold">حالة المرتجعات</h2>
+
+              <p className="mt-1 text-sm text-muted-foreground">
+                {toArabicNums(summary.returnsRequestsCount)} طلب إرجاع إجمالًا
+              </p>
+            </div>
+
+            <div className="flex size-10 shrink-0 items-center justify-center bg-danger/10 text-danger">
+              <PercentCircle className="size-5" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {returnsBreakdown.map(({ label, value, color }) => (
+              <div
+                key={label}
+                className="flex items-center justify-between gap-3 bg-muted p-2.5"
+              >
+                <span className="text-sm text-muted-foreground">{label}</span>
+
+                <Tag color={color} variant="soft" size="sm">
+                  {toArabicNums(value)}
+                </Tag>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
 
-      {/* Top Products */}
-      <ChartCard
-        title="الأكثر مبيعًا"
-        description="أفضل 5 منتجات من حيث إجمالي المبيعات (طلبات مكتملة فقط)"
-        icon={TrendingUp}
-        color="MAIN"
-      >
-        <BarChart
-          data={topProductsChartData}
-          color="MAIN"
-          height={220}
-          suffix=" ج.م"
+      {/* Monthly Sales Detail Table */}
+      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="border-b border-border pb-3 lg:pb-4">
+          <h2 className="font-bold">تفاصيل المبيعات الشهرية</h2>
+
+          <p className="mt-1 text-sm text-muted-foreground">
+            صافي كل شهر ونسبة تغيّره عن الشهر السابق
+          </p>
+        </div>
+
+        <Table
+          data={monthlyRows}
+          columns={monthlyTableColumns}
+          emptyMessage="لا توجد بيانات مبيعات بعد"
         />
-      </ChartCard>
+      </section>
+
+      {/* Top Products */}
+      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="border-b border-border pb-3 lg:pb-4">
+          <h2 className="font-bold">الأكثر مبيعًا</h2>
+
+          <p className="mt-1 text-sm text-muted-foreground">
+            أفضل المنتجات من حيث إجمالي المبيعات (طلبات مكتملة فقط)
+          </p>
+        </div>
+
+        <Table
+          data={topProducts}
+          columns={topProductsColumns}
+          emptyMessage="لا توجد بيانات مبيعات بعد"
+        />
+      </section>
     </div>
   );
 };
