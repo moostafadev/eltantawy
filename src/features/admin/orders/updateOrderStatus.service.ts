@@ -5,12 +5,18 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { resend } from "@/lib/resend";
 import { orderStatusEmail } from "@/lib/emails/order-status-email";
+import {
+  pusherServer,
+  ADMIN_ORDERS_CHANNEL,
+  ORDER_EVENTS,
+} from "@/lib/realtime";
 
 import {
   OrderStatusEnum,
   orderStatusLabels,
   orderStatusTransitions,
 } from "./types";
+import { getUserOrdersChannel } from "@/lib/realtime/constants";
 
 export const updateOrderStatusAction = async (
   id: string,
@@ -28,6 +34,7 @@ export const updateOrderStatusAction = async (
         customerName: true,
         customerEmail: true,
         total: true,
+        userId: true,
       },
     });
 
@@ -70,6 +77,42 @@ export const updateOrderStatusAction = async (
     revalidatePath(`/admin/orders/${id}`);
     revalidatePath("/admin");
     revalidatePath("/profile/orders");
+
+    /*
+     * ================================
+     * إشعار الأدمن Real-time بتغيير حالة الطلب
+     * ================================
+     *
+     * فشل إرسال الإشعار لا يجب أن يؤثر على نجاح تحديث الحالة
+     */
+    try {
+      await pusherServer.trigger(
+        ADMIN_ORDERS_CHANNEL,
+        ORDER_EVENTS.STATUS_UPDATED,
+        {
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+          status: nextStatus,
+        },
+      );
+
+      /*
+       * إشعار المستخدم صاحب الطلب نفسه (لو الطلب مرتبط بحساب)
+       */
+      if (order.userId) {
+        await pusherServer.trigger(
+          getUserOrdersChannel(order.userId),
+          ORDER_EVENTS.STATUS_UPDATED,
+          {
+            orderId: order.id,
+            orderNumber: order.orderNumber,
+            status: nextStatus,
+          },
+        );
+      }
+    } catch (realtimeError) {
+      console.error("ORDER_STATUS_REALTIME_ERROR:", realtimeError);
+    }
 
     /*
      * ================================

@@ -9,8 +9,14 @@ import { CartService } from "@/lib/cart/service";
 import { withOrderNumberRetry } from "@/lib/order/generateOrderNumber";
 import { resend } from "@/lib/resend";
 import { orderConfirmationEmail } from "@/lib/emails/order-confirmation-email";
+import {
+  pusherServer,
+  ADMIN_ORDERS_CHANNEL,
+  ORDER_EVENTS,
+} from "@/lib/realtime";
 
 import { checkoutSchema } from "../schema";
+import { getUserOrdersChannel } from "@/lib/realtime/constants";
 
 /**
  * لو المستخدم مسجل دخول، بنربط الطلب بحسابه. لو مش مسجل (Guest)،
@@ -197,6 +203,38 @@ export const createOrderAction = async (values: unknown) => {
 
     revalidatePath("/admin/orders");
     revalidatePath("/profile/orders");
+
+    /*
+     * ================================
+     * إشعار الأدمن Real-time بطلب جديد
+     * ================================
+     *
+     * فشل إرسال الإشعار لا يجب أن يؤثر على نجاح إنشاء الطلب
+     */
+    try {
+      await pusherServer.trigger(ADMIN_ORDERS_CHANNEL, ORDER_EVENTS.CREATED, {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        customerName: order.customerName,
+      });
+
+      /*
+       * إشعار المستخدم صاحب الطلب نفسه (لو مسجل دخول)، عشان يشوف طلبه
+       * في صفحة "طلباتي" فورًا بدون الحاجة لعمل Refresh يدوي
+       */
+      if (currentUser) {
+        await pusherServer.trigger(
+          getUserOrdersChannel(currentUser.id),
+          ORDER_EVENTS.CREATED,
+          {
+            orderId: order.id,
+            orderNumber: order.orderNumber,
+          },
+        );
+      }
+    } catch (realtimeError) {
+      console.error("ORDER_CREATED_REALTIME_ERROR:", realtimeError);
+    }
 
     /*
      * ================================

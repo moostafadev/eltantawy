@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 
 import { Table } from "@/components/table";
-import { OrdersTable } from "@/features/admin/orders";
+import { OrdersTable, OrdersRealtimeListener } from "@/features/admin/orders";
 import { ordersTableColumns } from "@/features/admin/orders/OrdersTableColumns";
 
 const OrdersPage = () => {
   return (
     <div className="flex flex-col gap-3 lg:gap-4">
+      <OrdersRealtimeListener />
+
       <div>
         <h1 className="text-2xl font-bold">الطلبات</h1>
 

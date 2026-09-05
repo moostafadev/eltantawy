@@ -3,7 +3,11 @@ import { redirect } from "next/navigation";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { verifyAccessToken } from "@/lib/auth";
-import { OrdersList, getAllOrdersForUser } from "@/features/client/orders";
+import {
+  OrdersList,
+  OrdersRealtimeListener,
+  getAllOrdersForUser,
+} from "@/features/client/orders";
 
 const ProfileOrdersPage = async () => {
   const cookieStore = await cookies();
@@ -25,6 +29,8 @@ const ProfileOrdersPage = async () => {
     <div className="flex flex-1 items-stretch bg-background-second/20 py-6 lg:py-8">
       <div className="container">
         <div className="flex w-full flex-col gap-4">
+          <OrdersRealtimeListener userId={payload.userId} />
+
           <Breadcrumb
             items={[
               {
