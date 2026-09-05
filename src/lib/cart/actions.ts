@@ -41,3 +41,11 @@ export async function removeFromCartAction(data: {
 export async function clearCartAction() {
   return CartService.clear();
 }
+
+export async function applyCouponAction(code: string) {
+  return CartService.applyCoupon(code);
+}
+
+export async function removeCouponAction() {
+  return CartService.removeCoupon();
+}

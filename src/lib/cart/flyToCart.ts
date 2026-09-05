@@ -5,17 +5,35 @@ type FlyDetail = {
   imageSrc?: string;
 };
 
+type CartTargetVariant = "desktop" | "mobile";
+
 const FLY_EVENT = "cart:fly";
 const LAND_EVENT = "cart:landed";
 
-let cartTargetEl: HTMLElement | null = null;
+let desktopCartTarget: HTMLElement | null = null;
+let mobileCartTarget: HTMLElement | null = null;
 
-export function registerCartTarget(el: HTMLElement | null) {
-  cartTargetEl = el;
+export function registerCartTarget(
+  el: HTMLElement | null,
+  variant: CartTargetVariant = "desktop",
+) {
+  if (variant === "mobile") {
+    mobileCartTarget = el;
+  } else {
+    desktopCartTarget = el;
+  }
 }
 
 export function getCartTarget() {
-  return cartTargetEl;
+  const isMobile =
+    typeof window !== "undefined" &&
+    window.matchMedia("(max-width: 1023px)").matches;
+
+  if (isMobile) {
+    return mobileCartTarget ?? desktopCartTarget;
+  }
+
+  return desktopCartTarget ?? mobileCartTarget;
 }
 
 export function flyToCart(fromEl: HTMLElement | null, imageSrc?: string) {

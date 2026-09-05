@@ -2,6 +2,8 @@ export type CartUnit = "KG" | "PIECE";
 
 export type ProductSaleType = "NORMAL" | "WEIGHT_RANGE";
 
+export type DiscountSource = "COUPON" | "ALL_CUSTOMERS" | "REGISTERED_ONLY";
+
 export interface CartItem {
   productId: string;
 
@@ -18,6 +20,12 @@ export interface CartItem {
 
 export interface Cart {
   items: CartItem[];
+
+  /**
+   * كود الكوبون المطبق حاليًا على السلة (لو موجود)
+   * بيتخزن دايمًا بحروف كبيرة (Uppercase)
+   */
+  couponCode?: string;
 }
 
 export interface CartWeightOption {
@@ -85,6 +93,9 @@ export interface HydratedCart {
 
   subtotal: number;
 
+  /**
+   * خصومات مستوى المنتج نفسه (discountPrice)
+   */
   discount: number;
 
   deliveryFee: number;
@@ -109,12 +120,49 @@ export interface HydratedCart {
   hasApproxItems: boolean;
 
   /**
-   * أقل إجمالي متوقع للسلة (شامل التوصيل)
+   * أقل إجمالي متوقع للسلة (شامل التوصيل وكل الخصومات)
    */
   minTotal: number;
 
   /**
-   * أعلى إجمالي متوقع للسلة (شامل التوصيل)
+   * أعلى إجمالي متوقع للسلة (شامل التوصيل وكل الخصومات)
    */
   maxTotal: number;
+
+  /**
+   * كود الكوبون المُدخل حاليًا (لو صالح بذاته)، أو null.
+   * ملاحظة: مش بالضرورة هو مصدر الخصم الفعلي المطبق،
+   * ممكن يكون فيه خصم تلقائي أعلى منه قيمة (راجع appliedDiscountSource)
+   */
+  couponCode: string | null;
+
+  /**
+   * القيمة اللي كان هيوفرها الكوبون المُدخل تحديدًا (لو صالح)
+   */
+  couponDiscountAmount: number;
+
+  /**
+   * القيمة اللي بيوفرها أفضل خصم تلقائي متاح (لكل العملاء/للمسجلين)
+   */
+  autoDiscountAmount: number;
+
+  /**
+   * وصف الخصم التلقائي المتاح (لو موجود)
+   */
+  autoDiscountLabel: string | null;
+
+  /**
+   * القيمة الفعلية المخصومة من الإجمالي = الأكبر بين الكوبون والخصم التلقائي
+   */
+  discountAmount: number;
+
+  /**
+   * مصدر الخصم الفعلي المطبق حاليًا على الإجمالي، أو null لو مفيش خصم
+   */
+  appliedDiscountSource: DiscountSource | null;
+
+  /**
+   * وصف نصي للخصم الفعلي المطبق (يُعرض في ملخص السلة)
+   */
+  appliedDiscountLabel: string | null;
 }

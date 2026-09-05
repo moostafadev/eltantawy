@@ -5,6 +5,11 @@ export interface CartProviderProps {
   initialCart: HydratedCart;
 }
 
+export interface ApplyCouponResult {
+  success: boolean;
+  message: string;
+}
+
 export interface CartContextValue {
   cart: HydratedCart;
 
@@ -37,4 +42,10 @@ export interface CartContextValue {
     unit: CartUnit,
     weightOptionId?: string,
   ): Promise<void>;
+
+  isApplyingCoupon: boolean;
+
+  applyCoupon(code: string): Promise<ApplyCouponResult>;
+
+  removeCoupon(): Promise<void>;
 }

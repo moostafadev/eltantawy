@@ -26,8 +26,14 @@ export const parseCart = (value?: string): Cart => {
       return EMPTY_CART();
     }
 
+    const couponCode =
+      typeof parsed.couponCode === "string" && parsed.couponCode.length > 0
+        ? parsed.couponCode
+        : undefined;
+
     return {
       items: parsed.items.filter(isValidCartItem),
+      ...(couponCode ? { couponCode } : {}),
     };
   } catch {
     return EMPTY_CART();
@@ -101,6 +107,7 @@ export const addCartItem = (cart: Cart, item: CartItem): Cart => {
   if (!exists) {
     return {
       items: [...cart.items, item],
+      ...(cart.couponCode ? { couponCode: cart.couponCode } : {}),
     };
   }
 
@@ -116,6 +123,7 @@ export const addCartItem = (cart: Cart, item: CartItem): Cart => {
 
       return current;
     }),
+    ...(cart.couponCode ? { couponCode: cart.couponCode } : {}),
   };
 };
 
@@ -137,6 +145,7 @@ export const updateCartItem = (
 
       return item;
     }),
+    ...(cart.couponCode ? { couponCode: cart.couponCode } : {}),
   };
 };
 
@@ -150,7 +159,27 @@ export const removeCartItem = (
     items: cart.items.filter(
       (item) => !isSameItem(item, productId, unit, weightOptionId),
     ),
+    ...(cart.couponCode ? { couponCode: cart.couponCode } : {}),
   };
 };
 
 export const clearCart = (): Cart => EMPTY_CART();
+
+/**
+ * تخزين كود الكوبون على السلة (بيتم استبدال أي كود قديم)
+ */
+export const setCouponCode = (cart: Cart, code: string): Cart => {
+  return {
+    items: cart.items,
+    couponCode: code,
+  };
+};
+
+/**
+ * إلغاء الكوبون المطبق حاليًا على السلة
+ */
+export const removeCouponCode = (cart: Cart): Cart => {
+  return {
+    items: cart.items,
+  };
+};

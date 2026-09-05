@@ -10,6 +10,8 @@ import {
 
 import {
   addToCartAction,
+  applyCouponAction,
+  removeCouponAction,
   removeFromCartAction,
   updateCartItemAction,
 } from "../actions";
@@ -31,6 +33,8 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
   const [updatingItems, setUpdatingItems] = useState<Record<string, boolean>>(
     {},
   );
+
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
   const markUpdating = useCallback((key: string, value: boolean) => {
     setUpdatingItems((prev) => ({
@@ -105,6 +109,40 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
     [markUpdating, syncCart],
   );
 
+  const applyCoupon = useCallback(
+    async (code: string) => {
+      setIsApplyingCoupon(true);
+
+      try {
+        const result = await applyCouponAction(code);
+
+        if (result.success && result.cart) {
+          syncCart(result.cart);
+        }
+
+        return {
+          success: result.success,
+          message: result.message,
+        };
+      } finally {
+        setIsApplyingCoupon(false);
+      }
+    },
+    [syncCart],
+  );
+
+  const removeCoupon = useCallback(async () => {
+    setIsApplyingCoupon(true);
+
+    try {
+      const result = await removeCouponAction();
+
+      syncCart(result);
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  }, [syncCart]);
+
   const value = useMemo<CartContextValue>(
     () => ({
       cart,
@@ -124,8 +162,24 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
       updateItem,
 
       removeItem,
+
+      isApplyingCoupon,
+
+      applyCoupon,
+
+      removeCoupon,
     }),
-    [cart, syncCart, updatingItems, addItem, updateItem, removeItem],
+    [
+      cart,
+      syncCart,
+      updatingItems,
+      addItem,
+      updateItem,
+      removeItem,
+      isApplyingCoupon,
+      applyCoupon,
+      removeCoupon,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

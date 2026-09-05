@@ -7,6 +7,7 @@ import { Button } from "@/components/button";
 import { Skeleton } from "@/components/skeleton";
 
 import { useCart } from "@/lib/cart/provider";
+import CouponCode from "./CouponCode";
 
 const CartSummary = () => {
   const router = useRouter();
@@ -16,6 +17,8 @@ const CartSummary = () => {
   const {
     subtotal,
     discount,
+    discountAmount,
+    appliedDiscountLabel,
     deliveryFee,
     total,
     hasApproxItems,
@@ -26,6 +29,8 @@ const CartSummary = () => {
   return (
     <aside className="flex h-fit flex-col gap-3 border border-border bg-background p-3 lg:gap-4 lg:p-4 lg:sticky lg:top-20">
       <h2 className="text-lg font-bold">ملخص السلة</h2>
+
+      <CouponCode />
 
       <div className="flex flex-col gap-3 text-sm lg:gap-4">
         <div className="flex justify-between">
@@ -43,13 +48,30 @@ const CartSummary = () => {
 
         {discount > 0 && (
           <div className="flex justify-between">
-            <span className="text-muted-foreground">الخصومات</span>
+            <span className="text-muted-foreground">خصومات المنتجات</span>
 
             {isUpdating ? (
               <Skeleton width={65} height={16} />
             ) : (
               <span className="font-medium text-success">
                 -{discount.toLocaleString("ar-EG")}
+                ج.م
+              </span>
+            )}
+          </div>
+        )}
+
+        {discountAmount > 0 && (
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">
+              {appliedDiscountLabel ?? "الخصم"}
+            </span>
+
+            {isUpdating ? (
+              <Skeleton width={65} height={16} />
+            ) : (
+              <span className="font-medium text-success">
+                -{discountAmount.toLocaleString("ar-EG")}
                 ج.م
               </span>
             )}
