@@ -25,6 +25,13 @@ const Checkout = ({ zones }: IProps) => {
 
   return (
     <div className="grid gap-3 lg:gap-4 lg:grid-cols-[1fr_360px]">
+      <div className="block lg:hidden">
+        <CheckoutSummary
+          deliveryFee={deliveryFee}
+          total={total}
+          hasZone={Boolean(selectedZone)}
+        />
+      </div>
       <CheckoutForm zones={zones} onZoneChange={setSelectedZoneId} />
 
       <CheckoutSummary

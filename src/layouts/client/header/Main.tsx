@@ -77,7 +77,7 @@ const Header = ({ isScrolled }: HeaderProps) => {
           <ButtonMobile isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
           <Link
             href="/"
-            className="flex h-full items-center"
+            className="flex h-full items-center -ml-9 lg:ml-0"
             onClick={() => setIsMenuOpen(false)}
           >
             <Image

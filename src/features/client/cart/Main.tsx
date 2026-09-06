@@ -34,7 +34,7 @@ const CartSummary = () => {
 
       <div className="flex flex-col gap-3 text-sm lg:gap-4">
         <div className="flex justify-between">
-          <span className="text-muted-foreground">المجموع الفرعي</span>
+          <span className="text-muted-foreground">مجموع المنتجات</span>
 
           {isUpdating ? (
             <Skeleton width={80} height={16} />

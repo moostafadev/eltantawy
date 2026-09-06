@@ -74,6 +74,16 @@ const CouponCode = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-2">
+        <Button
+          type="button"
+          color="MAIN"
+          variant="soft"
+          size="sm"
+          onClick={handleApply}
+          loading={isApplyingCoupon}
+        >
+          تطبيق
+        </Button>
         <input
           dir="ltr"
           value={code}
@@ -88,17 +98,6 @@ const CouponCode = () => {
           }}
           className="min-w-0 flex-1 border border-main/20 bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground outline-none transition-all duration-200 focus:border-main/60 focus:shadow-md focus:ring-2 focus:ring-main/15 disabled:cursor-not-allowed disabled:opacity-50"
         />
-
-        <Button
-          type="button"
-          color="MAIN"
-          variant="soft"
-          size="sm"
-          onClick={handleApply}
-          loading={isApplyingCoupon}
-        >
-          تطبيق
-        </Button>
       </div>
     </div>
   );

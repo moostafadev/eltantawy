@@ -12,10 +12,8 @@ export const checkoutSchema = z.object({
   customerEmail: z
     .string()
     .trim()
-    .email("البريد الإلكتروني غير صحيح")
-    .optional()
-    .or(z.literal("")),
-
+    .min(1, "الايميل مطلوب")
+    .email("البريد الإلكتروني غير صحيح"),
   deliveryZoneId: z.string().min(1, "يرجى اختيار منطقة التوصيل"),
 
   addressLine: z

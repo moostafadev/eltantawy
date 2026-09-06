@@ -42,7 +42,7 @@ const Carousel = ({
 
   return (
     <div
-      className={`group relative w-full ${className}`}
+      className={`relative w-full ${className}`}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >

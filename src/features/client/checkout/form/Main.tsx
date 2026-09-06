@@ -38,7 +38,7 @@ const CheckoutForm = ({ zones, onZoneChange }: Props) => {
 
   const zoneOptions = zones.map((zone) => ({
     value: zone.id,
-    label: `${zone.title} (${zone.cost.toLocaleString("ar-EG")} ج.م)`,
+    label: `${zone.title}`,
   }));
 
   const handleSubmit = async (values: CheckoutFormValues) => {
@@ -69,33 +69,41 @@ const CheckoutForm = ({ zones, onZoneChange }: Props) => {
       defaultValues={defaultValues}
       className="flex h-fit min-w-0 flex-1 flex-col gap-3 border border-background-second bg-background p-3 shadow-sm lg:gap-4 lg:p-4"
     >
-      <Input<CheckoutFormValues>
-        name="customerName"
-        label="الاسم بالكامل"
-        placeholder="مثال: أحمد محمد"
-      />
+      <div className="flex flex-col gap-3 lg:gap-4 lg:flex-row">
+        <Input<CheckoutFormValues>
+          name="customerName"
+          label="الاسم بالكامل"
+          placeholder="مثال: أحمد محمد"
+          className="flex-1"
+        />
 
-      <Input<CheckoutFormValues>
-        name="customerPhone"
-        label="رقم الهاتف"
-        type="tel"
-        placeholder="01xxxxxxxxx"
-      />
+        <Input<CheckoutFormValues>
+          name="customerPhone"
+          label="رقم الهاتف"
+          type="tel"
+          placeholder="01xxxxxxxxx"
+          className="flex-1"
+        />
+      </div>
 
-      <Input<CheckoutFormValues>
-        name="customerEmail"
-        label="البريد الإلكتروني (اختياري)"
-        type="email"
-        placeholder="example@email.com"
-      />
+      <div className="flex flex-col gap-3 lg:gap-4 lg:flex-row">
+        <Input<CheckoutFormValues>
+          name="customerEmail"
+          label="البريد الإلكتروني"
+          type="email"
+          placeholder="example@email.com"
+          className="flex-1"
+        />
 
-      <Select<CheckoutFormValues>
-        name="deliveryZoneId"
-        label="منطقة التوصيل"
-        placeholder="اختر منطقة التوصيل"
-        options={zoneOptions}
-        onValueChange={onZoneChange}
-      />
+        <Select<CheckoutFormValues>
+          name="deliveryZoneId"
+          label="منطقة التوصيل"
+          placeholder="اختر منطقة التوصيل"
+          options={zoneOptions}
+          onValueChange={onZoneChange}
+          className="flex-1"
+        />
+      </div>
 
       <Input<CheckoutFormValues>
         name="addressLine"
@@ -109,7 +117,12 @@ const CheckoutForm = ({ zones, onZoneChange }: Props) => {
         placeholder="أي ملاحظات إضافية على الطلب"
       />
 
-      <Button type="submit" color="MAIN" size="lg" loading={loading}>
+      <Button
+        type="submit"
+        color="MAIN"
+        loading={loading}
+        className="w-fit mr-auto"
+      >
         {loading ? "جاري إرسال الطلب..." : "تأكيد الطلب"}
       </Button>
     </Form>

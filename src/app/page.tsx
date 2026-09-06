@@ -60,7 +60,7 @@ const Page = async () => {
             alt="شعار الطنطاوي"
             width={240}
             height={219}
-            className="mx-auto h-40 w-auto sm:h-36"
+            className="mx-auto h-46 w-auto sm:h-50"
             priority
           />
 
