@@ -1,2 +1,2 @@
 export { default as UsersTable } from "./Main";
-export { getUsers } from "./user.service";
+export { getUsers, getGuestUsers } from "./user.service";

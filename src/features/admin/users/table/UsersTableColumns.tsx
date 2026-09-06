@@ -1,18 +1,24 @@
 "use client";
 
+import Link from "next/link";
+import { Eye } from "lucide-react";
+
 import { Tag } from "@/components/tag";
+import { Button } from "@/components/button";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
 
-import { User } from "./types";
+import { UserRow } from "./types";
 
-export const usersTableColumns: TableColumn<User>[] = [
+export const usersTableColumns: TableColumn<UserRow>[] = [
   {
     key: "name",
     title: "الاسم",
-    render: (user) => (
+    render: (row) => (
       <span className="font-medium">
-        {user.fName} {user.lName}
+        {row.kind === "REGISTERED"
+          ? `${row.data.fName} ${row.data.lName}`
+          : row.data.customerName}
       </span>
     ),
   },
@@ -20,26 +26,42 @@ export const usersTableColumns: TableColumn<User>[] = [
   {
     key: "email",
     title: "البريد الإلكتروني",
-    render: (user) => <span dir="ltr">{user.email}</span>,
+    render: (row) => (
+      <span dir="ltr">
+        {row.kind === "REGISTERED"
+          ? row.data.email
+          : (row.data.customerEmail ?? "—")}
+      </span>
+    ),
   },
 
   {
     key: "phone",
     title: "رقم الهاتف",
-    render: (user) => <span dir="ltr">{toArabicNums(String(user.phone))}</span>,
+    render: (row) => (
+      <span dir="ltr">
+        {toArabicNums(
+          row.kind === "REGISTERED" ? row.data.phone : row.data.customerPhone,
+        )}
+      </span>
+    ),
   },
 
   {
-    key: "role",
-    title: <div className="flex justify-center">الصلاحية</div>,
-    render: (user) => (
+    key: "type",
+    title: <div className="flex justify-center">نوع الحساب</div>,
+    render: (row) => (
       <div className="flex justify-center">
         <Tag
-          color={user.role === "ADMIN" ? "MAIN" : "NEUTRAL"}
+          color={row.kind === "REGISTERED" ? "MAIN" : "SECONDARY"}
           variant="soft"
           size="sm"
         >
-          {user.role === "ADMIN" ? "مدير" : "مستخدم"}
+          {row.kind === "REGISTERED"
+            ? row.data.role === "ADMIN"
+              ? "مدير"
+              : "مستخدم مسجل"
+            : "ضيف"}
         </Tag>
       </div>
     ),
@@ -48,26 +70,64 @@ export const usersTableColumns: TableColumn<User>[] = [
   {
     key: "isVerified",
     title: <div className="flex justify-center">الحالة</div>,
-    render: (user) => (
+    render: (row) => (
       <div className="flex justify-center">
-        <Tag
-          color={user.isVerified ? "SUCCESS" : "DANGER"}
-          variant="soft"
-          size="sm"
-        >
-          {user.isVerified ? "موثق" : "غير موثق"}
-        </Tag>
+        {row.kind === "REGISTERED" ? (
+          <Tag
+            color={row.data.isVerified ? "SUCCESS" : "DANGER"}
+            variant="soft"
+            size="sm"
+          >
+            {row.data.isVerified ? "موثق" : "غير موثق"}
+          </Tag>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )}
       </div>
     ),
   },
 
   {
-    key: "createdAt",
-    title: <div className="flex justify-end">تاريخ التسجيل</div>,
-    render: (user) => (
-      <span className="flex justify-end">
-        {new Date(user.createdAt).toLocaleDateString("ar-EG")}
+    key: "ordersCount",
+    title: <div className="flex justify-center">عدد الطلبات</div>,
+    render: (row) => (
+      <span className="flex justify-center font-medium">
+        {toArabicNums(
+          row.kind === "REGISTERED"
+            ? row.data._count.orders
+            : row.data.ordersCount,
+        )}
       </span>
+    ),
+  },
+
+  {
+    key: "createdAt",
+    title: <div className="flex justify-end">آخر نشاط</div>,
+    render: (row) => (
+      <span className="flex justify-end">
+        {new Date(row.data.createdAt).toLocaleDateString("ar-EG")}
+      </span>
+    ),
+  },
+
+  {
+    key: "options",
+    title: <div className="flex justify-center">التحكم</div>,
+    render: (row) => (
+      <div className="flex justify-center gap-1">
+        <Link
+          href={
+            row.kind === "REGISTERED"
+              ? `/admin/users/${row.data.id}`
+              : `/admin/users/guest/${row.data.customerPhone}`
+          }
+        >
+          <Button size="icon" color="NEUTRAL" variant="outline">
+            <Eye className="size-4 lg:size-5" />
+          </Button>
+        </Link>
+      </div>
     ),
   },
 ];
