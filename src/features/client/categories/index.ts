@@ -1,3 +1,3 @@
 export { default as Categories } from "./Main";
 
-export { getCategoriesForStore } from "./category.service";
+export { getCategoriesForStore, getHomeCategories } from "./category.service";

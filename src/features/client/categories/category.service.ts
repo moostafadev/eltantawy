@@ -106,3 +106,69 @@ export const getCategoriesForStore = async () => {
 
   return roots;
 };
+
+/**
+ * نسخة خفيفة مخصصة للصفحة الرئيسية: بتجيب التصنيفات الرئيسية فقط،
+ * مع إجمالي عدد المنتجات (المباشرة + الفرعية) لكل تصنيف، بدون تحميل
+ * قوائم المنتجات الكاملة أو الهيكل الهرمي المتداخل بالكامل
+ */
+export const getHomeCategories = async (limit = 6) => {
+  const categories = await prisma.category.findMany({
+    where: {
+      parentId: null,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    select: {
+      id: true,
+      title: true,
+      image: true,
+      _count: {
+        select: {
+          products: true,
+        },
+      },
+      children: {
+        select: {
+          _count: {
+            select: {
+              products: true,
+            },
+          },
+          children: {
+            select: {
+              _count: {
+                select: {
+                  products: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const withTotals = categories.map((category) => {
+    const childrenProducts = category.children.reduce((sum, child) => {
+      const grandChildrenProducts = child.children.reduce(
+        (childSum, grandChild) => childSum + grandChild._count.products,
+        0,
+      );
+
+      return sum + child._count.products + grandChildrenProducts;
+    }, 0);
+
+    return {
+      id: category.id,
+      title: category.title,
+      image: category.image,
+      totalProductsCount: category._count.products + childrenProducts,
+    };
+  });
+
+  return withTotals
+    .filter((category) => category.totalProductsCount > 0)
+    .slice(0, limit);
+};
