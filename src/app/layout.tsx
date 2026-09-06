@@ -23,6 +23,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       dir="rtl"
       className={`${fontFamily.variable} h-full antialiased`}
     >
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Eltantawy" />
+      </head>
       <body className="flex flex-col">
         <StructuredData data={organizationStructuredData} />
 
