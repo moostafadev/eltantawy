@@ -21,8 +21,12 @@ export interface OrderItem {
   weightOptionId: string | null;
   weightOptionName: string | null;
   isApprox: boolean;
+  minWeight: number | null;
+  maxWeight: number | null;
   minTotal: number | null;
   maxTotal: number | null;
+  actualWeight: number | null;
+  weightConfirmed: boolean;
   total: number;
   returnedQty: number;
 }
@@ -93,3 +97,10 @@ export const orderStatusTransitions: Record<
   DELIVERED: [],
   CANCELLED: [],
 };
+
+/**
+ * الحالة اللي لازم قبلها يكون كل عنصر "نطاق وزن" في الطلب
+ * له وزن فعلي مؤكّد (weightConfirmed = true)
+ */
+export const WEIGHT_CONFIRMATION_REQUIRED_BEFORE: OrderStatusEnum =
+  "OUT_FOR_DELIVERY";

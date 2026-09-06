@@ -163,6 +163,8 @@ export const createOrderAction = async (values: unknown) => {
               weightOptionId: item.weightOptionId ?? null,
               weightOptionName: item.weightOption?.name ?? null,
               isApprox: item.isApprox,
+              minWeight: item.weightOption?.minWeight ?? null,
+              maxWeight: item.weightOption?.maxWeight ?? null,
               minTotal: item.minTotal ?? null,
               maxTotal: item.maxTotal ?? null,
               total: item.total,

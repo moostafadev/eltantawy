@@ -15,6 +15,7 @@ import {
   OrderStatusEnum,
   orderStatusLabels,
   orderStatusTransitions,
+  WEIGHT_CONFIRMATION_REQUIRED_BEFORE,
 } from "./types";
 import { getUserOrdersChannel } from "@/lib/realtime/constants";
 
@@ -53,6 +54,32 @@ export const updateOrderStatusAction = async (
         success: false,
         message: "لا يمكن تغيير حالة الطلب إلى هذه الحالة",
       };
+    }
+
+    /*
+     * ================================
+     * منع الخروج للتوصيل قبل تأكيد الوزن الفعلي
+     * ================================
+     *
+     * أي عنصر "نطاق وزن" في الطلب لازم يكون له وزن فعلي مؤكّد
+     * قبل ما الطلب يوصل لحالة "خرج للتوصيل"، عشان السعر النهائي
+     * يبقى دقيق وليس تقريبي
+     */
+    if (nextStatus === WEIGHT_CONFIRMATION_REQUIRED_BEFORE) {
+      const unconfirmedCount = await prisma.orderItem.count({
+        where: {
+          orderId: id,
+          isApprox: true,
+          weightConfirmed: false,
+        },
+      });
+
+      if (unconfirmedCount > 0) {
+        return {
+          success: false,
+          message: `يوجد ${unconfirmedCount} منتج بوزن تقريبي لم يتم تحديد الوزن الفعلي له بعد، يرجى تأكيد الوزن أولًا`,
+        };
+      }
     }
 
     await prisma.$transaction([

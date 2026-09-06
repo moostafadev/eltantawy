@@ -254,8 +254,15 @@ model OrderItem {
   weightOptionId   String?
   weightOptionName String?
   isApprox         Boolean @default(false)
-  minTotal         Float?
-  maxTotal         Float?
+
+  minWeight Float?
+  maxWeight Float?
+
+  minTotal Float?
+  maxTotal Float?
+
+  actualWeight Float?
+  weightConfirmed Boolean @default(false)
 
   total Float
 

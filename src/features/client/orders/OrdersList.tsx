@@ -84,49 +84,68 @@ const OrdersList = ({ orders }: Props) => {
                 <h3 className="mb-2 text-sm font-semibold">عناصر الطلب</h3>
 
                 <div className="flex flex-col border border-background-second/60 bg-background">
-                  {order.items.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center gap-3 border-b border-background-second/60 p-2.5 last:border-b-0"
-                    >
-                      <div className="relative size-12 shrink-0 overflow-hidden bg-muted">
-                        {item.image ? (
-                          <Image
-                            src={item.image}
-                            alt={item.title}
-                            fill
-                            sizes="48px"
-                            className="object-cover"
-                          />
-                        ) : (
-                          <div className="flex size-full items-center justify-center text-muted-foreground">
-                            <Package className="size-5" />
-                          </div>
-                        )}
-                      </div>
+                  {order.items.map((item) => {
+                    const isConfirmedWeight =
+                      item.isApprox && item.weightConfirmed;
 
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium">
-                          {item.title}
-                        </p>
+                    return (
+                      <div
+                        key={item.id}
+                        className="flex items-center gap-3 border-b border-background-second/60 p-2.5 last:border-b-0"
+                      >
+                        <div className="relative size-12 shrink-0 overflow-hidden bg-muted">
+                          {item.image ? (
+                            <Image
+                              src={item.image}
+                              alt={item.title}
+                              fill
+                              sizes="48px"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="flex size-full items-center justify-center text-muted-foreground">
+                              <Package className="size-5" />
+                            </div>
+                          )}
+                        </div>
 
-                        <p className="mt-0.5 text-xs text-muted-foreground">
-                          {item.weightOptionName ??
-                            (item.unit === "KG" ? "كيلو" : "قطعة")}
-                          {" · "}
-                          {toArabicNums(item.qty)} × {toArabicNums(item.price)}{" "}
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium">
+                            {item.title}
+                          </p>
+
+                          <p className="mt-0.5 text-xs text-muted-foreground">
+                            {item.weightOptionName ??
+                              (item.unit === "KG" ? "كيلو" : "قطعة")}
+                            {" · "}
+                            {toArabicNums(item.qty)} ×{" "}
+                            {toArabicNums(item.price)} ج.م
+                          </p>
+
+                          {item.isApprox && (
+                            <p
+                              className={`mt-0.5 text-xs font-medium ${
+                                isConfirmedWeight
+                                  ? "text-success"
+                                  : "text-warning"
+                              }`}
+                            >
+                              {isConfirmedWeight
+                                ? `الوزن الفعلي: ${toArabicNums(item.actualWeight ?? 0)} كجم`
+                                : "سيتم تحديد الوزن الفعلي والسعر النهائي عند تجهيز الطلب"}
+                            </p>
+                          )}
+                        </div>
+
+                        <span className="shrink-0 text-sm font-bold text-main">
+                          {item.isApprox && !isConfirmedWeight
+                            ? `${toArabicNums(item.minTotal ?? 0)} - ${toArabicNums(item.maxTotal ?? 0)}`
+                            : toArabicNums(item.total)}{" "}
                           ج.م
-                        </p>
+                        </span>
                       </div>
-
-                      <span className="shrink-0 text-sm font-bold text-main">
-                        {item.isApprox
-                          ? `${toArabicNums(item.minTotal ?? 0)} - ${toArabicNums(item.maxTotal ?? 0)}`
-                          : toArabicNums(item.total)}{" "}
-                        ج.م
-                      </span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 

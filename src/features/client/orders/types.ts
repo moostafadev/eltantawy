@@ -32,6 +32,8 @@ export interface OrderDetailItem {
   isApprox: boolean;
   minTotal: number | null;
   maxTotal: number | null;
+  actualWeight: number | null;
+  weightConfirmed: boolean;
   total: number;
   returnedQty: number;
 }

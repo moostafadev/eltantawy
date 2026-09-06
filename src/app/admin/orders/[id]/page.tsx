@@ -7,6 +7,7 @@ import {
   getOneOrder,
   paymentMethodLabels,
   StatusChanger,
+  ConfirmWeightForm,
 } from "@/features/admin/orders";
 import {
   returnStatusColors,
@@ -36,6 +37,10 @@ const OrderPage = async ({ params }: OrderPageProps) => {
 
   const canCreateReturn =
     order.status === "DELIVERED" && returnableItems.length > 0;
+
+  const pendingWeightItems = order.items.filter(
+    (item) => item.isApprox && !item.weightConfirmed,
+  );
 
   return (
     <div className="flex flex-col gap-3 lg:gap-4">
@@ -77,6 +82,16 @@ const OrderPage = async ({ params }: OrderPageProps) => {
         )}
       </div>
 
+      {pendingWeightItems.length > 0 && (
+        <div className="flex items-center gap-2 border border-warning/30 bg-warning/5 p-3 text-sm font-medium text-warning">
+          <span>
+            ⚠️ يوجد {toArabicNums(pendingWeightItems.length)} منتج بوزن تقريبي
+            لم يتم تحديد وزنه الفعلي بعد. لن يمكن تغيير حالة الطلب إلى &quot;خرج
+            للتوصيل&quot; قبل تحديد الوزن الفعلي لكل المنتجات.
+          </span>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-4">
         {/* Order Items */}
         <section className="overflow-hidden border border-background-second bg-background shadow-sm h-fit">
@@ -88,28 +103,56 @@ const OrderPage = async ({ params }: OrderPageProps) => {
             {order.items.map((item) => (
               <div
                 key={item.id}
-                className="flex flex-wrap items-center justify-between gap-3 border-b border-background-second/60 p-3 last:border-b-0 lg:p-4"
+                className="flex flex-col gap-2 border-b border-background-second/60 p-3 last:border-b-0 lg:p-4"
               >
-                <div className="min-w-0">
-                  <p className="font-medium">{item.title}</p>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-medium">{item.title}</p>
 
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {item.weightOptionName ??
-                      (item.unit === "KG" ? "كيلو" : "قطعة")}
-                    {" · "}
-                    {toArabicNums(item.qty)} × {toArabicNums(item.price)} ج.م
-                  </p>
-
-                  {item.returnedQty > 0 && (
-                    <p className="mt-1 text-xs text-danger">
-                      تم إرجاع {toArabicNums(item.returnedQty)} من هذا العنصر
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {item.weightOptionName ??
+                        (item.unit === "KG" ? "كيلو" : "قطعة")}
+                      {" · "}
+                      {toArabicNums(item.qty)} × {toArabicNums(item.price)} ج.م
+                      {item.isApprox && item.weightConfirmed && (
+                        <span className="text-success">
+                          {" · "}الوزن الفعلي:{" "}
+                          {toArabicNums(item.actualWeight ?? 0)} كجم
+                        </span>
+                      )}
                     </p>
-                  )}
+
+                    {item.returnedQty > 0 && (
+                      <p className="mt-1 text-xs text-danger">
+                        تم إرجاع {toArabicNums(item.returnedQty)} من هذا العنصر
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {item.isApprox && (
+                      <Tag
+                        color={item.weightConfirmed ? "SUCCESS" : "WARNING"}
+                        variant="soft"
+                        size="sm"
+                      >
+                        {item.weightConfirmed ? "سعر نهائي" : "سعر تقريبي"}
+                      </Tag>
+                    )}
+
+                    <span className="font-bold text-main">
+                      {toArabicNums(item.total)} ج.م
+                    </span>
+                  </div>
                 </div>
 
-                <span className="font-bold text-main">
-                  {toArabicNums(item.total)} ج.م
-                </span>
+                {item.isApprox && !item.weightConfirmed && (
+                  <ConfirmWeightForm
+                    orderItemId={item.id}
+                    minWeight={item.minWeight}
+                    maxWeight={item.maxWeight}
+                  />
+                )}
               </div>
             ))}
           </div>
