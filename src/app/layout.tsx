@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
 
@@ -6,7 +5,7 @@ import { Layout } from "@/layouts/client";
 import { AuthProvider } from "@/context/AuthContext";
 import { ToastProvider } from "@/components/toaster";
 import { StructuredData } from "@/components/structured-data";
-import { rootMetadata } from "@/lib/seo/metadata";
+import { getRootMetadata } from "@/lib/seo/rootMetadata";
 import { organizationStructuredData } from "@/lib/seo/structuredData";
 
 const fontFamily = Cairo({
@@ -15,7 +14,7 @@ const fontFamily = Cairo({
   weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
-export const metadata: Metadata = rootMetadata;
+export const generateMetadata = async () => getRootMetadata();
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

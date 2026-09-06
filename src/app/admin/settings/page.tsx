@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Percent, Truck } from "lucide-react";
+import { ArrowLeft, Percent, Search, Truck } from "lucide-react";
 
 const settingsSections = [
   {
@@ -14,6 +14,13 @@ const settingsSections = [
     description: "إدارة كوبونات الخصم وخصومات العملاء",
     href: "/admin/settings/discounts",
     icon: Percent,
+    isActive: true,
+  },
+  {
+    title: "إعدادات SEO",
+    description: "تحسين ظهور الموقع في محركات البحث",
+    href: "/admin/settings/seo",
+    icon: Search,
     isActive: true,
   },
 ];

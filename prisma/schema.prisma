@@ -302,3 +302,14 @@ model OrderReturnItem {
   qty    Float
   amount Float
 }
+
+model SiteSeoSettings {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  siteTitle       String
+  siteDescription String
+  keywords        String[]
+  ogImage         String?
+
+  updatedAt DateTime @updatedAt
+}
