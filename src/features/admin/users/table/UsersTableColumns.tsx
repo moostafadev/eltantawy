@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { Eye, MessageCircle } from "lucide-react";
 
 import { Tag } from "@/components/tag";
 import { Button } from "@/components/button";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
+import { getWhatsAppLink } from "@/utils/whatsapp";
 
 import { UserRow } from "./types";
 
@@ -114,20 +115,41 @@ export const usersTableColumns: TableColumn<UserRow>[] = [
   {
     key: "options",
     title: <div className="flex justify-center">التحكم</div>,
-    render: (row) => (
-      <div className="flex justify-center gap-1">
-        <Link
-          href={
-            row.kind === "REGISTERED"
-              ? `/admin/users/${row.data.id}`
-              : `/admin/users/guest/${row.data.customerPhone}`
-          }
-        >
-          <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye className="size-4 lg:size-5" />
-          </Button>
-        </Link>
-      </div>
-    ),
+    render: (row) => {
+      const phone =
+        row.kind === "REGISTERED" ? row.data.phone : row.data.customerPhone;
+
+      const name =
+        row.kind === "REGISTERED"
+          ? `${row.data.fName} ${row.data.lName}`
+          : row.data.customerName;
+
+      return (
+        <div className="flex justify-center gap-1">
+          <Link
+            href={getWhatsAppLink(phone, `مرحبًا ${name}`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="التواصل عبر واتساب"
+          >
+            <Button size="icon" color="SUCCESS" variant="soft">
+              <MessageCircle className="size-4 lg:size-5" />
+            </Button>
+          </Link>
+
+          <Link
+            href={
+              row.kind === "REGISTERED"
+                ? `/admin/users/${row.data.id}`
+                : `/admin/users/guest/${row.data.customerPhone}`
+            }
+          >
+            <Button size="icon" color="NEUTRAL" variant="outline">
+              <Eye className="size-4 lg:size-5" />
+            </Button>
+          </Link>
+        </div>
+      );
+    },
   },
 ];

@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Eye } from "lucide-react";
+import { Eye, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/button";
 import { Tag } from "@/components/tag";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
+import { getWhatsAppLink } from "@/utils/whatsapp";
 
 import { Order, orderStatusColors, orderStatusLabels } from "./types";
 
@@ -90,6 +91,20 @@ export const ordersTableColumns: TableColumn<OrderRow>[] = [
     title: <div className="flex justify-center">التحكم</div>,
     render: (order) => (
       <div className="flex justify-center gap-1">
+        <Link
+          href={getWhatsAppLink(
+            order.customerPhone,
+            `مرحبًا ${order.customerName}، بخصوص طلبك #${order.orderNumber}`,
+          )}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="التواصل عبر واتساب"
+        >
+          <Button size="icon" color="SUCCESS" variant="soft">
+            <MessageCircle className="size-4 lg:size-5" />
+          </Button>
+        </Link>
+
         <Link href={`/admin/orders/${order.id}`}>
           <Button size="icon" color="NEUTRAL" variant="outline">
             <Eye className="size-4 lg:size-5" />
