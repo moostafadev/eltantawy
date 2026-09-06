@@ -1,5 +1,13 @@
 import { VerifyEmailForm } from "@/features/client/auth/verification-code";
 import Image from "next/image";
+import { buildMetadata } from "@/lib/seo/metadata";
+
+export const metadata = buildMetadata({
+  title: "تأكيد البريد الإلكتروني",
+  description: "أدخل رمز التحقق لتأكيد بريدك الإلكتروني وإتمام إنشاء حسابك.",
+  path: "/verify-email",
+  noIndex: true,
+});
 
 const VerifyEmail = () => {
   return (

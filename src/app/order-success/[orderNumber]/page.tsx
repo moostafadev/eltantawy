@@ -3,6 +3,14 @@ import { CheckCircle2 } from "lucide-react";
 
 import { Button } from "@/components/button";
 import { toArabicNums } from "@/utils/toArabicNums";
+import { buildMetadata } from "@/lib/seo/metadata";
+
+export const metadata = buildMetadata({
+  title: "تم استلام طلبك",
+  description: "تم استلام طلبك بنجاح وسيتم التواصل معك قريبًا لتأكيده.",
+  path: "/order-success",
+  noIndex: true,
+});
 
 interface OrderSuccessProps {
   params: Promise<{

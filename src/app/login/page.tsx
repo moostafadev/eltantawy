@@ -1,5 +1,14 @@
 import { FormLogin } from "@/features/client/auth/login";
 import Image from "next/image";
+import { buildMetadata } from "@/lib/seo/metadata";
+
+export const metadata = buildMetadata({
+  title: "تسجيل الدخول",
+  description:
+    "سجل الدخول إلى حسابك في الطنطاوي لمتابعة طلباتك والاستفادة من الخصومات.",
+  path: "/login",
+  noIndex: true,
+});
 
 const Login = () => {
   return (

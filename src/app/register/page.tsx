@@ -1,5 +1,14 @@
 import { RegisterForm } from "@/features/client/auth/register";
 import Image from "next/image";
+import { buildMetadata } from "@/lib/seo/metadata";
+
+export const metadata = buildMetadata({
+  title: "إنشاء حساب جديد",
+  description:
+    "أنشئ حسابك في الطنطاوي واستمتع بتتبع طلباتك والحصول على أفضل العروض.",
+  path: "/register",
+  noIndex: true,
+});
 
 const Register = () => {
   return (

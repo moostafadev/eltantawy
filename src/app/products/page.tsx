@@ -2,6 +2,15 @@ import { Package } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
 import { ProductCard } from "@/features/client/product-card";
+import { buildMetadata } from "@/lib/seo/metadata";
+
+export const metadata = buildMetadata({
+  title: "المنتجات",
+  description:
+    "تصفح كل منتجات الطنطاوي من اللحوم والدواجن الطازجة بأسعار مناسبة وجودة عالية، مع خيارات بيع بالكيلو أو بالقطعة.",
+  path: "/products",
+  keywords: ["منتجات لحوم", "شراء لحوم اونلاين", "أسعار اللحوم"],
+});
 
 const ProductsPage = async () => {
   const products = await prisma.product.findMany({

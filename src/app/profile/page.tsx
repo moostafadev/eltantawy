@@ -10,6 +10,14 @@ import { verifyAccessToken } from "@/lib/auth";
 import { ProfileCard, ProfileSkeleton } from "@/features/client/profile";
 import { RecentOrders } from "@/features/client/orders";
 import { Skeleton } from "@/components/skeleton";
+import { buildMetadata } from "@/lib/seo/metadata";
+
+export const metadata = buildMetadata({
+  title: "الملف الشخصي",
+  description: "إدارة بياناتك الشخصية ومتابعة طلباتك السابقة.",
+  path: "/profile",
+  noIndex: true,
+});
 
 const RecentOrdersSkeleton = () => {
   return (

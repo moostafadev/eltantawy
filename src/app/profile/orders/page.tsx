@@ -8,6 +8,14 @@ import {
   OrdersRealtimeListener,
   getAllOrdersForUser,
 } from "@/features/client/orders";
+import { buildMetadata } from "@/lib/seo/metadata";
+
+export const metadata = buildMetadata({
+  title: "طلباتي",
+  description: "تابع حالة طلباتك السابقة وتفاصيل كل طلب.",
+  path: "/profile/orders",
+  noIndex: true,
+});
 
 const ProfileOrdersPage = async () => {
   const cookieStore = await cookies();
