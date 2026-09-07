@@ -1,0 +1,30 @@
+:root {
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+
+  --color-main: #c1272d;
+  --color-main-foreground: #fdf6ef;
+
+  --color-background-second: #ffd2d4;
+
+  --color-success: #16a34a;
+  --color-success-foreground: #ffffff;
+
+  --color-danger: #dc2626;
+  --color-danger-foreground: #ffffff;
+
+  --color-warning: #eab308;
+  --color-warning-foreground: #171717;
+
+  --color-info: #2563eb;
+  --color-info-foreground: #ffffff;
+
+  --color-muted: #f8f8f8;
+  --color-muted-foreground: #737373;
+  --color-border: #e5e5e5;
+
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-base: 1.5rem;
+  --space-lg: 2rem;
+}
