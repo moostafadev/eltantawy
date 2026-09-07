@@ -147,6 +147,88 @@
       opacity: 1;
     }
   }
+
+  @keyframes hero-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes hero-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes hero-glow-pulse {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.9;
+      transform: scale(1.2);
+    }
+  }
+
+  @keyframes hero-glow-pulse-slow {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: scale(1.05);
+    }
+
+    50% {
+      opacity: 0.6;
+      transform: scale(0.9);
+    }
+  }
+
+  @keyframes hero-particle-drift {
+    0% {
+      transform: translate(0, 0);
+      opacity: 0;
+    }
+
+    10% {
+      opacity: 1;
+    }
+
+    90% {
+      opacity: 1;
+    }
+
+    100% {
+      transform: translate(var(--drift-x, 20px), -160px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes hero-scroll-bounce {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.6;
+    }
+
+    50% {
+      transform: translateY(8px);
+      opacity: 1;
+    }
+  }
 }
 
 .animate-cart-pop {
@@ -171,4 +253,39 @@
   animation:
     cart-badge 350ms cubic-bezier(0.34, 1.56, 0.64, 1),
     cart-badge-pulse 2s infinite 500ms;
+}
+
+.animate-hero-fade-up {
+  animation: hero-fade-up 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-hero-float {
+  animation: hero-float 4.5s ease-in-out infinite;
+}
+
+.animate-hero-glow-pulse {
+  animation: hero-glow-pulse 4s ease-in-out infinite;
+}
+
+.animate-hero-glow-pulse-slow {
+  animation: hero-glow-pulse-slow 6s ease-in-out infinite;
+}
+
+.animate-hero-particle {
+  animation: hero-particle-drift linear infinite;
+}
+
+.animate-hero-scroll-bounce {
+  animation: hero-scroll-bounce 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-fade-up,
+  .animate-hero-float,
+  .animate-hero-glow-pulse,
+  .animate-hero-glow-pulse-slow,
+  .animate-hero-particle,
+  .animate-hero-scroll-bounce {
+    animation: none;
+  }
 }
