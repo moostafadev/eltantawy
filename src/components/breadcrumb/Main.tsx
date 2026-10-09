@@ -35,7 +35,7 @@ const Breadcrumb = ({ items, className = "" }: BreadcrumbProps) => {
             <Link
               href={pathName.startsWith("/admin") ? "/admin" : "/"}
               aria-label="الرئيسية"
-              className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-background-second/30 hover:text-main sm:size-9"
+              className="flex size-8 items-center justify-center text-muted-foreground transition-colors hover:bg-background-second/30 hover:text-main sm:size-9"
             >
               <Home aria-hidden="true" className="size-4 sm:size-4.5" />
             </Link>
