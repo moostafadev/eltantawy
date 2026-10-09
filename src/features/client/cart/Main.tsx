@@ -13,13 +13,11 @@ const CartSummary = () => {
   const router = useRouter();
 
   const { cart, isUpdating } = useCart();
-
   const {
     subtotal,
     discount,
     discountAmount,
     appliedDiscountLabel,
-    deliveryFee,
     total,
     hasApproxItems,
     minTotal,
@@ -77,19 +75,6 @@ const CartSummary = () => {
             )}
           </div>
         )}
-
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">خدمة التوصيل</span>
-
-          {isUpdating ? (
-            <Skeleton width={65} height={16} />
-          ) : (
-            <span className="font-medium">
-              {deliveryFee.toLocaleString("ar-EG")}
-              ج.م
-            </span>
-          )}
-        </div>
 
         <div className="border-t border-border pt-3 lg:pt-4">
           <div className="flex justify-between">

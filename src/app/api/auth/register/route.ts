@@ -87,21 +87,35 @@ export async function POST(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const user = await prisma.user.create({
-      data: {
-        fName: fName.trim(),
-        lName: lName.trim(),
-        phone: normalizedPhone,
-        email: generatedEmail,
-        password: hashedPassword,
-      },
-      select: {
-        id: true,
-        fName: true,
-        lName: true,
-        phone: true,
-        role: true,
-      },
+    const user = await prisma.$transaction(async (tx) => {
+      const createdUser = await tx.user.create({
+        data: {
+          fName: fName.trim(),
+          lName: lName.trim(),
+          phone: normalizedPhone,
+          email: generatedEmail,
+          password: hashedPassword,
+        },
+        select: {
+          id: true,
+          fName: true,
+          lName: true,
+          phone: true,
+          role: true,
+        },
+      });
+
+      await tx.order.updateMany({
+        where: {
+          customerPhone: normalizedPhone,
+          userId: null,
+        },
+        data: {
+          userId: createdUser.id,
+        },
+      });
+
+      return createdUser;
     });
 
     const accessToken = signAccessToken({

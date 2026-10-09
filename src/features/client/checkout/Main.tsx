@@ -10,7 +10,6 @@ import { IProps } from "./types";
 
 const Checkout = ({ zones }: IProps) => {
   const { cart } = useCart();
-
   const [selectedZoneId, setSelectedZoneId] = useState("");
 
   const selectedZone = useMemo(
@@ -32,7 +31,10 @@ const Checkout = ({ zones }: IProps) => {
           hasZone={Boolean(selectedZone)}
         />
       </div>
-      <CheckoutForm zones={zones} onZoneChange={setSelectedZoneId} />
+      <CheckoutForm
+        zones={zones}
+        onZoneChange={setSelectedZoneId}
+      />
 
       <CheckoutSummary
         deliveryFee={deliveryFee}

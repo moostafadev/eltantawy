@@ -6,7 +6,6 @@ import { verifyAccessToken } from "../auth";
 import {
   CART_COOKIE_NAME,
   CART_COOKIE_OPTIONS,
-  CART_DELIVERY_FEE,
 } from "./constants";
 
 import {
@@ -422,7 +421,7 @@ export class CartService {
       0,
     );
 
-    const deliveryFee = CART_DELIVERY_FEE;
+    const deliveryFee = 0;
 
     const hasApproxItems = items.some((item) => item.isApprox);
 
