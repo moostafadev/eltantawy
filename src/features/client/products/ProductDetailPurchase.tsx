@@ -5,6 +5,7 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/button";
 import { useToast } from "@/components/toaster";
+import useScroll from "@/hooks/useScroll";
 import { useCart } from "@/lib/cart/provider";
 
 interface WeightOption {
@@ -37,6 +38,7 @@ const ProductDetailPurchase = ({
 }: Props) => {
   const { addItem } = useCart();
   const { toast } = useToast();
+  const isScrolled = useScroll();
 
   const isWeightRange = saleType === "WEIGHT_RANGE" && weightOptions.length > 0;
   const isKg = unit === "KG";
@@ -222,6 +224,25 @@ const ProductDetailPurchase = ({
       >
         <ShoppingCart className="size-4" />
         إضافة للسلة
+      </Button>
+
+      <Button
+        type="button"
+        color="SUCCESS"
+        size="icon"
+        loading={isLoading}
+        disabled={!isScrolled || (isWeightRange && !selectedOption)}
+        onClick={handleAdd}
+        aria-label="إضافة المنتج إلى السلة"
+        aria-hidden={!isScrolled}
+        tabIndex={isScrolled ? 0 : -1}
+        className={`fixed bottom-20 right-4 z-40 size-10 cursor-pointer appearance-none border-0 bg-success p-0 text-success-foreground shadow-none outline-none ring-0 transition-[opacity,transform,background-color] duration-300 ease-out hover:bg-success/90 focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 motion-reduce:transition-none lg:hidden ${
+          isScrolled
+            ? "translate-y-0 opacity-100"
+            : "pointer-events-none translate-y-2 opacity-0!"
+        }`}
+      >
+        <ShoppingCart className="size-4" />
       </Button>
     </div>
   );

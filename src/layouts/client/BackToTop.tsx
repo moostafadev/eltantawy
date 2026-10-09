@@ -48,8 +48,7 @@ const BackToTop = () => {
     };
   }, []);
 
-  if (progress <= 10) return null;
-
+  const isVisible = progress > 10;
   const isComplete = progress >= 100;
 
   const scrollToTop = () => {
@@ -93,8 +92,14 @@ const BackToTop = () => {
     <button
       type="button"
       aria-label="العودة إلى أعلى الصفحة"
+      aria-hidden={!isVisible}
+      tabIndex={isVisible ? 0 : -1}
       onClick={scrollToTop}
-      className="fixed bottom-20 left-4 z-40 flex size-10 cursor-pointer appearance-none items-center justify-center border-0 bg-background/70 p-0 text-foreground shadow-none outline-none ring-0 backdrop-blur-sm transition-colors hover:text-main focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 lg:bottom-6 lg:left-6 lg:size-12 duration-300"
+      className={`fixed bottom-20 left-4 z-40 flex size-10 cursor-pointer appearance-none items-center justify-center border-0 bg-background/70 p-0 text-foreground shadow-none outline-none ring-0 backdrop-blur-sm transition-[opacity,transform,color] duration-300 ease-out hover:text-main focus-visible:border-0 focus-visible:outline-none focus-visible:ring-0 motion-reduce:transition-none lg:bottom-6 lg:left-6 lg:size-12 ${
+        isVisible
+          ? "translate-y-0 opacity-100"
+          : "pointer-events-none translate-y-2 opacity-0"
+      }`}
     >
       <svg
         aria-hidden="true"
