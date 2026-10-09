@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { LoadingImage as Image } from "@/components/loading-image";
 import { Package, ShoppingBag } from "lucide-react";
 
 import { Accordion, AccordionItem } from "@/components/accordion";

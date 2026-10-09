@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { LoadingImage as Image } from "@/components/loading-image";
 import Link from "next/link";
 import { ArrowLeft, LayoutGrid, Package } from "lucide-react";
 

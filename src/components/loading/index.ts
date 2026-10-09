@@ -1,0 +1,18 @@
+export {
+  AdminTableLoading,
+  AdminFormLoading,
+  AdminDetailLoading,
+  AdminCategoryDetailLoading,
+  AdminOrderLoading,
+  AdminRecordLoading,
+  AdminSettingsLoading,
+  AdminUserLoading,
+  ClientCartLoading,
+  ClientCatalogLoading,
+  ClientCategoriesLoading,
+  ClientCheckoutLoading,
+  ClientOffersLoading,
+  ClientOrdersLoading,
+  ClientProductLoading,
+  ClientProfileLoading,
+} from "./PageSkeleton";

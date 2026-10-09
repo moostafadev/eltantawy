@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { LoadingImage as Image } from "@/components/loading-image";
 import { Minus, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/button";

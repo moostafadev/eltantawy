@@ -7,7 +7,7 @@ import { useToast } from "@/components/toaster";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Image from "next/image";
+import { LoadingImage as Image } from "@/components/loading-image";
 import Link from "next/link";
 
 import { loginSchema } from "./schema";

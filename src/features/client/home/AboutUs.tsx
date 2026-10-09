@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { LoadingImage as Image } from "@/components/loading-image";
 import { Info } from "lucide-react";
 
 import { aboutFeatures, aboutStats } from "./constants";

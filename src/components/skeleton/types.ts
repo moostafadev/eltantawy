@@ -5,5 +5,6 @@ export interface IProps {
   count?: number;
   height?: number;
   width?: number;
+  aspectRatio?: number | string;
   className?: string;
 }

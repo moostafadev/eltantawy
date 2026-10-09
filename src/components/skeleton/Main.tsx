@@ -13,6 +13,7 @@ const Skeleton = ({
   count = 1,
   width,
   height = 16,
+  aspectRatio,
   className = "",
 }: IProps) => {
   return (
@@ -23,7 +24,8 @@ const Skeleton = ({
           className={`animate-pulse ${getColor(color)} ${className}`}
           style={{
             width: width ? `${width}px` : "100%",
-            height: `${height}px`,
+            height: aspectRatio ? undefined : `${height}px`,
+            aspectRatio,
           }}
         />
       ))}

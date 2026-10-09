@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { LoadingImage as Image } from "@/components/loading-image";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import {

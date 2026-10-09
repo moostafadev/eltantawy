@@ -4,7 +4,7 @@ import { IProps } from "./types";
 import { Button } from "@/components/button";
 import { ChevronDown, Globe, LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
+import { LoadingImage as Image } from "@/components/loading-image";
 import { sidebarData } from "./constants";
 import { usePathname } from "next/navigation";
 import { LogoutButton } from "@/components/logoutButton";
