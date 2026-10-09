@@ -1,1 +1,1 @@
-export type { RegisterForm } from "./schema";
+export type { RegisterFormValues } from "./schema";

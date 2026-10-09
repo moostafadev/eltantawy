@@ -3,10 +3,10 @@
 import { Check, Circle } from "lucide-react";
 import { useFormContext, useWatch } from "react-hook-form";
 
-import { RegisterForm } from "./types";
+import { RegisterFormValues } from "./types";
 
 const PasswordRequirements = () => {
-  const { control } = useFormContext<RegisterForm>();
+  const { control } = useFormContext<RegisterFormValues>();
 
   const password =
     useWatch({

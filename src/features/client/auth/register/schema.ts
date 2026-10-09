@@ -21,4 +21,4 @@ export const registerSchema = z.object({
     .regex(/[^A-Za-z0-9]/, "يجب أن تحتوي على رمز خاص واحد على الأقل"),
 });
 
-export type RegisterForm = z.infer<typeof registerSchema>;
+export type RegisterFormValues = z.infer<typeof registerSchema>;

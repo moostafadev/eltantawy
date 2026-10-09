@@ -10,7 +10,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { RegisterForm } from "./types";
+import type { RegisterFormValues } from "./types";
 import { registerSchema } from "./schema";
 import PasswordRequirements from "./PasswordRequirements";
 import { useAuth } from "@/context/AuthContext";
@@ -22,7 +22,7 @@ const RegisterForm = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (data: RegisterForm) => {
+  const handleSubmit = async (data: RegisterFormValues) => {
     try {
       setIsLoading(true);
 
@@ -55,7 +55,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <Form<RegisterForm>
+    <Form<RegisterFormValues>
       onSubmit={handleSubmit}
       resolver={zodResolver(registerSchema)}
       className="flex w-full max-w-xl flex-col gap-4 border border-background-second/60 bg-background p-4 shadow-sm"
@@ -80,20 +80,20 @@ const RegisterForm = () => {
 
       <div className="flex flex-col gap-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Input<RegisterForm>
+          <Input<RegisterFormValues>
             name="fName"
             label="الاسم الأول"
             placeholder="أدخل اسمك الأول"
           />
 
-          <Input<RegisterForm>
+          <Input<RegisterFormValues>
             name="lName"
             label="اسم العائلة"
             placeholder="أدخل اسم العائلة"
           />
         </div>
 
-        <Input<RegisterForm>
+        <Input<RegisterFormValues>
           name="phone"
           label="رقم الهاتف"
           type="tel"
@@ -101,7 +101,7 @@ const RegisterForm = () => {
         />
 
         <div className="flex flex-col gap-2">
-          <Input<RegisterForm>
+          <Input<RegisterFormValues>
             name="password"
             label="كلمة المرور"
             type="password"
