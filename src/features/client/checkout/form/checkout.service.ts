@@ -196,7 +196,7 @@ export const createOrderAction = async (values: unknown) => {
       }),
     );
 
-    await CartService.clear();
+    const clearedCart = await CartService.clear();
 
     revalidatePath("/admin/orders");
     revalidatePath("/profile/orders");
@@ -237,6 +237,7 @@ export const createOrderAction = async (values: unknown) => {
       success: true,
       message: "تم إنشاء الطلب بنجاح",
       orderNumber: order.orderNumber,
+      cart: clearedCart,
     };
   } catch (error) {
     console.error("CREATE_ORDER_ERROR:", error);

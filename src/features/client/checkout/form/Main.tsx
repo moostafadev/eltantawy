@@ -10,6 +10,7 @@ import { Input } from "@/components/input";
 import { Select } from "@/components/select";
 import { useToast } from "@/components/toaster";
 import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/lib/cart/provider";
 
 import { checkoutSchema } from "../schema";
 import { CheckoutFormValues } from "../schema";
@@ -24,6 +25,7 @@ const CheckoutForm = ({ zones, onZoneChange }: Props) => {
   const router = useRouter();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { syncCart } = useCart();
 
   const [loading, setLoading] = useState(false);
 
@@ -51,6 +53,7 @@ const CheckoutForm = ({ zones, onZoneChange }: Props) => {
         return;
       }
 
+      syncCart(result.cart);
       toast.success(result.message);
 
       router.push(`/order-success/${result.orderNumber}`);
