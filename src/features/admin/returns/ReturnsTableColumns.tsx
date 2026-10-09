@@ -99,9 +99,12 @@ export const returnsTableColumns: TableColumn<ReturnRow>[] = [
     title: <div className="flex justify-center">التحكم</div>,
     render: (orderReturn) => (
       <div className="flex justify-center gap-1">
-        <Link href={`/admin/orders/${orderReturn.orderId}`}>
+        <Link
+          href={`/admin/orders/${orderReturn.orderId}`}
+          aria-label="عرض الطلب المرتبط"
+        >
           <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye className="size-4 lg:size-5" />
+            <Eye aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
       </div>

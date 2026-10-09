@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Minus, Plus, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { useToast } from "@/components/toaster";
 import useScroll from "@/hooks/useScroll";
 import { useCart } from "@/lib/cart/provider";
@@ -163,16 +164,19 @@ const ProductDetailPurchase = ({
         </p>
 
         <div className="flex items-center gap-4">
-          <Button
-            type="button"
-            size="icon"
-            variant="soft"
-            color="MAIN"
-            onClick={decrement}
-            disabled={quantity <= step || isLoading}
-          >
-            <Minus />
-          </Button>
+          <Tooltip content="تقليل الكمية" focusable={false}>
+            <Button
+              type="button"
+              size="icon"
+              variant="soft"
+              color="MAIN"
+              onClick={decrement}
+              disabled={quantity <= step || isLoading}
+              aria-label="تقليل الكمية"
+            >
+              <Minus aria-hidden="true" />
+            </Button>
+          </Tooltip>
 
           <div className="min-w-24 text-center">
             <strong className="text-2xl">
@@ -184,16 +188,19 @@ const ProductDetailPurchase = ({
             </span>
           </div>
 
-          <Button
-            type="button"
-            size="icon"
-            variant="soft"
-            color="MAIN"
-            onClick={increment}
-            disabled={isLoading}
-          >
-            <Plus />
-          </Button>
+          <Tooltip content="زيادة الكمية" focusable={false}>
+            <Button
+              type="button"
+              size="icon"
+              variant="soft"
+              color="MAIN"
+              onClick={increment}
+              disabled={isLoading}
+              aria-label="زيادة الكمية"
+            >
+              <Plus aria-hidden="true" />
+            </Button>
+          </Tooltip>
         </div>
       </div>
 

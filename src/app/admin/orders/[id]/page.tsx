@@ -1,4 +1,15 @@
 import { notFound } from "next/navigation";
+import {
+  CreditCard,
+  House,
+  Mail,
+  MapPin,
+  NotebookPen,
+  Phone,
+  TriangleAlert,
+  UserRound,
+  type LucideIcon,
+} from "lucide-react";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Tag } from "@/components/tag";
@@ -84,8 +95,9 @@ const OrderPage = async ({ params }: OrderPageProps) => {
 
       {pendingWeightItems.length > 0 && (
         <div className="flex items-center gap-2 border border-warning/30 bg-warning/5 p-3 text-sm font-medium text-warning">
+          <TriangleAlert aria-hidden="true" className="size-5 shrink-0" />
           <span>
-            ⚠️ يوجد {toArabicNums(pendingWeightItems.length)} منتج بوزن تقريبي
+            يوجد {toArabicNums(pendingWeightItems.length)} منتج بوزن تقريبي
             لم يتم تحديد وزنه الفعلي بعد. لن يمكن تغيير حالة الطلب إلى &quot;خرج
             للتوصيل&quot; قبل تحديد الوزن الفعلي لكل المنتجات.
           </span>
@@ -214,21 +226,42 @@ const OrderPage = async ({ params }: OrderPageProps) => {
             </div>
 
             <div className="flex flex-col">
-              <InfoRow label="الاسم" value={order.customerName} />
               <InfoRow
+                icon={UserRound}
+                label="الاسم"
+                value={order.customerName}
+              />
+              <InfoRow
+                icon={Phone}
                 label="الهاتف"
                 value={toArabicNums(order.customerPhone)}
               />
               {order.customerEmail && (
                 <InfoRow
+                  icon={Mail}
                   label="البريد الإلكتروني"
                   value={order.customerEmail}
                 />
               )}
-              <InfoRow label="منطقة التوصيل" value={order.deliveryZoneTitle} />
-              <InfoRow label="العنوان" value={order.addressLine} />
-              {order.notes && <InfoRow label="ملاحظات" value={order.notes} />}
               <InfoRow
+                icon={MapPin}
+                label="منطقة التوصيل"
+                value={order.deliveryZoneTitle}
+              />
+              <InfoRow
+                icon={House}
+                label="العنوان"
+                value={order.addressLine}
+              />
+              {order.notes && (
+                <InfoRow
+                  icon={NotebookPen}
+                  label="ملاحظات"
+                  value={order.notes}
+                />
+              )}
+              <InfoRow
+                icon={CreditCard}
                 label="طريقة الدفع"
                 value={paymentMethodLabels[order.paymentMethod]}
               />
@@ -288,14 +321,18 @@ const OrderPage = async ({ params }: OrderPageProps) => {
 };
 
 interface InfoRowProps {
+  icon: LucideIcon;
   label: string;
   value: string;
 }
 
-const InfoRow = ({ label, value }: InfoRowProps) => {
+const InfoRow = ({ icon: Icon, label, value }: InfoRowProps) => {
   return (
     <div className="flex flex-col gap-1 border-b border-background-second/60 p-3 last:border-b-0 lg:gap-1.5 lg:p-4">
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
+      <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        <Icon aria-hidden="true" className="size-3.5" />
+        <span className="sr-only">{label}</span>
+      </p>
       <p className="text-sm font-medium text-foreground">{value}</p>
     </div>
   );

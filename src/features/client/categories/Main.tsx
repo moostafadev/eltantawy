@@ -26,7 +26,7 @@ const Categories = ({ categories }: CategoriesProps) => {
   return (
     <main className="flex flex-col">
       <CategoryHashScroll />
-      <div className="container py-6 lg:py-8">
+      <div className="container pt-6 lg:pt-8">
         <div className="flex flex-col gap-6 lg:gap-8">
           <header className="flex flex-col gap-4 border-b border-border pb-6">
             <div className="flex items-center gap-3">

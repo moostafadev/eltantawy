@@ -58,12 +58,8 @@ export const ClientCatalogLoading = () => (
 );
 
 export const ClientCategoriesLoading = () => (
-  <main
-    role="status"
-    aria-label="جاري تحميل الصفحة"
-    className="flex flex-col"
-  >
-    <div className="container py-6 lg:py-8">
+  <main role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col">
+    <div className="container pt-6 lg:pt-8">
       <header className="flex flex-col gap-4 border-b border-border pb-6">
         <div className="flex items-center gap-3">
           <Skeleton width={48} height={48} />
@@ -78,7 +74,7 @@ export const ClientCategoriesLoading = () => (
         </div>
       </header>
     </div>
-    <div className="border-y border-border bg-background">
+    <div className="bg-background">
       <div className="container flex gap-2 overflow-hidden py-3">
         {Array.from({ length: 5 }).map((_, index) => (
           <Skeleton key={index} width={110} height={36} className="shrink-0" />
@@ -292,7 +288,11 @@ export const ClientOffersLoading = () => (
 );
 
 export const AdminTableLoading = () => (
-  <div role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col gap-3 lg:gap-4">
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex flex-col gap-3 lg:gap-4"
+  >
     <AdminPageHeader action />
     <section className="overflow-hidden border border-border bg-background">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-3 lg:p-4">
@@ -306,7 +306,10 @@ export const AdminTableLoading = () => (
           ))}
         </div>
         {Array.from({ length: 8 }).map((_, row) => (
-          <div key={row} className="flex items-center gap-3 border-b border-border/60 p-3 last:border-0">
+          <div
+            key={row}
+            className="flex items-center gap-3 border-b border-border/60 p-3 last:border-0"
+          >
             {Array.from({ length: 5 }).map((_, col) => (
               <Skeleton
                 key={col}
@@ -327,13 +330,20 @@ export const AdminTableLoading = () => (
 );
 
 export const AdminFormLoading = () => (
-  <div role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col gap-3 lg:gap-4">
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex flex-col gap-3 lg:gap-4"
+  >
     <AdminBreadcrumb />
     <AdminPageHeader />
     <section className="flex flex-col gap-4 border border-border bg-background p-3 lg:gap-5 lg:p-5">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className={`flex flex-col gap-2 ${index > 3 ? "sm:col-span-2" : ""}`}>
+          <div
+            key={index}
+            className={`flex flex-col gap-2 ${index > 3 ? "sm:col-span-2" : ""}`}
+          >
             <Skeleton width={110} height={14} />
             <Skeleton height={42} />
           </div>
@@ -348,7 +358,11 @@ export const AdminFormLoading = () => (
 );
 
 export const AdminDetailLoading = () => (
-  <div role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col gap-3 lg:gap-4">
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex flex-col gap-3 lg:gap-4"
+  >
     <AdminBreadcrumb />
     <AdminPageHeader action />
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-4">
@@ -359,7 +373,10 @@ export const AdminDetailLoading = () => (
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2">
           {Array.from({ length: 8 }).map((_, index) => (
-            <div key={index} className="flex flex-col gap-2 border-b border-border/60 p-3 lg:p-4">
+            <div
+              key={index}
+              className="flex flex-col gap-2 border-b border-border/60 p-3 lg:p-4"
+            >
               <Skeleton width={90} height={14} />
               <Skeleton width={150} height={18} className="max-w-full" />
             </div>
@@ -375,7 +392,11 @@ export const AdminDetailLoading = () => (
 );
 
 export const AdminCategoryDetailLoading = () => (
-  <div role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col gap-3 lg:gap-4">
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex flex-col gap-3 lg:gap-4"
+  >
     <AdminDetailLoading />
     <section className="flex flex-col gap-3 border border-border bg-background p-3 lg:p-4">
       <div className="flex items-center justify-between border-b border-border pb-3">
@@ -391,7 +412,11 @@ export const AdminCategoryDetailLoading = () => (
 );
 
 export const AdminRecordLoading = () => (
-  <div role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col gap-3 lg:gap-4">
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex flex-col gap-3 lg:gap-4"
+  >
     <AdminBreadcrumb />
     <AdminPageHeader action />
     <section className="overflow-hidden border border-background-second bg-background shadow-sm">
@@ -401,7 +426,10 @@ export const AdminRecordLoading = () => (
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2">
         {Array.from({ length: 8 }).map((_, index) => (
-          <div key={index} className="flex flex-col gap-2 border-b border-background-second/60 p-3 lg:p-4">
+          <div
+            key={index}
+            className="flex flex-col gap-2 border-b border-background-second/60 p-3 lg:p-4"
+          >
             <Skeleton width={100} height={14} />
             <Skeleton width={160} height={18} className="max-w-full" />
           </div>
@@ -419,7 +447,11 @@ export const AdminRecordLoading = () => (
 );
 
 export const AdminOrderLoading = () => (
-  <div role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col gap-3 lg:gap-4">
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex flex-col gap-3 lg:gap-4"
+  >
     <AdminBreadcrumb />
     <AdminPageHeader action />
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-4">
@@ -428,7 +460,10 @@ export const AdminOrderLoading = () => (
           <Skeleton width={120} height={18} />
         </div>
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="flex flex-col gap-2 border-b border-background-second/60 p-3 lg:p-4">
+          <div
+            key={index}
+            className="flex flex-col gap-2 border-b border-background-second/60 p-3 lg:p-4"
+          >
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-1 flex-col gap-2">
                 <Skeleton width={190} height={18} className="max-w-full" />
@@ -442,7 +477,10 @@ export const AdminOrderLoading = () => (
       <section className="flex flex-col gap-3 border border-border bg-background p-3 lg:p-4">
         <Skeleton width={150} height={20} />
         {Array.from({ length: 5 }).map((_, index) => (
-          <div key={index} className="flex justify-between gap-3 border-b border-border/60 py-2">
+          <div
+            key={index}
+            className="flex justify-between gap-3 border-b border-border/60 py-2"
+          >
             <Skeleton width={90} height={14} />
             <Skeleton width={120} height={14} />
           </div>
@@ -455,7 +493,11 @@ export const AdminOrderLoading = () => (
 );
 
 export const AdminUserLoading = () => (
-  <div role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col gap-3 lg:gap-4">
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex flex-col gap-3 lg:gap-4"
+  >
     <AdminBreadcrumb />
     <PageTitle width={190} />
     <section className="flex flex-col gap-3 border border-border bg-background p-3 lg:p-4">
@@ -468,17 +510,26 @@ export const AdminUserLoading = () => (
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {Array.from({ length: 3 }).map((_, index) => (
-          <div key={index} className="flex flex-col gap-2 border border-border p-3">
+          <div
+            key={index}
+            className="flex flex-col gap-2 border border-border p-3"
+          >
             <Skeleton width={100} height={14} />
             <Skeleton width={80} height={24} />
           </div>
         ))}
       </div>
       {Array.from({ length: 2 }).map((_, index) => (
-        <section key={index} className="flex flex-col gap-3 border-t border-border pt-3">
+        <section
+          key={index}
+          className="flex flex-col gap-3 border-t border-border pt-3"
+        >
           <Skeleton width={130} height={20} />
           {Array.from({ length: 3 }).map((_, row) => (
-            <div key={row} className="flex items-center gap-3 border-b border-border/60 py-2">
+            <div
+              key={row}
+              className="flex items-center gap-3 border-b border-border/60 py-2"
+            >
               <Skeleton width={50} height={34} className="shrink-0" />
               <Skeleton height={16} className="flex-1" />
               <Skeleton width={80} height={16} className="shrink-0" />
@@ -491,11 +542,18 @@ export const AdminUserLoading = () => (
 );
 
 export const AdminSettingsLoading = () => (
-  <div role="status" aria-label="جاري تحميل الصفحة" className="flex flex-col gap-3 lg:gap-4">
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex flex-col gap-3 lg:gap-4"
+  >
     <AdminPageHeader />
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:gap-4">
       {Array.from({ length: 3 }).map((_, index) => (
-        <div key={index} className="flex items-center gap-3 border border-background-second bg-background p-3 lg:p-4">
+        <div
+          key={index}
+          className="flex items-center gap-3 border border-background-second bg-background p-3 lg:p-4"
+        >
           <Skeleton width={44} height={44} className="shrink-0" />
           <div className="flex min-w-0 flex-1 flex-col gap-2">
             <Skeleton width={120} height={18} />

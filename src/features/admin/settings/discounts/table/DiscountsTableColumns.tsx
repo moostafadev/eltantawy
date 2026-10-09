@@ -91,15 +91,21 @@ export const discountsTableColumns: TableColumn<Discount>[] = [
     title: <div className="flex justify-center">التحكم</div>,
     render: (discount) => (
       <div className="flex justify-center gap-1">
-        <Link href={`/admin/settings/discounts/${discount.id}`}>
+        <Link
+          href={`/admin/settings/discounts/${discount.id}`}
+          aria-label="عرض الخصم"
+        >
           <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye className="size-4 lg:size-5" />
+            <Eye aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
 
-        <Link href={`/admin/settings/discounts/${discount.id}/edit`}>
+        <Link
+          href={`/admin/settings/discounts/${discount.id}/edit`}
+          aria-label="تعديل الخصم"
+        >
           <Button size="icon" color="INFO" variant="soft">
-            <Pen className="size-4 lg:size-5" />
+            <Pen aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
 

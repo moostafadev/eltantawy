@@ -1,6 +1,15 @@
 import { Table } from "@/components/table";
 import { Tag } from "@/components/tag";
 import { toArabicNums } from "@/utils/toArabicNums";
+import {
+  type LucideIcon,
+  Banknote,
+  CalendarDays,
+  Phone,
+  RotateCcw,
+  ShoppingBag,
+  UserRound,
+} from "lucide-react";
 import { ordersTableColumns } from "@/features/admin/orders/OrdersTableColumns";
 import { returnsTableColumns } from "@/features/admin/returns/ReturnsTableColumns";
 
@@ -43,13 +52,18 @@ const UserDetailView = ({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2">
-          <InfoItem label="الاسم" value={name} />
+          <InfoItem icon={UserRound} label="الاسم" value={name} />
 
-          <InfoItem label="رقم الهاتف" value={toArabicNums(phone)} />
+          <InfoItem
+            icon={Phone}
+            label="رقم الهاتف"
+            value={toArabicNums(phone)}
+          />
 
           <div className="flex flex-col gap-1 border-b border-background-second/60 p-3 last:border-b-0 sm:odd:border-l lg:gap-1.5 lg:p-4">
-            <p className="text-xs font-medium text-muted-foreground">
-              نوع الحساب
+            <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <UserRound aria-hidden="true" className="size-3.5" />
+              <span className="sr-only">نوع الحساب</span>
             </p>
 
             <Tag
@@ -64,6 +78,7 @@ const UserDetailView = ({
 
           {!isGuest && registeredAt && (
             <InfoItem
+              icon={CalendarDays}
               label="تاريخ التسجيل"
               value={new Date(registeredAt).toLocaleDateString("ar-EG")}
             />
@@ -72,14 +87,23 @@ const UserDetailView = ({
       </section>
 
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:gap-4">
-        <StatCard label="عدد الطلبات" value={toArabicNums(ordersCount)} />
+        <StatCard
+          icon={ShoppingBag}
+          label="عدد الطلبات"
+          value={toArabicNums(ordersCount)}
+        />
 
         <StatCard
+          icon={Banknote}
           label="إجمالي المصروف"
           value={`${toArabicNums(String(totalSpent))} ج.م`}
         />
 
-        <StatCard label="عدد المرتجعات" value={toArabicNums(returnsCount)} />
+        <StatCard
+          icon={RotateCcw}
+          label="عدد المرتجعات"
+          value={toArabicNums(returnsCount)}
+        />
       </section>
 
       <section className="flex flex-col gap-3 border border-background-second bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
@@ -118,26 +142,34 @@ const UserDetailView = ({
 };
 
 interface InfoItemProps {
+  icon: LucideIcon;
   label: string;
   value: string;
 }
 
-const InfoItem = ({ label, value }: InfoItemProps) => (
+const InfoItem = ({ icon: Icon, label, value }: InfoItemProps) => (
   <div className="flex flex-col gap-1 border-b border-background-second/60 p-3 last:border-b-0 sm:odd:border-l lg:gap-1.5 lg:p-4">
-    <p className="text-xs font-medium text-muted-foreground">{label}</p>
+    <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+      <Icon aria-hidden="true" className="size-3.5" />
+      <span className="sr-only">{label}</span>
+    </p>
 
     <p className="text-sm font-medium text-foreground">{value}</p>
   </div>
 );
 
 interface StatCardProps {
+  icon: LucideIcon;
   label: string;
   value: string;
 }
 
-const StatCard = ({ label, value }: StatCardProps) => (
+const StatCard = ({ icon: Icon, label, value }: StatCardProps) => (
   <div className="border border-background-second bg-background p-3 shadow-sm lg:p-4">
-    <p className="text-xs font-medium text-muted-foreground">{label}</p>
+    <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+      <Icon aria-hidden="true" className="size-3.5" />
+      <span className="sr-only">{label}</span>
+    </p>
 
     <p className="mt-1 text-xl font-bold text-main">{value}</p>
   </div>

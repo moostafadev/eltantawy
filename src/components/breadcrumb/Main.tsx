@@ -5,6 +5,7 @@ import { ChevronLeft, Home } from "lucide-react";
 
 import { BreadcrumbProps } from "./types";
 import { usePathname } from "next/navigation";
+import { Tooltip } from "@/components/tooltip";
 
 /**
  * Breadcrumb navigation trail.
@@ -30,13 +31,15 @@ const Breadcrumb = ({ items, className = "" }: BreadcrumbProps) => {
     >
       <ol className="flex min-w-0 items-center gap-1.5 text-sm sm:gap-2">
         <li className="flex shrink-0 items-center">
-          <Link
-            href={pathName.startsWith("/admin") ? "/admin" : "/"}
-            aria-label="الرئيسية"
-            className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-background-second/30 hover:text-main sm:size-9"
-          >
-            <Home className="size-4 sm:size-4.5" />
-          </Link>
+          <Tooltip content="الرئيسية" focusable={false}>
+            <Link
+              href={pathName.startsWith("/admin") ? "/admin" : "/"}
+              aria-label="الرئيسية"
+              className="flex size-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-background-second/30 hover:text-main sm:size-9"
+            >
+              <Home aria-hidden="true" className="size-4 sm:size-4.5" />
+            </Link>
+          </Tooltip>
         </li>
 
         {items.map((item, index) => {

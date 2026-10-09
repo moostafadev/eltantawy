@@ -83,6 +83,7 @@ const FormLogin = () => {
           name="phone"
           label="رقم الهاتف"
           type="tel"
+          showIconLabel
           placeholder="01xxxxxxxxx"
         />
 
@@ -90,6 +91,7 @@ const FormLogin = () => {
           name="password"
           label="كلمة المرور"
           type="password"
+          showIconLabel
           placeholder="أدخل كلمة المرور"
         />
       </div>

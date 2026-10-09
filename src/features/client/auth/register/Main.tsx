@@ -97,6 +97,7 @@ const RegisterForm = () => {
           name="phone"
           label="رقم الهاتف"
           type="tel"
+          showIconLabel
           placeholder="01xxxxxxxxx"
         />
 
@@ -105,6 +106,7 @@ const RegisterForm = () => {
             name="password"
             label="كلمة المرور"
             type="password"
+            showIconLabel
             placeholder="أدخل كلمة مرور قوية"
           />
 

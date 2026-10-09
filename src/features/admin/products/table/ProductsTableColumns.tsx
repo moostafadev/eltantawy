@@ -80,15 +80,18 @@ export const productsTableColumns: TableColumn<Product>[] = [
     title: <div className="flex justify-center">التحكم</div>,
     render: (product) => (
       <div className="flex justify-center gap-1">
-        <Link href={`/admin/products/${product.id}`}>
+        <Link href={`/admin/products/${product.id}`} aria-label="عرض المنتج">
           <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye className="size-4 lg:size-5" />
+            <Eye aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
 
-        <Link href={`/admin/products/${product.id}/edit`}>
+        <Link
+          href={`/admin/products/${product.id}/edit`}
+          aria-label="تعديل المنتج"
+        >
           <Button size="icon" color="INFO" variant="soft">
-            <Pen className="size-4 lg:size-5" />
+            <Pen aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
 

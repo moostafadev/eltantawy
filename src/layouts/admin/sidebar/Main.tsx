@@ -47,50 +47,54 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
           pathName === item.link || pathName.startsWith(`${item.link}/`),
       );
 
+      const navControl = hasItems ? (
+        <button
+          type="button"
+          disabled={!isActive}
+          onClick={() => toggleItem(link)}
+          aria-label={title}
+          className={`flex items-center gap-3 lg:gap-4 w-full duration-300 ${
+            isActive
+              ? "bg-main/5 hover:bg-main/10 cursor-pointer"
+              : "cursor-not-allowed opacity-50"
+          } ${
+            hasActiveChild ? "bg-main text-main" : ""
+          } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center lg:px-4 lg:justify-start"} py-3 lg:py-4 font-medium `}
+        >
+          <Icon aria-hidden="true" className="size-5 shrink-0" />
+
+          <span
+            className={`${isOpen ? "flex-1" : "hidden lg:flex lg:flex-1"} text-right`}
+          >
+            {title}
+          </span>
+
+          <ChevronDown
+            aria-hidden="true"
+            className={`size-4 duration-300 ${isOpenItem ? "rotate-180" : ""} ${isOpen ? "" : "hidden lg:block"}`}
+          />
+        </button>
+      ) : (
+        <Link
+          href={isActive ? link : pathName}
+          aria-label={title}
+          className={`flex items-center gap-3 lg:gap-4 w-full duration-300 ${
+            isActive ? "" : "cursor-not-allowed opacity-50"
+          } ${
+            isCurrent
+              ? "bg-main text-background"
+              : "bg-main/5 hover:bg-main/10"
+          } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center lg:px-4 lg:justify-start"} py-3 lg:py-4 font-medium `}
+        >
+          <Icon aria-hidden="true" className="size-5 shrink-0" />
+
+          <span className={isOpen ? "" : "hidden lg:inline"}>{title}</span>
+        </Link>
+      );
+
       return (
         <li key={link} className="w-full">
-          {/* Parent */}
-          {hasItems ? (
-            <button
-              type="button"
-              disabled={!isActive}
-              onClick={() => toggleItem(link)}
-              className={`flex items-center gap-3 lg:gap-4 w-full duration-300 ${
-                isActive
-                  ? "bg-main/5 hover:bg-main/10 cursor-pointer"
-                  : "cursor-not-allowed opacity-50"
-              } ${
-                hasActiveChild ? "bg-main text-main" : ""
-              } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center lg:px-4 lg:justify-start"} py-3 lg:py-4 font-medium `}
-            >
-              <Icon className="size-5 shrink-0" />
-
-              <span
-                className={`${isOpen ? "flex-1" : "hidden lg:flex lg:flex-1"} text-right`}
-              >
-                {title}
-              </span>
-
-              <ChevronDown
-                className={`size-4 duration-300 ${isOpenItem ? "rotate-180" : ""} ${isOpen ? "" : "hidden lg:block"}`}
-              />
-            </button>
-          ) : (
-            <Link
-              href={isActive ? link : pathName}
-              className={`flex items-center gap-3 lg:gap-4 w-full duration-300 ${
-                isActive ? "" : "cursor-not-allowed opacity-50"
-              } ${
-                isCurrent
-                  ? "bg-main text-background"
-                  : "bg-main/5 hover:bg-main/10"
-              } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center lg:px-4 lg:justify-start"} py-3 lg:py-4 font-medium `}
-            >
-              <Icon className="size-5 shrink-0" />
-
-              <span className={isOpen ? "" : "hidden lg:inline"}>{title}</span>
-            </Link>
-          )}
+          {navControl}
 
           {/* Sub Items */}
           {hasItems && isOpenItem && (
@@ -112,6 +116,7 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
       <Button
         size="icon"
         color="MAIN"
+        aria-label={isOpen ? "إغلاق القائمة الجانبية" : "فتح القائمة الجانبية"}
         className={`fixed ${isOpen ? "right-68" : "right-20"} top-3.5 lg:top-4.5 z-50 lg:hidden`}
         onClick={() => setIsOpen((open) => !open)}
       >

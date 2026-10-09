@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Tag as TagIcon, X } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { useToast } from "@/components/toaster";
 import { useCart } from "@/lib/cart/provider";
 
@@ -56,17 +57,19 @@ const CouponCode = () => {
           </div>
         </div>
 
-        <Button
-          type="button"
-          size="icon"
-          color="DANGER"
-          variant="ghost"
-          onClick={handleRemove}
-          disabled={isApplyingCoupon}
-          aria-label="إلغاء كود الخصم"
-        >
-          <X className="size-4" />
-        </Button>
+        <Tooltip content="إلغاء كود الخصم" focusable={false}>
+          <Button
+            type="button"
+            size="icon"
+            color="DANGER"
+            variant="ghost"
+            onClick={handleRemove}
+            disabled={isApplyingCoupon}
+            aria-label="إلغاء كود الخصم"
+          >
+            <X className="size-4" />
+          </Button>
+        </Tooltip>
       </div>
     );
   }

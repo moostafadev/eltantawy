@@ -5,6 +5,7 @@ import { useMemo, useRef, useState } from "react";
 import { Check, Minus, Plus, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { useDialog } from "@/components/dialog";
 import { useCart } from "@/lib/cart/provider";
 import { flyToCart } from "@/lib/cart/flyToCart";
@@ -180,16 +181,19 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
         </p>
 
         <div className="flex items-center justify-center gap-4">
-          <Button
-            type="button"
-            size="icon"
-            variant="soft"
-            color="MAIN"
-            onClick={decrement}
-            disabled={quantity <= step || isLoading}
-          >
-            <Minus />
-          </Button>
+          <Tooltip content="تقليل الكمية" focusable={false}>
+            <Button
+              type="button"
+              size="icon"
+              variant="soft"
+              color="MAIN"
+              onClick={decrement}
+              disabled={quantity <= step || isLoading}
+              aria-label="تقليل الكمية"
+            >
+              <Minus aria-hidden="true" />
+            </Button>
+          </Tooltip>
 
           <div className="min-w-24 text-center">
             <strong className="text-2xl">
@@ -201,16 +205,19 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
             </span>
           </div>
 
-          <Button
-            type="button"
-            size="icon"
-            variant="soft"
-            color="MAIN"
-            onClick={increment}
-            disabled={isLoading}
-          >
-            <Plus />
-          </Button>
+          <Tooltip content="زيادة الكمية" focusable={false}>
+            <Button
+              type="button"
+              size="icon"
+              variant="soft"
+              color="MAIN"
+              onClick={increment}
+              disabled={isLoading}
+              aria-label="زيادة الكمية"
+            >
+              <Plus aria-hidden="true" />
+            </Button>
+          </Tooltip>
         </div>
       </div>
 

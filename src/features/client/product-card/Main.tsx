@@ -10,6 +10,7 @@ import { ProductCardProps } from "./types";
 import ProductPrice from "./ProductPrice";
 import { useDialog } from "@/components/dialog";
 import { AddToCartDialog } from "../cart";
+import { Tooltip } from "@/components/tooltip";
 
 const ProductCard = ({ product, className = "" }: ProductCardProps) => {
   const { openDialog } = useDialog();
@@ -48,23 +49,31 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
             </span>
           )}
 
-        <Button
-          type="button"
-          className="absolute bottom-2 left-2 z-10 flex size-7 items-center justify-center backdrop-blur-sm transition-all duration-200 lg:size-8"
-          size="icon"
-          color="SUCCESS"
-          variant="soft"
-          onClick={() =>
-            openDialog({
-              title: "إضافة إلى السلة",
-              size: "md",
-              children: <AddToCartDialog product={product} />,
-            })
-          }
-          aria-label="إضافة إلى السلة"
+        <Tooltip
+          content="إضافة إلى السلة"
+          focusable={false}
         >
-          <ShoppingCart className="size-4 animate-cart-attention" />
-        </Button>
+          <Button
+            type="button"
+            className="absolute bottom-2 left-2 z-10 flex size-7 items-center justify-center backdrop-blur-sm transition-all duration-200 lg:size-8"
+            size="icon"
+            color="SUCCESS"
+            variant="soft"
+            onClick={() =>
+              openDialog({
+                title: "إضافة إلى السلة",
+                size: "md",
+                children: <AddToCartDialog product={product} />,
+              })
+            }
+            aria-label="إضافة إلى السلة"
+          >
+            <ShoppingCart
+              aria-hidden="true"
+              className="size-4 animate-cart-attention"
+            />
+          </Button>
+        </Tooltip>
       </div>
 
       <Link

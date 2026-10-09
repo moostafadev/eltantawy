@@ -101,7 +101,7 @@ export const usersTableColumns: TableColumn<UserRow>[] = [
             aria-label="التواصل عبر واتساب"
           >
             <Button size="icon" color="SUCCESS" variant="soft">
-              <MessageCircle className="size-4 lg:size-5" />
+              <MessageCircle aria-hidden="true" className="size-4 lg:size-5" />
             </Button>
           </Link>
 
@@ -111,9 +111,10 @@ export const usersTableColumns: TableColumn<UserRow>[] = [
                 ? `/admin/users/${row.data.id}`
                 : `/admin/users/guest/${row.data.customerPhone}`
             }
+            aria-label="عرض تفاصيل المستخدم"
           >
             <Button size="icon" color="NEUTRAL" variant="outline">
-              <Eye className="size-4 lg:size-5" />
+              <Eye aria-hidden="true" className="size-4 lg:size-5" />
             </Button>
           </Link>
         </div>

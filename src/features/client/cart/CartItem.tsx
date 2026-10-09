@@ -4,6 +4,7 @@ import { LoadingImage as Image } from "@/components/loading-image";
 import { Minus, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { CartItemWithProduct } from "@/lib/cart/types";
 import { useCart } from "@/lib/cart/provider";
 
@@ -79,32 +80,37 @@ const CartItem = ({ item }: CartItemProps) => {
             </p>
           </div>
 
-          <Button
-            type="button"
-            size="icon"
-            color="DANGER"
-            variant="ghost"
-            onClick={remove}
-            loading={isUpdating}
-            disabled={isUpdating}
-            aria-label="حذف المنتج"
-          >
-            <Trash2 className="size-4" />
-          </Button>
+          <Tooltip content={`حذف ${item.product.title}`} focusable={false}>
+            <Button
+              type="button"
+              size="icon"
+              color="DANGER"
+              variant="ghost"
+              onClick={remove}
+              loading={isUpdating}
+              disabled={isUpdating}
+              aria-label={`حذف ${item.product.title}`}
+            >
+              <Trash2 className="size-4" />
+            </Button>
+          </Tooltip>
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              size="icon"
-              color="MAIN"
-              variant="soft"
-              onClick={decrement}
-              disabled={isUpdating || item.qty <= step}
-            >
-              <Minus className="size-3.5" />
-            </Button>
+            <Tooltip content="تقليل الكمية" focusable={false}>
+              <Button
+                type="button"
+                size="icon"
+                color="MAIN"
+                variant="soft"
+                onClick={decrement}
+                disabled={isUpdating || item.qty <= step}
+                aria-label="تقليل الكمية"
+              >
+                <Minus className="size-3.5" />
+              </Button>
+            </Tooltip>
 
             <div className="min-w-16 text-center text-sm font-semibold">
               {item.qty.toLocaleString("ar-EG")}
@@ -114,16 +120,19 @@ const CartItem = ({ item }: CartItemProps) => {
               </span>
             </div>
 
-            <Button
-              type="button"
-              size="icon"
-              color="MAIN"
-              variant="soft"
-              onClick={increment}
-              disabled={isUpdating}
-            >
-              <Plus className="size-3.5" />
-            </Button>
+            <Tooltip content="زيادة الكمية" focusable={false}>
+              <Button
+                type="button"
+                size="icon"
+                color="MAIN"
+                variant="soft"
+                onClick={increment}
+                disabled={isUpdating}
+                aria-label="زيادة الكمية"
+              >
+                <Plus className="size-3.5" />
+              </Button>
+            </Tooltip>
           </div>
 
           <div className="text-left mr-auto">

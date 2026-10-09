@@ -82,8 +82,9 @@ const WeightOptionsFields = () => {
               color="DANGER"
               variant="outline"
               onClick={() => remove(index)}
+              aria-label="حذف خيار الوزن"
             >
-              <X className="size-4" />
+              <X aria-hidden="true" className="size-4" />
             </Button>
           </div>
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Hash, LockKeyhole, Phone } from "lucide-react";
 import { useState } from "react";
 import { FieldValues, useFormContext, useFormState } from "react-hook-form";
 
 import { Button } from "../button";
+import { Tooltip } from "../tooltip";
 import { IProps } from "./types";
 import {
   getInputType,
@@ -22,6 +23,7 @@ import {
  * - `type="tel"` strips non-digit characters as the user types.
  * - `type="number"` renders as text internally (see `lib.ts`) and strips
  *   invalid characters, keeping at most one leading minus and one dot.
+ * - `tel`, `password`, and `number` labels include matching icons.
  *
  * @example
  * <Input<LoginForm> name="email" label="Email" placeholder="you@mail.com" />
@@ -32,6 +34,7 @@ const Input = <T extends FieldValues>({
   placeholder,
   type = "text",
   className,
+  showIconLabel = false,
 }: IProps<T>) => {
   const { register, control } = useFormContext<T>();
 
@@ -54,6 +57,13 @@ const Input = <T extends FieldValues>({
   const isPassword = isPasswordType(type);
   const isPhone = isPhoneType(type);
   const isNumber = isNumberType(type);
+  const TypeIcon = isPhone
+    ? Phone
+    : isPassword
+      ? LockKeyhole
+      : isNumber
+        ? Hash
+        : null;
 
   const inputType = getInputType(type, showPassword);
 
@@ -74,11 +84,23 @@ const Input = <T extends FieldValues>({
       {label && (
         <label
           htmlFor={name}
-          className={`text-sm font-medium ${
+          className={`flex items-center gap-1.5 text-sm font-medium ${
             error ? "text-danger" : "text-foreground"
           }`}
         >
-          {label}
+          {TypeIcon && (
+            <Tooltip content={label} focusable={false}>
+              <TypeIcon
+                aria-hidden="true"
+                className="size-3.5 text-muted-foreground"
+              />
+            </Tooltip>
+          )}
+          <span
+            className={TypeIcon && !showIconLabel ? "sr-only" : undefined}
+          >
+            {label}
+          </span>
         </label>
       )}
 
@@ -95,19 +117,27 @@ const Input = <T extends FieldValues>({
         />
 
         {isPassword && (
-          <Button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute left-0 top-0 h-full bg-main/80 "
-            color="MAIN"
-            size="icon"
+          <Tooltip
+            content={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+            focusable={false}
           >
-            {showPassword ? (
-              <EyeOff className="size-4" />
-            ) : (
-              <Eye className="size-4" />
-            )}
-          </Button>
+            <Button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute left-0 top-0 h-full bg-main/80"
+              color="MAIN"
+              size="icon"
+              aria-label={
+                showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
+              }
+            >
+              {showPassword ? (
+                <EyeOff className="size-4" />
+              ) : (
+                <Eye className="size-4" />
+              )}
+            </Button>
+          </Tooltip>
         )}
       </div>
 

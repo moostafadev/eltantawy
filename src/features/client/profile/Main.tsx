@@ -1,4 +1,6 @@
+import { Tooltip } from "@/components/tooltip";
 import { toArabicNums } from "@/utils/toArabicNums";
+import { type LucideIcon, Phone, ShieldCheck, UserRound } from "lucide-react";
 
 import { getProfile } from "./profile.service";
 
@@ -26,18 +28,34 @@ const ProfileCard = async ({ userId }: Props) => {
             {user.fName} {user.lName}
           </h2>
 
-          <p className="mt-1 text-sm text-muted-foreground">
-            {toArabicNums(user.phone)}
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+            <Tooltip content="رقم الهاتف" focusable={false}>
+              <Phone aria-hidden="true" className="size-4 shrink-0" />
+            </Tooltip>
+            <span dir="ltr">{toArabicNums(user.phone)}</span>
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2">
-        <ProfileItem label="الاسم الأول" value={user.fName} />
-        <ProfileItem label="اسم العائلة" value={user.lName} />
-        <ProfileItem label="رقم الهاتف" value={toArabicNums(user.phone)} />
+        <ProfileItem
+          icon={UserRound}
+          label="الاسم الأول"
+          value={user.fName}
+        />
+        <ProfileItem
+          icon={UserRound}
+          label="اسم العائلة"
+          value={user.lName}
+        />
+        <ProfileItem
+          icon={Phone}
+          label="رقم الهاتف"
+          value={toArabicNums(user.phone)}
+        />
 
         <ProfileItem
+          icon={ShieldCheck}
           label="نوع الحساب"
           value={user.role === "ADMIN" ? "مدير" : "مستخدم"}
         />
@@ -47,14 +65,20 @@ const ProfileCard = async ({ userId }: Props) => {
 };
 
 interface ProfileItemProps {
+  icon: LucideIcon;
   label: string;
   value: string;
 }
 
-const ProfileItem = ({ label, value }: ProfileItemProps) => {
+const ProfileItem = ({ icon: Icon, label, value }: ProfileItemProps) => {
   return (
     <div className="flex flex-col gap-1 border-b border-background-second/60 p-3 last:border-b-0 sm:odd:border-l lg:gap-1.5 lg:p-4">
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
+      <p className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+        <Tooltip content={label} focusable={false}>
+          <Icon aria-hidden="true" className="size-3.5" />
+        </Tooltip>
+        <span className="sr-only">{label}</span>
+      </p>
 
       <p className="text-sm font-medium text-foreground">{value}</p>
     </div>

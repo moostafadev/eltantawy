@@ -3,6 +3,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 
 import CarouselProgress from "./CarouselProgress";
 
@@ -28,35 +29,39 @@ const CarouselControls = ({
   return (
     <div className="mt-4 flex items-center justify-center gap-3">
       {showArrows && (
-        <Button
-          type="button"
-          variant="soft"
-          color="SECONDARY"
-          size="icon"
-          onClick={onPrevious}
-          disabled={!canScrollPrevious}
-          aria-label="العناصر السابقة"
-          className="size-8 shrink-0 rounded-full p-0"
-        >
-          <ChevronRight className="size-4" />
-        </Button>
+        <Tooltip content="العناصر السابقة" focusable={false}>
+          <Button
+            type="button"
+            variant="soft"
+            color="SECONDARY"
+            size="icon"
+            onClick={onPrevious}
+            disabled={!canScrollPrevious}
+            aria-label="العناصر السابقة"
+            className="size-8 shrink-0 rounded-full p-0"
+          >
+            <ChevronRight className="size-4" />
+          </Button>
+        </Tooltip>
       )}
 
       <CarouselProgress currentIndex={currentIndex} totalMoves={totalMoves} />
 
       {showArrows && (
-        <Button
-          type="button"
-          variant="soft"
-          color="SECONDARY"
-          size="icon"
-          onClick={onNext}
-          disabled={!canScrollNext}
-          aria-label="العناصر التالية"
-          className="size-8 shrink-0 rounded-full p-0"
-        >
-          <ChevronLeft className="size-4" />
-        </Button>
+        <Tooltip content="العناصر التالية" focusable={false}>
+          <Button
+            type="button"
+            variant="soft"
+            color="SECONDARY"
+            size="icon"
+            onClick={onNext}
+            disabled={!canScrollNext}
+            aria-label="العناصر التالية"
+            className="size-8 shrink-0 rounded-full p-0"
+          >
+            <ChevronLeft className="size-4" />
+          </Button>
+        </Tooltip>
       )}
     </div>
   );

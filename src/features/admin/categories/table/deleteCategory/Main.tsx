@@ -20,8 +20,13 @@ const DeleteCategoryButton = ({ id }: Props) => {
   };
 
   return (
-    <Button size="icon" color="DANGER" onClick={confirmDelete}>
-      <Trash2 className="size-4 lg:size-5" />
+    <Button
+      size="icon"
+      color="DANGER"
+      onClick={confirmDelete}
+      aria-label="حذف التصنيف"
+    >
+      <Trash2 aria-hidden="true" className="size-4 lg:size-5" />
     </Button>
   );
 };

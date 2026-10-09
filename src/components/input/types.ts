@@ -6,4 +6,5 @@ export interface IProps<T extends FieldValues> {
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
   className?: string;
+  showIconLabel?: boolean;
 }

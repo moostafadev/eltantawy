@@ -68,6 +68,34 @@ current page and is not rendered as a link.
 />
 ```
 
+#### `Tooltip`
+
+Displays a small, project-styled hint when its child is hovered or focused.
+Import it from `@/components/tooltip` and provide the trigger as `children`
+and the hint as `content`.
+
+```tsx
+import { Tooltip } from "@/components/tooltip";
+
+<Tooltip content="Open the shopping cart">
+  <button type="button" aria-label="Shopping cart">
+    <CartIcon />
+  </button>
+</Tooltip>
+```
+
+`side` accepts `top`, `right`, `bottom`, `left`, or `auto`; it defaults to
+`top` and flips to the opposite side when there is not enough room. `auto`
+chooses between the top and bottom based on available space. `className`
+adds classes to the tooltip itself. By default, the trigger can receive
+keyboard focus and the tooltip is associated with it for assistive
+technologies. Set `focusable={false}` when the child already has its own
+focus behavior; this also avoids adding a layout-affecting wrapper.
+
+Use concise hint text, but keep essential labels and instructions in the
+interface itself: a tooltip is supplementary and does not replace visible
+content or an accessible name such as `aria-label`.
+
 #### `Accordion`, `AccordionItem`, and `useAccordion`
 
 `Accordion` manages open-item state for its descendant `AccordionItem`

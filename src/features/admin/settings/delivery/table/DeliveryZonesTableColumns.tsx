@@ -76,14 +76,20 @@ export const deliveryZonesTableColumns: TableColumn<DeliveryZone>[] = [
     title: <div className="flex justify-center">التحكم</div>,
     render: (zone) => (
       <div className="flex justify-center gap-1">
-        <Link href={`/admin/settings/delivery/${zone.id}`}>
+        <Link
+          href={`/admin/settings/delivery/${zone.id}`}
+          aria-label="عرض منطقة التوصيل"
+        >
           <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye className="size-4 lg:size-5" />
+            <Eye aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
-        <Link href={`/admin/settings/delivery/${zone.id}/edit`}>
+        <Link
+          href={`/admin/settings/delivery/${zone.id}/edit`}
+          aria-label="تعديل منطقة التوصيل"
+        >
           <Button size="icon" color="INFO" variant="soft">
-            <Pen className="size-4 lg:size-5" />
+            <Pen aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
         <DeleteDeliveryZoneButton id={zone.id} />

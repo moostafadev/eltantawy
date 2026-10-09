@@ -18,7 +18,7 @@ const CategoriesQuickNav = ({ categories }: CategoriesQuickNavProps) => {
   };
 
   return (
-    <div className="sticky top-0 z-20 border-y border-background-second/20 bg-background/50 backdrop-blur-sm lg:top-16 shadow-sm">
+    <div className="sticky top-0 z-20 bg-background/50 backdrop-blur-sm lg:top-16">
       <div className="container">
         <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto py-3">
           {categories.map((category) => (

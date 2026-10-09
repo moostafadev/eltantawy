@@ -101,13 +101,16 @@ export const ordersTableColumns: TableColumn<OrderRow>[] = [
           aria-label="التواصل عبر واتساب"
         >
           <Button size="icon" color="SUCCESS" variant="soft">
-            <MessageCircle className="size-4 lg:size-5" />
+            <MessageCircle aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
 
-        <Link href={`/admin/orders/${order.id}`}>
+        <Link
+          href={`/admin/orders/${order.id}`}
+          aria-label="عرض تفاصيل الطلب"
+        >
           <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye className="size-4 lg:size-5" />
+            <Eye aria-hidden="true" className="size-4 lg:size-5" />
           </Button>
         </Link>
       </div>

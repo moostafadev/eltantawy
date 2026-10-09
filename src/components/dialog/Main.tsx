@@ -65,6 +65,7 @@ const Dialog = ({
               size="icon"
               color="NEUTRAL"
               variant="soft"
+              aria-label="إغلاق النافذة"
             >
               <X className="size-3 lg:size-4" />
             </Button>
