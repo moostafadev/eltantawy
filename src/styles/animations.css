@@ -7,6 +7,20 @@
   --animate-dialog-content-in: dialog-content-in 300ms ease-out;
   --animate-dialog-content-out: dialog-content-out 200ms ease-in;
 
+  @keyframes loading-image-reveal {
+    from {
+      opacity: 0.72;
+      filter: blur(3px);
+      transform: scale(0.99);
+    }
+
+    to {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+    }
+  }
+
   @keyframes toast-in {
     from {
       opacity: 0;
@@ -231,6 +245,10 @@
   }
 }
 
+.loading-image[data-loaded="true"] {
+  animation: loading-image-reveal 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .animate-cart-pop {
   animation: cart-pop 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -280,6 +298,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .loading-image[data-loaded="true"] {
+    animation: none;
+  }
+
   .animate-hero-fade-up,
   .animate-hero-float,
   .animate-hero-glow-pulse,
