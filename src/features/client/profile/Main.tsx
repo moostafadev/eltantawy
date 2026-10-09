@@ -9,7 +9,7 @@ interface Props {
 const ProfileCard = async ({ userId }: Props) => {
   const user = await getProfile(userId);
 
-  if (!user || !user.isVerified) {
+  if (!user) {
     return null;
   }
 
@@ -26,21 +26,16 @@ const ProfileCard = async ({ userId }: Props) => {
             {user.fName} {user.lName}
           </h2>
 
-          <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {toArabicNums(user.phone)}
+          </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2">
         <ProfileItem label="الاسم الأول" value={user.fName} />
         <ProfileItem label="اسم العائلة" value={user.lName} />
-        <ProfileItem label="البريد الإلكتروني" value={user.email} />
-
         <ProfileItem label="رقم الهاتف" value={toArabicNums(user.phone)} />
-
-        <ProfileItem
-          label="حالة البريد الإلكتروني"
-          value={user.isVerified ? "تم التحقق" : "غير متحقق"}
-        />
 
         <ProfileItem
           label="نوع الحساب"

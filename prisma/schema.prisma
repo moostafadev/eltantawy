@@ -72,11 +72,6 @@ model User {
 
   role UserRole @default(USER)
 
-  isVerified Boolean @default(false)
-
-  emailVerificationCodeHash String?
-  emailVerificationExpiresAt DateTime?
-
   orders Order[]
 
   createdAt DateTime @default(now())

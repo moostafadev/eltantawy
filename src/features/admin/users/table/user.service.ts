@@ -12,9 +12,7 @@ export const getUsers = async () => {
       fName: true,
       lName: true,
       phone: true,
-      email: true,
       role: true,
-      isVerified: true,
       createdAt: true,
       _count: {
         select: {
@@ -43,7 +41,6 @@ export const getGuestUsers = async () => {
     select: {
       customerName: true,
       customerPhone: true,
-      customerEmail: true,
       createdAt: true,
     },
   });
@@ -53,7 +50,6 @@ export const getGuestUsers = async () => {
     {
       customerName: string;
       customerPhone: string;
-      customerEmail: string | null;
       createdAt: Date;
       ordersCount: number;
     }
@@ -65,11 +61,10 @@ export const getGuestUsers = async () => {
     if (existing) {
       existing.ordersCount += 1;
 
-      // نحتفظ ببيانات آخر طلب (الاسم/الإيميل) كأحدث تمثيل للضيف
+      // Keep the latest guest name and activity date.
       if (order.createdAt > existing.createdAt) {
         existing.createdAt = order.createdAt;
         existing.customerName = order.customerName;
-        existing.customerEmail = order.customerEmail;
       }
 
       continue;
@@ -78,7 +73,6 @@ export const getGuestUsers = async () => {
     map.set(order.customerPhone, {
       customerName: order.customerName,
       customerPhone: order.customerPhone,
-      customerEmail: order.customerEmail,
       createdAt: order.createdAt,
       ordersCount: 1,
     });

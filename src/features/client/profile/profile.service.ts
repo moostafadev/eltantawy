@@ -7,10 +7,8 @@ export const getProfile = async (userId: string) => {
       id: true,
       fName: true,
       lName: true,
-      email: true,
       phone: true,
       role: true,
-      isVerified: true,
       createdAt: true,
     },
   });

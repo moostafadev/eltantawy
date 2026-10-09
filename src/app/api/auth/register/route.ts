@@ -1,71 +1,59 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import crypto from "crypto";
+import { Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
-import { resend } from "@/lib/resend";
-import { verificationEmail } from "@/lib/emails/verification-email";
-
-const resendApiKey = process.env.RESEND_API_KEY;
-const resendFromEmail = process.env.RESEND_FROM_EMAIL;
-
-function generateCode() {
-  return crypto.randomInt(100000, 1000000).toString();
-}
-
-function hashCode(code: string) {
-  return crypto.createHash("sha256").update(code).digest("hex");
-}
+import { signAccessToken, signRefreshToken } from "@/lib/auth";
 
 export async function POST(request: Request) {
-  if (!resendApiKey) {
-    console.error("RESEND_API_KEY is missing");
-
-    return NextResponse.json(
-      { message: "Email service is not configured." },
-      { status: 500 },
-    );
-  }
-
-  if (!resendFromEmail) {
-    console.error("RESEND_FROM_EMAIL is missing");
-
-    return NextResponse.json(
-      { message: "Email service is not configured." },
-      { status: 500 },
-    );
-  }
-
   try {
     const body = await request.json();
+    const { fName, lName, phone, password } = body;
 
-    const { fName, lName, phone, email, password } = body;
-
-    if (!fName || !lName || !phone || !email || !password) {
+    if (
+      typeof fName !== "string" ||
+      typeof lName !== "string" ||
+      typeof phone !== "string" ||
+      typeof password !== "string" ||
+      !fName.trim() ||
+      !lName.trim() ||
+      !phone.trim() ||
+      !password
+    ) {
       return NextResponse.json(
         {
-          message:
-            "First name, last name, phone, email and password are required.",
+          message: "First name, last name, phone and password are required.",
         },
         { status: 400 },
       );
     }
 
-    if (password.length < 8) {
+    if (
+      password.length < 8 ||
+      !/[A-Z]/.test(password) ||
+      !/[a-z]/.test(password) ||
+      !/[0-9]/.test(password) ||
+      !/[^A-Za-z0-9]/.test(password)
+    ) {
       return NextResponse.json(
         {
-          message: "Password must be at least 8 characters.",
+          message: "Password does not meet the required strength.",
         },
         { status: 400 },
       );
     }
 
     const normalizedPhone = phone.trim();
-    const normalizedEmail = email.trim().toLowerCase();
 
-    /*
-     * Check phone
-     */
+    if (!/^01[0125][0-9]{8}$/.test(normalizedPhone)) {
+      return NextResponse.json(
+        {
+          message: "Phone number is invalid.",
+        },
+        { status: 400 },
+      );
+    }
+
     const existingPhone = await prisma.user.findUnique({
       where: {
         phone: normalizedPhone,
@@ -81,111 +69,88 @@ export async function POST(request: Request) {
       );
     }
 
-    /*
-     * Check email
-     */
-    const existingEmail = await prisma.user.findUnique({
+    const generatedEmail = `${normalizedPhone}@eltantawymeats.com`;
+    const existingGeneratedEmail = await prisma.user.findUnique({
       where: {
-        email: normalizedEmail,
+        email: generatedEmail,
       },
     });
 
-    if (existingEmail) {
+    if (existingGeneratedEmail) {
       return NextResponse.json(
         {
-          message: "This email is already registered.",
+          message: "This phone number cannot be used to create an account.",
         },
         { status: 409 },
       );
     }
 
-    /*
-     * Hash password
-     */
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    /*
-     * Verification code
-     */
-    const code = generateCode();
-    const codeHash = hashCode(code);
-
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-    /*
-     * Create user
-     */
     const user = await prisma.user.create({
       data: {
         fName: fName.trim(),
         lName: lName.trim(),
         phone: normalizedPhone,
-        email: normalizedEmail,
+        email: generatedEmail,
         password: hashedPassword,
-
-        isVerified: false,
-
-        emailVerificationCodeHash: codeHash,
-        emailVerificationExpiresAt: expiresAt,
+      },
+      select: {
+        id: true,
+        fName: true,
+        lName: true,
+        phone: true,
+        role: true,
       },
     });
 
-    /*
-     * Send verification email
-     */
-    const { error } = await resend.emails.send({
-      from: resendFromEmail,
-      to: [normalizedEmail],
-      subject: "تأكيد البريد الإلكتروني - الطنطاوي",
-      html: verificationEmail({
-        name: user.fName,
-        code,
-      }),
+    const accessToken = signAccessToken({
+      userId: user.id,
+      role: user.role,
+    });
+    const refreshToken = signRefreshToken({
+      userId: user.id,
+      role: user.role,
     });
 
-    if (error) {
-      console.error("RESEND ERROR:", JSON.stringify(error, null, 2));
-
-      return NextResponse.json(
-        {
-          message: "Unable to send verification email. Please try again.",
-        },
-        { status: 500 },
-      );
-    }
-
-    /*
-     * Create response
-     */
     const response = NextResponse.json(
       {
-        message: "Account created. Verification code sent to your email.",
-        requiresEmailVerification: true,
+        message: "Account created successfully.",
+        user,
       },
       { status: 201 },
     );
 
-    /*
-     * Save verification information
-     */
-    response.cookies.set("pending_verification_email", normalizedEmail, {
+    response.cookies.set("access_token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 10 * 60,
+      maxAge: 60 * 60,
     });
 
-    response.cookies.set("pending_verification_name", user.fName, {
+    response.cookies.set("refresh_token", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 10 * 60,
+      maxAge: 30 * 24 * 60 * 60,
     });
 
     return response;
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        {
+          message: "This phone number is already registered.",
+        },
+        { status: 409 },
+      );
+    }
+
     console.error("Signup error:", error);
 
     return NextResponse.json(

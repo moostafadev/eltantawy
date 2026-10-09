@@ -36,13 +36,7 @@ const FormLogin = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        if (result.requiresEmailVerification) {
-          toast.warning("يرجى تأكيد بريدك الإلكتروني أولًا.");
-          router.push("/verify-email");
-          return;
-        }
-
-        toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة.");
+        toast.error("رقم الهاتف أو كلمة المرور غير صحيحة.");
         return;
       }
 
@@ -86,10 +80,10 @@ const FormLogin = () => {
 
       <div className="flex flex-col gap-5">
         <Input<LoginForm>
-          name="email"
-          label="البريد الإلكتروني"
-          type="email"
-          placeholder="example@email.com"
+          name="phone"
+          label="رقم الهاتف"
+          type="tel"
+          placeholder="01xxxxxxxxx"
         />
 
         <Input<LoginForm>

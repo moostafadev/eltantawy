@@ -12,10 +12,8 @@ export interface AuthUser {
   id: string;
   fName: string;
   lName: string;
-  email: string;
   phone: string;
   role: "USER" | "ADMIN";
-  isVerified: boolean;
 }
 
 interface AuthContextType {

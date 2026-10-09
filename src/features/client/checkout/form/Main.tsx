@@ -30,7 +30,6 @@ const CheckoutForm = ({ zones, onZoneChange }: Props) => {
   const defaultValues: CheckoutFormValues = {
     customerName: user ? `${user.fName} ${user.lName}` : "",
     customerPhone: user?.phone ?? "",
-    customerEmail: user?.email ?? "",
     deliveryZoneId: "",
     addressLine: "",
     notes: "",
@@ -86,24 +85,13 @@ const CheckoutForm = ({ zones, onZoneChange }: Props) => {
         />
       </div>
 
-      <div className="flex flex-col gap-3 lg:gap-4 lg:flex-row">
-        <Input<CheckoutFormValues>
-          name="customerEmail"
-          label="البريد الإلكتروني"
-          type="email"
-          placeholder="example@email.com"
-          className="flex-1"
-        />
-
-        <Select<CheckoutFormValues>
-          name="deliveryZoneId"
-          label="منطقة التوصيل"
-          placeholder="اختر منطقة التوصيل"
-          options={zoneOptions}
-          onValueChange={onZoneChange}
-          className="flex-1"
-        />
-      </div>
+      <Select<CheckoutFormValues>
+        name="deliveryZoneId"
+        label="منطقة التوصيل"
+        placeholder="اختر منطقة التوصيل"
+        options={zoneOptions}
+        onValueChange={onZoneChange}
+      />
 
       <Input<CheckoutFormValues>
         name="addressLine"

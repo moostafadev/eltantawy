@@ -38,14 +38,12 @@ export async function GET() {
         id: true,
         fName: true,
         lName: true,
-        email: true,
         phone: true,
         role: true,
-        isVerified: true,
       },
     });
 
-    if (!user || !user.isVerified) {
+    if (!user) {
       return NextResponse.json(
         {
           authenticated: false,

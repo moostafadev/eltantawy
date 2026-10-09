@@ -9,9 +9,7 @@ import { UserOrderRow, UserReturnRow } from "./types";
 interface Props {
   name: string;
   phone: string;
-  email: string | null;
   isGuest: boolean;
-  isVerified?: boolean;
   role?: "USER" | "ADMIN";
   registeredAt?: Date;
   ordersCount: number;
@@ -24,9 +22,7 @@ interface Props {
 const UserDetailView = ({
   name,
   phone,
-  email,
   isGuest,
-  isVerified,
   role,
   registeredAt,
   ordersCount,
@@ -51,8 +47,6 @@ const UserDetailView = ({
 
           <InfoItem label="رقم الهاتف" value={toArabicNums(phone)} />
 
-          <InfoItem label="البريد الإلكتروني" value={email ?? "—"} />
-
           <div className="flex flex-col gap-1 border-b border-background-second/60 p-3 last:border-b-0 sm:odd:border-l lg:gap-1.5 lg:p-4">
             <p className="text-xs font-medium text-muted-foreground">
               نوع الحساب
@@ -67,23 +61,6 @@ const UserDetailView = ({
               {isGuest ? "ضيف" : role === "ADMIN" ? "مدير" : "مستخدم مسجل"}
             </Tag>
           </div>
-
-          {!isGuest && (
-            <div className="flex flex-col gap-1 border-b border-background-second/60 p-3 last:border-b-0 sm:odd:border-l lg:gap-1.5 lg:p-4">
-              <p className="text-xs font-medium text-muted-foreground">
-                حالة البريد الإلكتروني
-              </p>
-
-              <Tag
-                color={isVerified ? "SUCCESS" : "DANGER"}
-                variant="soft"
-                size="sm"
-                className="w-fit"
-              >
-                {isVerified ? "موثق" : "غير موثق"}
-              </Tag>
-            </div>
-          )}
 
           {!isGuest && registeredAt && (
             <InfoItem

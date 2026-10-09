@@ -34,16 +34,11 @@ export async function requireAdmin() {
     select: {
       id: true,
       role: true,
-      isVerified: true,
     },
   });
 
   if (!user) {
     redirect("/login");
-  }
-
-  if (!user.isVerified) {
-    redirect("/verify-email");
   }
 
   if (user.role !== "ADMIN") {

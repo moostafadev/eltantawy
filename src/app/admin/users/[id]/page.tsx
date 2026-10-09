@@ -57,9 +57,7 @@ const UserPage = async ({ params }: UserPageProps) => {
       <UserDetailView
         name={`${user.fName} ${user.lName}`}
         phone={user.phone}
-        email={user.email}
         isGuest={false}
-        isVerified={user.isVerified}
         role={user.role}
         registeredAt={user.createdAt}
         ordersCount={summary.ordersCount}

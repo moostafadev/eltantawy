@@ -9,11 +9,6 @@ export const checkoutSchema = z.object({
     .min(1, "رقم الهاتف مطلوب")
     .regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
 
-  customerEmail: z
-    .string()
-    .trim()
-    .min(1, "الايميل مطلوب")
-    .email("البريد الإلكتروني غير صحيح"),
   deliveryZoneId: z.string().min(1, "يرجى اختيار منطقة التوصيل"),
 
   addressLine: z

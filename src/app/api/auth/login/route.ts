@@ -8,35 +8,44 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
-    const { email, password } = body;
+    const { phone, password } = body;
 
     /*
      * Validate input
      */
-    if (!email || !password) {
+    if (typeof phone !== "string" || typeof password !== "string") {
       return NextResponse.json(
         {
-          message: "Email and password are required.",
+          message: "Phone number and password are required.",
         },
         { status: 400 },
       );
     }
 
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedPhone = phone.trim();
+
+    if (!/^01[0125][0-9]{8}$/.test(normalizedPhone)) {
+      return NextResponse.json(
+        {
+          message: "Phone number is invalid.",
+        },
+        { status: 400 },
+      );
+    }
 
     /*
      * Find user
      */
     const user = await prisma.user.findUnique({
       where: {
-        email: normalizedEmail,
+        phone: normalizedPhone,
       },
     });
 
     if (!user) {
       return NextResponse.json(
         {
-          message: "Invalid email or password.",
+          message: "Invalid phone number or password.",
         },
         { status: 401 },
       );
@@ -52,22 +61,9 @@ export async function POST(request: Request) {
     if (!isPasswordValid) {
       return NextResponse.json(
         {
-          message: "Invalid email or password.",
+          message: "Invalid phone number or password.",
         },
         { status: 401 },
-      );
-    }
-
-    /*
-     * Check email verification
-     */
-    if (!user.isVerified) {
-      return NextResponse.json(
-        {
-          message: "Please verify your email before logging in.",
-          requiresEmailVerification: true,
-        },
-        { status: 403 },
       );
     }
 
@@ -93,10 +89,8 @@ export async function POST(request: Request) {
         id: user.id,
         fName: user.fName,
         lName: user.lName,
-        email: user.email,
         phone: user.phone,
         role: user.role,
-        isVerified: user.isVerified,
       },
     });
 

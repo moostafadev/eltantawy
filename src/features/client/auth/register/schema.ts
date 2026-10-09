@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const loginSchema = z.object({
+export const registerSchema = z.object({
   fName: z.string().trim().min(1, "الاسم الأول مطلوب"),
 
   lName: z.string().trim().min(1, "اسم العائلة مطلوب"),
@@ -10,12 +10,6 @@ export const loginSchema = z.object({
     .trim()
     .min(1, "رقم الهاتف مطلوب")
     .regex(/^01[0125][0-9]{8}$/, "رقم الهاتف غير صحيح"),
-
-  email: z
-    .string()
-    .trim()
-    .min(1, "البريد الإلكتروني مطلوب")
-    .email("البريد الإلكتروني غير صحيح"),
 
   password: z
     .string()
@@ -27,4 +21,4 @@ export const loginSchema = z.object({
     .regex(/[^A-Za-z0-9]/, "يجب أن تحتوي على رمز خاص واحد على الأقل"),
 });
 
-export type LoginForm = z.infer<typeof loginSchema>;
+export type RegisterForm = z.infer<typeof registerSchema>;

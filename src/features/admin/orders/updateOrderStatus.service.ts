@@ -3,8 +3,6 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
-import { resend } from "@/lib/resend";
-import { orderStatusEmail } from "@/lib/emails/order-status-email";
 import {
   pusherServer,
   ADMIN_ORDERS_CHANNEL,
@@ -13,7 +11,6 @@ import {
 
 import {
   OrderStatusEnum,
-  orderStatusLabels,
   orderStatusTransitions,
   WEIGHT_CONFIRMATION_REQUIRED_BEFORE,
 } from "./types";
@@ -32,9 +29,6 @@ export const updateOrderStatusAction = async (
         id: true,
         status: true,
         orderNumber: true,
-        customerName: true,
-        customerEmail: true,
-        total: true,
         userId: true,
       },
     });
@@ -139,35 +133,6 @@ export const updateOrderStatusAction = async (
       }
     } catch (realtimeError) {
       console.error("ORDER_STATUS_REALTIME_ERROR:", realtimeError);
-    }
-
-    /*
-     * ================================
-     * إشعار إيميل عند التوصيل فقط
-     * ================================
-     *
-     * فشل الإرسال هنا لا يجب أن يؤثر على نجاح تحديث الحالة
-     */
-    if (nextStatus === "DELIVERED" && order.customerEmail) {
-      try {
-        const { error } = await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL!,
-          to: [order.customerEmail],
-          subject: `تم توصيل طلبك #${order.orderNumber} - الطنطاوي`,
-          html: orderStatusEmail({
-            customerName: order.customerName,
-            orderNumber: order.orderNumber,
-            statusLabel: orderStatusLabels.DELIVERED,
-            total: order.total,
-          }),
-        });
-
-        if (error) {
-          console.error("ORDER_STATUS_EMAIL_ERROR:", error);
-        }
-      } catch (emailError) {
-        console.error("ORDER_STATUS_EMAIL_ERROR:", emailError);
-      }
     }
 
     return {

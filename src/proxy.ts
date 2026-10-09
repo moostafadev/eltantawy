@@ -4,7 +4,7 @@ import { verifyAccessToken } from "@/lib/auth";
 
 const protectedRoutes = ["/admin", "/profile"];
 
-const authRoutes = ["/login", "/register", "/verify-email"];
+const authRoutes = ["/login", "/register"];
 
 function isProtectedRoute(pathname: string) {
   return protectedRoutes.some(

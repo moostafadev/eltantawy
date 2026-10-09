@@ -7,8 +7,6 @@ import { prisma } from "@/lib/prisma";
 import { verifyAccessToken } from "@/lib/auth";
 import { CartService } from "@/lib/cart/service";
 import { withOrderNumberRetry } from "@/lib/order/generateOrderNumber";
-import { resend } from "@/lib/resend";
-import { orderConfirmationEmail } from "@/lib/emails/order-confirmation-email";
 import {
   pusherServer,
   ADMIN_ORDERS_CHANNEL,
@@ -60,7 +58,6 @@ export const createOrderAction = async (values: unknown) => {
   const {
     customerName,
     customerPhone,
-    customerEmail,
     deliveryZoneId,
     addressLine,
     notes,
@@ -136,7 +133,7 @@ export const createOrderAction = async (values: unknown) => {
 
           customerName,
           customerPhone,
-          customerEmail: customerEmail || null,
+          customerEmail: null,
 
           deliveryZoneId: zone.id,
           deliveryZoneTitle: zone.title,
@@ -181,9 +178,7 @@ export const createOrderAction = async (values: unknown) => {
           id: true,
           orderNumber: true,
           customerName: true,
-          customerEmail: true,
           deliveryZoneTitle: true,
-          addressLine: true,
           total: true,
           items: {
             select: {
@@ -236,44 +231,6 @@ export const createOrderAction = async (values: unknown) => {
       }
     } catch (realtimeError) {
       console.error("ORDER_CREATED_REALTIME_ERROR:", realtimeError);
-    }
-
-    /*
-     * ================================
-     * إرسال إيميل تأكيد الطلب
-     * ================================
-     *
-     * لو فشل الإرسال، الطلب يفضل ناجح ومنرجعش خطأ للمستخدم،
-     * الإيميل مجرد إشعار إضافي مش جزء أساسي من نجاح العملية
-     */
-    if (order.customerEmail) {
-      try {
-        const { error } = await resend.emails.send({
-          from: process.env.RESEND_FROM_EMAIL!,
-          to: [order.customerEmail],
-          subject: `تم استلام طلبك #${order.orderNumber} - الطنطاوي`,
-          html: orderConfirmationEmail({
-            customerName: order.customerName,
-            orderNumber: order.orderNumber,
-            items: order.items,
-            subtotal: cart.subtotal,
-            productsDiscount: cart.discount,
-            discountAmount: cart.discountAmount,
-            couponCode: cart.couponCode,
-            deliveryFee,
-            total: order.total,
-            addressLine: order.addressLine,
-            deliveryZoneTitle: order.deliveryZoneTitle,
-            hasAccount: Boolean(currentUser),
-          }),
-        });
-
-        if (error) {
-          console.error("ORDER_CONFIRMATION_EMAIL_ERROR:", error);
-        }
-      } catch (emailError) {
-        console.error("ORDER_CONFIRMATION_EMAIL_ERROR:", emailError);
-      }
     }
 
     return {

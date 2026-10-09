@@ -25,18 +25,6 @@ export const usersTableColumns: TableColumn<UserRow>[] = [
   },
 
   {
-    key: "email",
-    title: "البريد الإلكتروني",
-    render: (row) => (
-      <span dir="ltr">
-        {row.kind === "REGISTERED"
-          ? row.data.email
-          : (row.data.customerEmail ?? "—")}
-      </span>
-    ),
-  },
-
-  {
     key: "phone",
     title: "رقم الهاتف",
     render: (row) => (
@@ -64,26 +52,6 @@ export const usersTableColumns: TableColumn<UserRow>[] = [
               : "مستخدم مسجل"
             : "ضيف"}
         </Tag>
-      </div>
-    ),
-  },
-
-  {
-    key: "isVerified",
-    title: <div className="flex justify-center">الحالة</div>,
-    render: (row) => (
-      <div className="flex justify-center">
-        {row.kind === "REGISTERED" ? (
-          <Tag
-            color={row.data.isVerified ? "SUCCESS" : "DANGER"}
-            variant="soft"
-            size="sm"
-          >
-            {row.data.isVerified ? "موثق" : "غير موثق"}
-          </Tag>
-        ) : (
-          <span className="text-muted-foreground">—</span>
-        )}
       </div>
     ),
   },

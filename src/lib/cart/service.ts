@@ -77,10 +77,7 @@ export class CartService {
    * جلب بيانات المستخدم الحالي (لو مسجل دخول) من access_token
    * بدون أي redirect، فقط للاستخدام الداخلي في تقييم الخصومات
    */
-  private static async getCurrentUser(): Promise<{
-    id: string;
-    isVerified: boolean;
-  } | null> {
+  private static async getCurrentUser(): Promise<{ id: string } | null> {
     const cookieStore = await cookies();
 
     const accessToken = cookieStore.get("access_token")?.value;
@@ -101,7 +98,6 @@ export class CartService {
       },
       select: {
         id: true,
-        isVerified: true,
       },
     });
   }
@@ -470,7 +466,7 @@ export class CartService {
       "ALL_CUSTOMERS",
     ];
 
-    if (currentUser?.isVerified) {
+    if (currentUser) {
       autoTypes.push("REGISTERED_ONLY");
     }
 

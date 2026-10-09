@@ -14,7 +14,6 @@ export const getGuestProfile = async (phone: string) => {
     select: {
       customerName: true,
       customerPhone: true,
-      customerEmail: true,
     },
   });
 };

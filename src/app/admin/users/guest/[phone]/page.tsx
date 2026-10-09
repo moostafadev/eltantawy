@@ -55,7 +55,6 @@ const GuestUserPage = async ({ params }: GuestUserPageProps) => {
       <UserDetailView
         name={guest.customerName}
         phone={guest.customerPhone}
-        email={guest.customerEmail}
         isGuest
         ordersCount={summary.ordersCount}
         totalSpent={summary.totalSpent}
