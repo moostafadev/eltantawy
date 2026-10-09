@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { verifyAccessToken } from "@/lib/auth";
 import { CartService } from "@/lib/cart/service";
+import { HydratedCart } from "@/lib/cart/types";
 import { withOrderNumberRetry } from "@/lib/order/generateOrderNumber";
 import {
   pusherServer,
@@ -15,6 +16,18 @@ import {
 
 import { checkoutSchema } from "../schema";
 import { getUserOrdersChannel } from "@/lib/realtime/constants";
+
+type CreateOrderResult =
+  | {
+      success: false;
+      message: string;
+    }
+  | {
+      success: true;
+      message: string;
+      orderNumber: number;
+      cart: HydratedCart;
+    };
 
 /**
  * لو المستخدم مسجل دخول، بنربط الطلب بحسابه. لو مش مسجل (Guest)،
@@ -45,7 +58,9 @@ const getCurrentUser = async () => {
   });
 };
 
-export const createOrderAction = async (values: unknown) => {
+export const createOrderAction = async (
+  values: unknown,
+): Promise<CreateOrderResult> => {
   const result = checkoutSchema.safeParse(values);
 
   if (!result.success) {
