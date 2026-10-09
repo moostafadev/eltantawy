@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 
 import { Header } from "./header";
 import { Footer } from "./footer";
+import BackToTop from "./BackToTop";
 import useScroll from "@/hooks/useScroll";
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
@@ -32,6 +33,7 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
       </main>
 
       <Footer />
+      <BackToTop />
     </>
   );
 };
