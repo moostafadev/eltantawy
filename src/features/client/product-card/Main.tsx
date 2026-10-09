@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Heart, Package, ShoppingCart } from "lucide-react";
+import { Package, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 
 import { Button } from "@/components/button";
@@ -10,16 +10,11 @@ import { ProductCardProps } from "./types";
 import ProductPrice from "./ProductPrice";
 import { useDialog } from "@/components/dialog";
 import { AddToCartDialog } from "../cart";
-import { useFavorites } from "@/lib/favorites/provider";
 
 const ProductCard = ({ product, className = "" }: ProductCardProps) => {
   const { openDialog } = useDialog();
-  const { isFavorite, isItemUpdating, toggleFavorite } = useFavorites();
 
   const unitLabel = product.unit === "KG" ? "كيلو" : "قطعة";
-
-  const favorite = isFavorite(product.id);
-  const isFavoriteLoading = isItemUpdating(product.id);
 
   return (
     <Card
@@ -52,19 +47,6 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
               خصم
             </span>
           )}
-
-        <Button
-          type="button"
-          className="absolute left-2 top-2 z-10 flex size-7 items-center justify-center backdrop-blur-sm lg:size-8"
-          size="icon"
-          color={favorite ? "DANGER" : "MAIN"}
-          variant={favorite ? "soft" : "ghost"}
-          loading={isFavoriteLoading}
-          onClick={() => toggleFavorite(product.id)}
-          aria-label={favorite ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
-        >
-          <Heart className={`size-4 ${favorite ? "fill-current" : ""}`} />
-        </Button>
 
         <Button
           type="button"

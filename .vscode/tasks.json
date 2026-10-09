@@ -7,6 +7,14 @@
 			"command": "npm run build",
 			"isBackground": false,
 			"problemMatcher": []
+		},
+		{
+			"label": "Lint changed files",
+			"type": "shell",
+			"command": "npx eslint src/layouts/client/Main.tsx src/layouts/client/header/Main.tsx src/features/client/product-card/Main.tsx src/app/favorites/page.tsx",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
 		}
 	]
 }
