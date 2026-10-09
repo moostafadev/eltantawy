@@ -38,10 +38,9 @@ export const updateReturnStatusAction = async (
     }
 
     /*
-     * عند تنفيذ الاسترجاع فعليًا (REFUNDED)، بنحدّث:
-     * - returnedQty على كل OrderItem متأثر
-     * - refundedAmount على الـ Order نفسه (بيستخدم في حساب صافي المبيعات)
-     * كل ده جوه transaction واحدة عشان نضمن اتساق البيانات
+     * When a return is completed (`REFUNDED`), update the returned quantity
+     * for each affected order item and the order's refunded amount, which is
+     * used to calculate net sales. Keep all updates in one transaction.
      */
     if (nextStatus === "REFUNDED") {
       await prisma.$transaction(async (tx) => {

@@ -27,8 +27,7 @@ export const useCarousel = ({
   const [visibleItems, setVisibleItems] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
 
-  // بنستخدمهم عشان نتجاهل حدث الـ scroll الجاي من كود عندنا (زرار/أوتوبلاي)
-  // ونستنى بس الـ scroll الجاي فعليًا من سحب المستخدم يدويًا.
+  // Ignore the next programmatic scroll event and track manual user scrolling.
   const isProgrammaticScroll = useRef(false);
   const programmaticScrollTimeout = useRef<ReturnType<
     typeof setTimeout
@@ -98,8 +97,8 @@ export const useCarousel = ({
   }, [children, updateCarousel]);
 
   /**
-   * مسافة عنصر واحد (عرض العنصر + الفراغ بينه وبين اللي بعده).
-   * كل العناصر بنفس العرض (flex-basis ثابتة)، فالاعتماد على أول عنصر كافي.
+   * Returns one item's width plus the gap after it. Carousel items share a
+   * fixed flex basis, so measuring the first item is sufficient.
    */
   const getItemStep = useCallback((container: HTMLElement) => {
     const items = Array.from(container.children) as HTMLElement[];
@@ -142,8 +141,8 @@ export const useCarousel = ({
 
       const step = getItemStep(container);
 
-      // بنحسب موضع مطلق (مش نسبي) عشان نتفادى تراكم الأخطاء
-      // لو المستخدم ضغط زرار قبل ما الأنيميشن اللي قبله يخلص.
+      // Use an absolute offset to avoid accumulating errors when controls are
+      // clicked before the previous scroll animation finishes.
       const targetLogicalOffset = nextIndex * step;
 
       isProgrammaticScroll.current = true;
@@ -157,7 +156,7 @@ export const useCarousel = ({
         behavior: "smooth",
       });
 
-      // fallback للمتصفحات اللي مش بتدعم حدث "scrollend"
+      // Fall back to a timeout in browsers that do not support "scrollend".
       programmaticScrollTimeout.current = setTimeout(() => {
         isProgrammaticScroll.current = false;
       }, 600);
@@ -180,8 +179,8 @@ export const useCarousel = ({
   }, [currentIndex, loop, scrollToIndex]);
 
   /*
-   * تتبّع سحب المستخدم اليدوي (touch/trackpad) وتحديث currentIndex
-   * تبعًا لموضع السكرول الفعلي، مش بس تبعًا لضغط الأزرار أو الأوتوبلاي.
+   * Track manual touchpad or touch scrolling and update currentIndex from
+   * the actual scroll position, not only from controls or autoplay.
    */
   useEffect(() => {
     const container = containerRef.current;
@@ -189,7 +188,7 @@ export const useCarousel = ({
     if (!container) return;
 
     const handleScroll = () => {
-      // تجاهل الأحداث الناتجة عن سكرول برمجي (زرار/أوتوبلاي)
+      // Ignore scroll events triggered by controls or autoplay.
       if (isProgrammaticScroll.current) return;
 
       if (scrollDebounceTimeout.current) {
@@ -221,9 +220,9 @@ export const useCarousel = ({
 
     container.addEventListener("scroll", handleScroll, { passive: true });
 
-    // "scrollend" مش مدعوم في كل المتصفحات (زي Safari القديم)،
-    // لكن لو موجود بيدينا دقة أعلى؛ وإلا هنعتمد على الـ fallback timeout
-    // الموجود جوه scrollToIndex.
+    // "scrollend" is not supported in every browser (including older Safari).
+    // When available it is more accurate; otherwise scrollToIndex's timeout
+    // is used as a fallback.
     container.addEventListener("scrollend", handleScrollEnd);
 
     return () => {

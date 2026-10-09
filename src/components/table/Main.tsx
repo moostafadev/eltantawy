@@ -12,7 +12,7 @@ import Spin from "@/components/icons/Spin";
  * to show skeleton rows instead of `data` while fetching.
  *
  * @example
- * <Table data={products} columns={productsTableColumns} emptyMessage="لا يوجد منتجات" />
+ * <Table data={products} columns={productsTableColumns} emptyMessage="No products found" />
  */
 const Table = <T,>({
   data,

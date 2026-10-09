@@ -1,8 +1,8 @@
 import { MonthlySales, MonthlySalesRow } from "./types";
 
 /**
- * بيحول قائمة المبيعات الشهرية الخام إلى صفوف تحتوي على نسبة التغيير
- * عن الشهر السابق مباشرة، بيُستخدم في بطاقات الأشهر والجدول التفصيلي
+ * Converts monthly sales data into rows with the percentage change from the
+ * previous month, for use in monthly cards and the detailed table.
  */
 export const buildMonthlyRows = (data: MonthlySales[]): MonthlySalesRow[] => {
   return data.map((month, index) => {

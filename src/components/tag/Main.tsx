@@ -8,7 +8,7 @@ import { TagProps } from "./types";
  * `solid` / `soft` / `outline` variants.
  *
  * @example
- * <Tag color="SUCCESS" variant="soft" size="sm">موثق</Tag>
+ * <Tag color="SUCCESS" variant="soft" size="sm">Verified</Tag>
  */
 const Tag = ({
   children,

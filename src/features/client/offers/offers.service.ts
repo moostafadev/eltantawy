@@ -3,8 +3,8 @@
 import { prisma } from "@/lib/prisma";
 
 /**
- * المنتجات اللي عليها خصم مباشر فعليًا (discountPrice أقل من price)،
- * بترتيب حسب نسبة الخصم الأعلى أولًا
+ * Returns products with an active direct discount (`discountPrice` below
+ * `price`), sorted by the largest percentage discount first.
  */
 export const getDiscountedProducts = async () => {
   const products = await prisma.product.findMany({
@@ -42,8 +42,8 @@ export const getDiscountedProducts = async () => {
 };
 
 /**
- * أول خصم تلقائي مفعّل حاليًا وصالح (كل العملاء أو المسجلين فقط)،
- * بيُعرض كبانر أعلى صفحة العروض
+ * Returns the first currently valid automatic discount for all customers
+ * or registered customers, for the banner at the top of the offers page.
  */
 export const getActiveAutoDiscount = async () => {
   const now = new Date();
@@ -74,6 +74,6 @@ export const getActiveAutoDiscount = async () => {
     return null;
   }
 
-  // نفضّل الخصم الأعلى قيمة نسبية لو فيه أكتر من واحد
+  // Prefer the discount with the greatest relative value.
   return validDiscounts.sort((a, b) => b.value - a.value)[0];
 };

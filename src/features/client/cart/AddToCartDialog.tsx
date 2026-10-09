@@ -37,7 +37,7 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
     [product.weightOptions, selectedOptionId],
   );
 
-  // منتجات نطاق الوزن: الكمية دايمًا عدد عبوات صحيح (خطوة 1)
+  // For weight-range products, quantity is always an integer package count.
   const step = isKg && !isWeightRange && mode === "HALF_KG" ? 0.5 : 1;
 
   const unitPrice =
@@ -45,7 +45,7 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
       ? product.discountPrice
       : product.price;
 
-  // نطاق السعر التقريبي للخيار المختار × عدد العبوات
+  // Approximate price range for the selected option multiplied by package count.
   const approxPriceRange = useMemo(() => {
     if (!isWeightRange || !selectedOption) return null;
 
@@ -79,8 +79,8 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
         weightOptionId: isWeightRange ? selectedOptionId : undefined,
       });
 
-      // لازم تتنفذ قبل closeDialog عشان تاخد مكان الزرار
-      // قبل ما الـ Dialog يتشال من الـ DOM
+      // Run this before closeDialog to capture the button position before the
+      // dialog is removed from the DOM.
       flyToCart(addButtonRef.current, product.image ?? undefined);
 
       closeDialog();

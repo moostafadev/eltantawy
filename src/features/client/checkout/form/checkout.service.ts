@@ -30,8 +30,8 @@ type CreateOrderResult =
     };
 
 /**
- * لو المستخدم مسجل دخول، بنربط الطلب بحسابه. لو مش مسجل (Guest)،
- * الطلب بيتم عادي وبتتخزن بياناته من الفورم فقط.
+ * Links the order to the current account when the customer is signed in.
+ * Guest orders are created using only the submitted checkout details.
  */
 const getCurrentUser = async () => {
   const cookieStore = await cookies();
@@ -92,11 +92,11 @@ export const createOrderAction = async (
 
     /*
      * ================================
-     * منع الطلب برقم هاتف مسجل لحساب مستخدم آخر
+     * Prevent orders from using another account's registered phone number.
      * ================================
      *
-     * لو الرقم المُدخل مسجل بالفعل لحساب، ومش نفس المستخدم الحالي
-     * (سواء كان Guest أو مسجل دخول بحساب مختلف)، نرفض الطلب
+     * Reject the order when the number belongs to a different user, whether
+     * the customer is a guest or is signed in to another account.
      */
     const existingPhoneOwner = await prisma.user.findUnique({
       where: {
@@ -218,10 +218,10 @@ export const createOrderAction = async (
 
     /*
      * ================================
-     * إشعار الأدمن Real-time بطلب جديد
+     * Notify the admin about the new order in real time.
      * ================================
      *
-     * فشل إرسال الإشعار لا يجب أن يؤثر على نجاح إنشاء الطلب
+     * A notification failure must not affect the successful order creation.
      */
     try {
       await pusherServer.trigger(ADMIN_ORDERS_CHANNEL, ORDER_EVENTS.CREATED, {
@@ -231,8 +231,8 @@ export const createOrderAction = async (
       });
 
       /*
-       * إشعار المستخدم صاحب الطلب نفسه (لو مسجل دخول)، عشان يشوف طلبه
-       * في صفحة "طلباتي" فورًا بدون الحاجة لعمل Refresh يدوي
+       * Notify the account owner so the new order appears on their orders
+       * page immediately without requiring a manual refresh.
        */
       if (currentUser) {
         await pusherServer.trigger(

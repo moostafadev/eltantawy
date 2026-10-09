@@ -2,9 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 
-/**
- * آخر N طلبات للمستخدم، بيُستخدم في قسم "طلباتي" المختصر داخل صفحة البروفايل
- */
+/** Returns the user's latest orders for the profile-page summary. */
 export const getRecentOrdersForUser = async (userId: string, limit = 3) => {
   const orders = await prisma.order.findMany({
     where: {
@@ -39,8 +37,8 @@ export const getRecentOrdersForUser = async (userId: string, limit = 3) => {
 };
 
 /**
- * كل طلبات المستخدم بتفاصيلها الكاملة (المنتجات + سجل تغيير الحالة بالتوقيت)،
- * بيُستخدم في صفحة /profile/orders
+ * Returns all user orders with their items and timestamped status history
+ * for the `/profile/orders` page.
  */
 export const getAllOrdersForUser = async (userId: string) => {
   return prisma.order.findMany({
@@ -100,8 +98,8 @@ export const getAllOrdersForUser = async (userId: string) => {
 };
 
 /**
- * تفاصيل طلب واحد + سجل تغييرات الحالة بالتوقيت، مقيّد بمالك الطلب
- * (userId) عشان مستخدم مايقدرش يشوف طلب مستخدم تاني عن طريق الـ id
+ * Returns one order and its timestamped status history, restricted to its
+ * owner (`userId`) so users cannot view another customer's order by ID.
  */
 export const getOneOrderForUser = async (userId: string, orderId: string) => {
   const order = await prisma.order.findFirst({

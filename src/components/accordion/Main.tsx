@@ -13,21 +13,18 @@ import { AccordionContextValue, AccordionProps } from "./types";
 const AccordionContext = createContext<AccordionContextValue | null>(null);
 
 /**
- * Accordion عام قابل لإعادة الاستخدام. بيدير حالة الفتح/الغلق داخليًا
- * عبر Context، ويدعم وضعين:
+ * Reusable accordion that manages its open state through context.
  *
- * - `allowMultiple=false` (افتراضي): عنصر واحد مفتوح فقط في نفس الوقت.
- * - `allowMultiple=true`: كل العناصر تقدر تتفتح مع بعضها.
- *
- * يُستخدم مع `AccordionItem` كأبناء مباشرين أو غير مباشرين.
+ * By default, only one item can be open at a time. Set `allowMultiple` to
+ * allow multiple open items. Use with `AccordionItem` descendants.
  *
  * @example
  * <Accordion>
- *   <AccordionItem value="1" trigger={<span>العنوان الأول</span>}>
- *     المحتوى الأول
+ *   <AccordionItem value="shipping" trigger={<span>Shipping</span>}>
+ *     Delivery details
  *   </AccordionItem>
- *   <AccordionItem value="2" trigger={<span>العنوان الثاني</span>}>
- *     المحتوى الثاني
+ *   <AccordionItem value="returns" trigger={<span>Returns</span>}>
+ *     Return details
  *   </AccordionItem>
  * </Accordion>
  */

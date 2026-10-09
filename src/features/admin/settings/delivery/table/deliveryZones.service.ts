@@ -91,8 +91,8 @@ export const getDeliveryZonesForGraph = async () => {
 };
 
 /**
- * المناطق القابلة للاختيار فعليًا في صفحة الـ Checkout:
- * نشطة، وليها تكلفة توصيل محددة (يعني منطقة نهائية مش أب لمناطق فرعية)
+ * Returns delivery zones available for selection at checkout: active leaf
+ * zones with a defined delivery fee.
  */
 export const getActiveDeliveryZonesForCheckout = async () => {
   const zones = await prisma.deliveryZone.findMany({

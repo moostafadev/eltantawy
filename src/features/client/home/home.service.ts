@@ -5,12 +5,12 @@ import { prisma } from "@/lib/prisma";
 const MIN_TOP_SELLING_PRODUCTS = 4;
 
 /**
- * الأكثر مبيعًا فعليًا: بنجمع كل عناصر الطلبات اللي حالتها "تم التوصيل"
- * لكل منتج، ونرتب حسب إجمالي المبيعات (نفس منطق getTopProducts في الأدمن).
+ * Finds the best-selling products by summing items from delivered orders,
+ * using the same sales-total ranking as the admin dashboard.
  *
- * لو عدد المنتجات الحقيقية اللي اتباعت أقل من الحد الأدنى المطلوب،
- * بنكمل الباقي بمنتجات عشوائية من الكتالوج (مع استبعاد المكرر) عشان
- * القسم في الصفحة الرئيسية ميفضلش شبه فاضي
+ * If fewer products have sales than the requested minimum, fills the
+ * remaining slots with unique products from the catalog so the home-page
+ * section does not appear sparse.
  */
 export const getTopSellingProducts = async (
   limit = 8,
@@ -91,7 +91,7 @@ export const getTopSellingProducts = async (
       products.map((product) => [product.id, product]),
     );
 
-    // بنحافظ على ترتيب الأكثر مبيعًا (حسب الإجمالي) مش ترتيب الداتابيز
+    // Preserve sales ranking instead of using the database result order.
     orderedProducts = topIds
       .map((id) => productsMap.get(id))
       .filter((product): product is NonNullable<typeof product> =>
@@ -100,7 +100,7 @@ export const getTopSellingProducts = async (
   }
 
   /*
-   * تكملة عشوائية لو العدد أقل من الحد الأدنى المطلوب
+   * Fill the remaining slots with randomly selected products when needed.
    */
   if (orderedProducts.length < minimum) {
     const needed = minimum - orderedProducts.length;

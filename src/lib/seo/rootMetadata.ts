@@ -5,10 +5,8 @@ import { buildMetadata } from "./metadata";
 import { getSeoSettings } from "@/features/admin/settings/seo";
 
 /**
- * Metadata الأساسي للـ Root Layout والصفحة الرئيسية، بيقرأ العنوان
- * والوصف والكلمات المفتاحية وصورة الـ OG من إعدادات SEO المتحكم فيها
- * الأدمن، مع fallback للقيم الافتراضية في SITE_CONFIG لو مفيش إعدادات
- * محفوظة بعد
+ * Builds metadata for the root layout and home page from admin-managed SEO
+ * settings, falling back to `SITE_CONFIG` defaults when settings are absent.
  */
 export const getRootMetadata = async (): Promise<Metadata> => {
   const settings = await getSeoSettings();
@@ -35,7 +33,7 @@ export const getRootMetadata = async (): Promise<Metadata> => {
       apple: "/logo.png",
     },
     verification: {
-      // لما يتعمل حساب Google Search Console، حط الكود هنا:
+      // Add the Google Search Console verification code here when available:
       // google: "YOUR_VERIFICATION_CODE",
     },
   };

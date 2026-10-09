@@ -17,8 +17,8 @@ export interface MonthlySales {
 
 export interface MonthlySalesRow extends MonthlySales {
   /**
-   * نسبة التغيير عن الشهر السابق (%). null لأول شهر في القائمة
-   * أو لو قيمة الشهر السابق صفر (تفاديًا للقسمة على صفر)
+   * Percentage change from the previous month. Null for the first month or
+   * when the previous month's value is zero to avoid division by zero.
    */
   change: number | null;
 }

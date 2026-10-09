@@ -93,7 +93,7 @@ export const editDiscountAction = async (id: string, values: unknown) => {
         },
       });
     } else {
-      // خصم سريع: امنع تفعيل أكتر من خصم واحد من نفس النوع في نفس الوقت
+      // Allow at most one active quick discount of each type at a time.
       if (isActive) {
         const existingActive = await prisma.discount.findFirst({
           where: {

@@ -16,9 +16,9 @@ interface Props {
 }
 
 /**
- * نموذج صغير مضمّن جوه صفحة تفاصيل الطلب، لإدخال وتأكيد الوزن الفعلي
- * لعنصر طلب واحد من نوع "نطاق وزن". يُستخدم بشكل مستقل لكل عنصر
- * (تأكيد جزئي، مش لازم كل العناصر مرة واحدة).
+ * An embedded form on the order details page for entering and confirming
+ * the actual weight of one weight-range item. Each item can be confirmed
+ * independently; confirming every item at once is not required.
  */
 const ConfirmWeightForm = ({ orderItemId, minWeight, maxWeight }: Props) => {
   const { toast } = useToast();

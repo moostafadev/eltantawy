@@ -8,9 +8,9 @@ const MONTHS_TO_SHOW = 6;
 const TOP_PRODUCTS_LIMIT = 5;
 
 /**
- * ملخص الأداء المالي: المبيعات = إجمالي (total - refundedAmount) لكل
- * الطلبات اللي حالتها "تم التوصيل" فقط، بحيث تكون المرتجعات مخصومة
- * تلقائيًا من صافي المبيعات
+ * Builds the financial summary from delivered orders only. Sales are
+ * calculated as `total - refundedAmount`, so refunds are deducted from net
+ * sales automatically.
  */
 export const getSalesSummary = async (): Promise<SalesSummary> => {
   const [deliveredOrders, refundedAmountAgg, returnsCounts] = await Promise.all(
@@ -72,9 +72,7 @@ export const getSalesSummary = async (): Promise<SalesSummary> => {
   };
 };
 
-/**
- * صافي المبيعات مجمّعة شهريًا لآخر 6 أشهر، بيُستخدم في الرسم البياني
- */
+/** Returns net sales by month for the last six months for the sales chart. */
 export const getMonthlySales = async (): Promise<MonthlySales[]> => {
   const deliveredOrders = await prisma.order.findMany({
     where: {
@@ -121,9 +119,7 @@ export const getMonthlySales = async (): Promise<MonthlySales[]> => {
   return months.map(({ label, value }) => ({ label, value }));
 };
 
-/**
- * الأكثر مبيعًا من المنتجات، بناءً على الطلبات المكتملة فقط
- */
+/** Returns the best-selling products based only on completed orders. */
 export const getTopProducts = async (): Promise<TopProduct[]> => {
   const items = await prisma.orderItem.findMany({
     where: {

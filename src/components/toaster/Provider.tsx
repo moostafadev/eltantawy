@@ -196,7 +196,7 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
  *
  * @example
  * const { toast } = useToast();
- * toast.success("تم الحفظ بنجاح.");
+ * toast.success("Saved successfully.");
  * toast.error(result.message);
  */
 export const useToast = () => {

@@ -66,7 +66,7 @@ const isValidCartItem = (item: unknown): item is CartItem => {
     return false;
   }
 
-  // منتجات نطاق الوزن: qty تمثل عدد العبوات، لازم رقم صحيح موجب
+  // For weight-range products, qty is a positive integer package count.
   if (value.weightOptionId) {
     return Number.isInteger(value.qty);
   }
@@ -166,7 +166,7 @@ export const removeCartItem = (
 export const clearCart = (): Cart => EMPTY_CART();
 
 /**
- * تخزين كود الكوبون على السلة (بيتم استبدال أي كود قديم)
+ * Stores a coupon code on the cart, replacing any previously applied code.
  */
 export const setCouponCode = (cart: Cart, code: string): Cart => {
   return {
@@ -176,7 +176,7 @@ export const setCouponCode = (cart: Cart, code: string): Cart => {
 };
 
 /**
- * إلغاء الكوبون المطبق حاليًا على السلة
+ * Removes the currently applied coupon code from the cart.
  */
 export const removeCouponCode = (cart: Cart): Cart => {
   return {

@@ -6,10 +6,10 @@ import { useAccordion } from "./Main";
 import { AccordionItemProps } from "./types";
 
 /**
- * عنصر مفرد داخل `Accordion`. لازم يُستخدم داخل `<Accordion>`.
+ * One item in an `Accordion`; it must be rendered inside `<Accordion>`.
  *
- * `trigger` هو المحتوى اللي بيظهر دايمًا في الهيدر (بجوار سهم الفتح/الغلق)،
- * و`children` هو المحتوى اللي بيظهر بس لما العنصر يكون مفتوح.
+ * `trigger` is always visible in the header beside the expand icon.
+ * `children` is shown only while the item is open.
  */
 const AccordionItem = ({
   value,

@@ -13,8 +13,8 @@ const discountTypeLabels: Record<Props["type"], string> = {
 };
 
 /**
- * بانر يعرض الخصم التلقائي الحالي المفعّل على الموقع (لو موجود)،
- * بيُستخدم أعلى صفحة العروض
+ * Displays the site's currently active automatic discount, when present,
+ * at the top of the offers page.
  */
 const OfferBanner = ({ type, valueType, value, minOrderAmount }: Props) => {
   const valueLabel = valueType === "PERCENTAGE" ? `${value}%` : `${value} ج.م`;

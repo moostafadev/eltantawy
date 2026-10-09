@@ -52,12 +52,11 @@ export const updateOrderStatusAction = async (
 
     /*
      * ================================
-     * منع الخروج للتوصيل قبل تأكيد الوزن الفعلي
+     * Require actual weights before dispatch
      * ================================
      *
-     * أي عنصر "نطاق وزن" في الطلب لازم يكون له وزن فعلي مؤكّد
-     * قبل ما الطلب يوصل لحالة "خرج للتوصيل"، عشان السعر النهائي
-     * يبقى دقيق وليس تقريبي
+     * Every weight-range item must have a confirmed actual weight before
+     * the order moves to "out for delivery", so its final price is accurate.
      */
     if (nextStatus === WEIGHT_CONFIRMATION_REQUIRED_BEFORE) {
       const unconfirmedCount = await prisma.orderItem.count({
@@ -101,10 +100,10 @@ export const updateOrderStatusAction = async (
 
     /*
      * ================================
-     * إشعار الأدمن Real-time بتغيير حالة الطلب
+     * Notify the admin of the order status change in real time.
      * ================================
      *
-     * فشل إرسال الإشعار لا يجب أن يؤثر على نجاح تحديث الحالة
+     * A notification failure must not affect the successful status update.
      */
     try {
       await pusherServer.trigger(
@@ -117,9 +116,7 @@ export const updateOrderStatusAction = async (
         },
       );
 
-      /*
-       * إشعار المستخدم صاحب الطلب نفسه (لو الطلب مرتبط بحساب)
-       */
+      /* Notify the customer who owns the order, when it is linked to an account. */
       if (order.userId) {
         await pusherServer.trigger(
           getUserOrdersChannel(order.userId),

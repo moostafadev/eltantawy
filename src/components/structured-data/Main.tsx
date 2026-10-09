@@ -3,11 +3,11 @@ interface Props {
 }
 
 /**
- * بيحقن JSON-LD structured data داخل `<script type="application/ld+json">`
- * لدعم Rich Snippets في نتائج بحث جوجل
+ * Renders JSON-LD structured data in an
+ * `<script type="application/ld+json">` element to support rich search results.
  *
  * @example
- * <StructuredData data={buildProductStructuredData({...})} />
+ * <StructuredData data={buildProductStructuredData(product)} />
  */
 const StructuredData = ({ data }: Props) => {
   const items = Array.isArray(data) ? data : [data];

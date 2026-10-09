@@ -5,12 +5,11 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 /**
- * تأكيد الوزن الفعلي لعنصر طلب واحد من نوع "نطاق وزن".
+ * Confirms the actual weight for one order item sold by weight range.
  *
- * بيحسب السعر النهائي الدقيق = سعر الوحدة × الوزن الفعلي × عدد العبوات،
- * وبيعدّل إجمالي الطلب (subtotal / total) بمقدار الفرق بين السعر
- * القديم (التقريبي) والسعر الجديد (الدقيق)، من غير ما يمس قيمة
- * الخصومات المطبّقة أصلًا وقت الطلب.
+ * Calculates the final price as unit price × actual weight × package count,
+ * then adjusts the order subtotal and total by the difference without
+ * changing discounts that were fixed when the order was created.
  */
 export const confirmItemActualWeightAction = async (
   orderItemId: string,
@@ -81,8 +80,8 @@ export const confirmItemActualWeightAction = async (
     });
 
     /*
-     * تعديل إجمالي الطلب بمقدار الفرق فقط، بدون إعادة حساب الخصومات
-     * (الكوبون/الخصم التلقائي متجمّد بقيمته وقت إنشاء الطلب)
+     * Apply only the price difference; discounts remain fixed at the values
+     * recorded when the order was created.
      */
     if (delta !== 0) {
       await prisma.order.update({
@@ -119,7 +118,7 @@ export const confirmItemActualWeightAction = async (
 };
 
 /**
- * هل الطلب فيه عناصر نطاق وزن لسه محتاجة تأكيد الوزن الفعلي؟
+ * Checks whether an order has any weight-range items awaiting confirmation.
  */
 export const hasUnconfirmedWeightItems = async (orderId: string) => {
   const count = await prisma.orderItem.count({

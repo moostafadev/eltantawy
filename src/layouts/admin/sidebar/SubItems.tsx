@@ -7,7 +7,7 @@ import { SubItemsProps } from "./types";
 const SubItems = ({ items }: SubItemsProps) => {
   const pathName = usePathname();
 
-  // اختار أكثر لينك تحديدًا (الأطول) يطابق المسار الحالي
+  // Select the most specific (longest) link that matches the current path.
   const activeLink = items
     .filter(({ link }) => pathName === link || pathName.startsWith(`${link}/`))
     .sort((a, b) => b.link.length - a.link.length)[0]?.link;

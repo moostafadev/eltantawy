@@ -108,9 +108,9 @@ export const getCategoriesForStore = async () => {
 };
 
 /**
- * نسخة خفيفة مخصصة للصفحة الرئيسية: بتجيب التصنيفات الرئيسية فقط،
- * مع إجمالي عدد المنتجات (المباشرة + الفرعية) لكل تصنيف، بدون تحميل
- * قوائم المنتجات الكاملة أو الهيكل الهرمي المتداخل بالكامل
+ * Returns a lightweight set of root categories for the home page, including
+ * direct and descendant product counts without loading product lists or the
+ * complete nested category tree.
  */
 export const getHomeCategories = async (limit = 6) => {
   const categories = await prisma.category.findMany({

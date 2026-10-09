@@ -9,9 +9,8 @@ export interface StatColorClasses {
 }
 
 /**
- * كل لون بيرجع مجموعة كلاسات ثابتة (accent bar / خلفية الأيقونة / لون
- * الأيقونة / ظل عند الـ hover) عشان نتجنب بناء class names ديناميكية
- * (Tailwind محتاج الـ class تكون literal في الكود عشان تتكتشف).
+ * Maps each color to a fixed set of classes (accent bar, icon background,
+ * icon color, and hover shadow) because Tailwind must see literal class names.
  */
 export const getStatColorClasses = (color: COLOR): StatColorClasses => {
   switch (color) {

@@ -68,8 +68,8 @@ export const getUserReturns = async (userId: string) => {
 };
 
 /**
- * ملخص الحساب: عدد الطلبات (غير الملغاة) وإجمالي المصروف الفعلي
- * (total - refundedAmount) وعدد المرتجعات
+ * Returns the account summary: non-cancelled order count, actual spend
+ * (`total - refundedAmount`), and return count.
  */
 export const getUserSummary = async (userId: string) => {
   const [orders, returnsCount] = await Promise.all([

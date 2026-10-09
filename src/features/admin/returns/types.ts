@@ -36,10 +36,10 @@ export const returnStatusColors: Record<
 };
 
 /**
- * حالات المرتجع المسموح الانتقال إليها من كل حالة:
- * - PENDING: تنتظر موافقة أو رفض الأدمن
- * - APPROVED: تمت الموافقة، بننتظر تنفيذ الاسترجاع فعليًا (تحديث الأرقام المالية)
- * - REFUNDED / REJECTED: حالات نهائية
+ * Allowed return status transitions:
+ * - PENDING: awaiting admin approval or rejection.
+ * - APPROVED: approved and awaiting the refund operation and financial updates.
+ * - REFUNDED / REJECTED: terminal states.
  */
 export const returnStatusTransitions: Record<
   ReturnStatusEnum,

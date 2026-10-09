@@ -24,11 +24,11 @@ export const getUsers = async () => {
 };
 
 /**
- * تجميع طلبات الضيوف (userId = null) حسب رقم الهاتف، لعرضهم كـ "مستخدمين"
- * في جدول الأدمن رغم عدم وجود حساب User فعلي لهم.
+ * Groups guest orders (`userId = null`) by phone number so they can appear
+ * as users in the admin table even though they do not have a User account.
  *
- * التجميع بيتم في الذاكرة بدل استخدام groupBy، لأن الحجم المتوقع
- * لطلبات الضيوف صغير نسبيًا، وده بيضمن توافق كامل مع MongoDB.
+ * Grouping is done in memory because the expected guest-order volume is
+ * relatively small and this approach is fully compatible with MongoDB.
  */
 export const getGuestUsers = async () => {
   const guestOrders = await prisma.order.findMany({

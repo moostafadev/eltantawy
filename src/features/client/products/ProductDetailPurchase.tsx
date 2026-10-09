@@ -25,8 +25,9 @@ interface Props {
 }
 
 /**
- * أزرار اختيار الكمية/الوزن وإضافة المنتج للسلة، مستخدمة داخل صفحة
- * تفاصيل المنتج (بدون Dialog، عكس `AddToCartDialog` المستخدم في الكروت)
+ * Provides quantity or weight selection and adds a product to the cart on
+ * the product details page. Unlike `AddToCartDialog`, it does not use a
+ * dialog.
  */
 const ProductDetailPurchase = ({
   productId,

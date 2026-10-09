@@ -28,14 +28,14 @@ const BASE_KEYWORDS = [
 ];
 
 /**
- * بيبني object الـ Metadata الموحّد لأي صفحة في الـ client. `extraKeywords`
- * (لو اتبعتت) بتتدمج مع BASE_KEYWORDS + كلمات الصفحة، وبتيجي من إعدادات
- * SEO المتحكم فيها الأدمن (راجع src/features/admin/settings/seo)
+ * Builds a shared metadata object for a page. When supplied, `extraKeywords`
+ * are merged with `BASE_KEYWORDS` and page keywords; extra keywords are
+ * provided by admin-managed SEO settings in `src/features/admin/settings/seo`.
  *
  * @example
  * export const metadata = buildMetadata({
- *   title: "المنتجات",
- *   description: "تصفح جميع منتجاتنا من اللحوم والدواجن الطازجة",
+ *   title: "Products",
+ *   description: "Browse our fresh meat and poultry products",
  *   path: "/products",
  * });
  */

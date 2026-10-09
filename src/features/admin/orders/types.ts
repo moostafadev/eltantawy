@@ -83,8 +83,8 @@ export const paymentMethodLabels: Record<PaymentMethodEnum, string> = {
 };
 
 /**
- * حالات الطلب المسموح الانتقال إليها من كل حالة، بيستخدم في الأدمن
- * لمنع تغيير حالة الطلب بشكل غير منطقي (مثال: من DELIVERED لـ PENDING)
+ * Allowed order status transitions, used by the admin UI to prevent
+ * invalid changes (for example, moving from DELIVERED back to PENDING).
  */
 export const orderStatusTransitions: Record<
   OrderStatusEnum,
@@ -99,8 +99,8 @@ export const orderStatusTransitions: Record<
 };
 
 /**
- * الحالة اللي لازم قبلها يكون كل عنصر "نطاق وزن" في الطلب
- * له وزن فعلي مؤكّد (weightConfirmed = true)
+ * The status that requires every weight-range item in the order to have a
+ * confirmed actual weight (`weightConfirmed = true`).
  */
 export const WEIGHT_CONFIRMATION_REQUIRED_BEFORE: OrderStatusEnum =
   "OUT_FOR_DELIVERY";

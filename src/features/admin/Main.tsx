@@ -43,8 +43,8 @@ const AdminDashboard = async () => {
   ]);
 
   /*
-   * الأداء المالي: أهم مؤشرات المبيعات والمرتجعات، بتتعرض في أعلى
-   * الصفحة بشكل بارز لأنها أهم بيانات لصاحب الموقع
+   * Financial performance: highlight key sales and return metrics at the
+   * top of the page because they are the most important business indicators.
    */
   const financialStats: {
     title: string;
@@ -84,7 +84,7 @@ const AdminDashboard = async () => {
   ];
 
   /*
-   * أهم 3 مؤشرات بيعكسوا نشاط الموقع، بتتعرض بشكل بارز
+   * Highlight the three key metrics that reflect overall site activity.
    */
   const featuredStats: {
     title: string;
@@ -117,8 +117,8 @@ const AdminDashboard = async () => {
   ];
 
   /*
-   * بيانات هيكلية/إعدادات أقل أهمية، بتتعرض بشكل مختصر
-   * في قسم "ملخص الموقع" بدون تكرارها كبطاقات كبيرة
+   * Show less critical structural and configuration data in the site
+   * summary without repeating it as large statistic cards.
    */
   const secondaryStats: {
     title: string;
@@ -140,9 +140,7 @@ const AdminDashboard = async () => {
     },
   ];
 
-  /*
-   * اختصارات مباشرة لكل جدول بيانات في لوحة التحكم
-   */
+  /* Provide direct links to each data table in the dashboard. */
   const tableShortcuts: {
     title: string;
     href: string;

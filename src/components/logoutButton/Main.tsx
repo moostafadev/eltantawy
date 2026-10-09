@@ -11,8 +11,8 @@ import { IProps } from "./types";
 
 /**
  * `Button` wrapper that logs the user out via `useAuth().logout()`, shows
- * a toast, then redirects to the homepage. Pass `children` to override
- * the default "تسجيل الخروج" label/icon.
+ * a toast, then redirects to the homepage. Pass `children` to override the
+ * default logout label and icon.
  *
  * @example
  * <LogoutButton color="NEUTRAL" variant="outline" size="sm" />

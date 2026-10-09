@@ -38,8 +38,8 @@ export const getProductForStore = async (id: string) => {
 };
 
 /**
- * منتجات مشابهة من نفس التصنيف، بتُعرض أسفل صفحة تفاصيل المنتج
- * لتحسين تجربة التصفح وزيادة الوقت المقضي في الموقع (إشارة إيجابية لـ SEO)
+ * Returns related products from the same category for the product details
+ * page, improving navigation and supporting SEO engagement signals.
  */
 export const getRelatedProducts = async (
   categoryId: string | null,

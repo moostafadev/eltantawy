@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
 
 /**
- * MongoDB (عبر Prisma) مش بيدعم auto-increment زي الـ SQL databases،
- * فبنولّد رقم الطلب يدويًا: بناخد أعلى orderNumber موجود ونزوّده بواحد.
+ * MongoDB does not support auto-increment through Prisma like SQL databases,
+ * so this generates an order number by incrementing the highest existing one.
  */
 const START_ORDER_NUMBER = 1000;
 
@@ -20,9 +20,8 @@ export const generateOrderNumber = async (): Promise<number> => {
 };
 
 /**
- * في حالة نادرة من تزامن طلبين في نفس اللحظة بالظبط، ممكن يحصل تعارض
- * على الـ unique constraint الخاص بـ orderNumber. بنعيد المحاولة بدل
- * ما نفشل الطلب بالكامل.
+ * Concurrent requests can occasionally collide on the unique orderNumber
+ * constraint. Retry those conflicts instead of failing the entire request.
  */
 export const withOrderNumberRetry = async <T>(
   fn: (orderNumber: number) => Promise<T>,

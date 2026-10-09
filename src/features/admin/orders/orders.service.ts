@@ -43,8 +43,7 @@ export const getOneOrder = async (id: string) => {
 };
 
 /**
- * توزيع عدد الطلبات على كل حالة، بيُستخدم في الرسم البياني الدائري
- * (Donut Chart) بالصفحة الرئيسية للداشبورد
+ * Returns the number of orders in each status for the dashboard donut chart.
  */
 export const getOrderStatusDistribution = async (): Promise<
   { status: OrderStatusEnum; count: number }[]

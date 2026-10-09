@@ -1,11 +1,10 @@
 /**
- * ⚠️ تحذير مهم:
- * هذا الملف مخصص للاستيراد من كود السيرفر فقط (Server Actions/Services).
+ * Server-only entry point for Server Actions and services.
  *
- * لا تقم أبدًا باستيراد أي شيء من هذا الملف داخل Client Component،
- * لأن "pusherServer" يحتوي على PUSHER_SECRET وسيتم تضمينه في bundle
- * المتصفح بالخطأ. من داخل Client Component، استورد مباشرة من:
- * "@/lib/realtime/pusher-client" و "@/lib/realtime/constants"
+ * Never import this module from a Client Component: `pusherServer` contains
+ * `PUSHER_SECRET`, which would otherwise be included in the browser bundle.
+ * Client Components should import from `@/lib/realtime/pusher-client` and
+ * `@/lib/realtime/constants` instead.
  */
 
 export { pusherServer } from "./pusher-server";

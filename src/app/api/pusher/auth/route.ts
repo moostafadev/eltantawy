@@ -5,9 +5,8 @@ import { verifyAccessToken } from "@/lib/auth";
 import { pusherServer } from "@/lib/realtime/pusher-server";
 
 /**
- * Pusher بيستدعي الـ Endpoint ده تلقائيًا كل ما Client Component يحاول
- * يعمل subscribe على private channel، عشان نتأكد إن المستخدم مسموحله
- * فعلًا يشترك في الـ channel المطلوب قبل ما نوافق على الطلب.
+ * Pusher calls this endpoint when a client subscribes to a private channel.
+ * It verifies that the authenticated user is allowed to access that channel.
  */
 export async function POST(request: Request) {
   try {
@@ -38,8 +37,8 @@ export async function POST(request: Request) {
     }
 
     /*
-     * التأكد إن المستخدم بيحاول يشترك في الـ channel الخاص بيه هو بس،
-     * مش channel خاص بمستخدم تاني
+     * Ensure the user subscribes only to their own channel, not another
+     * user's private channel.
      */
     const expectedChannel = `private-user-orders-${payload.userId}`;
 

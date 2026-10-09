@@ -26,10 +26,10 @@ interface OrderStatusUpdatedPayload {
 }
 
 /**
- * Component غير مرئي، بيستمع لأحداث Pusher الخاصة بطلبات المستخدم الحالي
- * فقط (عبر Private Channel)، وبيعرض Toast + يحدّث الصفحة عند وصول أي حدث.
+ * Invisible listener for the current user's Pusher order events on a private
+ * channel. It displays a toast and refreshes the page when an event arrives.
  *
- * يُستخدم داخل صفحة "طلباتي" (profile/orders) وصفحة البروفايل الرئيسية.
+ * Use it on the user's orders page and main profile page.
  */
 const OrdersRealtimeListener = ({ userId }: Props) => {
   const router = useRouter();

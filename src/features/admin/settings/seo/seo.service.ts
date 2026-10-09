@@ -7,8 +7,8 @@ import { SITE_CONFIG } from "@/lib/seo/config";
 import { seoSettingsSchema } from "./schema";
 
 /**
- * إعدادات SEO محفوظة كسجل واحد فقط (Singleton) في الداتابيز.
- * لو مفيش سجل بعد (أول مرة)، بترجع القيم الافتراضية من SITE_CONFIG
+ * SEO settings are stored as a single database record. If no record exists
+ * yet, this returns the default values from `SITE_CONFIG`.
  */
 export const getSeoSettings = async () => {
   const settings = await prisma.siteSeoSettings.findFirst();

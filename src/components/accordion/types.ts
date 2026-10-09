@@ -2,9 +2,9 @@ import { ReactNode } from "react";
 
 export interface AccordionProps {
   children: ReactNode;
-  /** يسمح بفتح أكثر من عنصر في نفس الوقت، افتراضيًا false (عنصر واحد فقط) */
+  /** Allows multiple items to stay open. Defaults to false. */
   allowMultiple?: boolean;
-  /** قيمة العنصر المفتوح افتراضيًا (لو allowMultiple = false) */
+  /** Value of the item that is open by default when multiple items are disabled. */
   defaultOpenValue?: string;
   className?: string;
 }

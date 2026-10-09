@@ -12,8 +12,8 @@ interface ProductStructuredDataParams {
 }
 
 /**
- * JSON-LD Schema لصفحة منتج واحد (Product Schema)
- * بيساعد جوجل يعرض Rich Snippets (سعر، توفر، تقييم) في نتائج البحث
+ * Builds Product JSON-LD for a product page to help search engines display
+ * rich results such as price, availability, and ratings.
  */
 export const buildProductStructuredData = ({
   id,
@@ -61,8 +61,8 @@ interface BreadcrumbItem {
 }
 
 /**
- * JSON-LD Schema لمسار التنقل (Breadcrumb)، بيظهر في نتائج البحث
- * كمسار تحت العنوان بدل الرابط الخام
+ * Builds Breadcrumb JSON-LD so search results can show a navigation path
+ * beneath the page title instead of a raw URL.
  */
 export const buildBreadcrumbStructuredData = (items: BreadcrumbItem[]) => {
   return {
@@ -77,9 +77,7 @@ export const buildBreadcrumbStructuredData = (items: BreadcrumbItem[]) => {
   };
 };
 
-/**
- * JSON-LD Schema للمنظمة، بيتحط في الـ layout الرئيسي مرة واحدة
- */
+/** Organization JSON-LD data to include once in the root layout. */
 export const organizationStructuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",

@@ -22,7 +22,7 @@ const CartItem = ({ item }: CartItemProps) => {
 
   const isWeightRange = item.isApprox && Boolean(item.weightOption);
 
-  // منتجات نطاق الوزن: الكمية دايمًا عدد عبوات صحيح (خطوة 1)
+  // For weight-range products, quantity is always an integer package count.
   const step = isWeightRange ? 1 : isKg ? 0.5 : 1;
 
   const increment = () => {

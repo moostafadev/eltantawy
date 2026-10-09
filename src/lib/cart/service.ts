@@ -73,8 +73,8 @@ export class CartService {
   }
 
   /**
-   * جلب بيانات المستخدم الحالي (لو مسجل دخول) من access_token
-   * بدون أي redirect، فقط للاستخدام الداخلي في تقييم الخصومات
+   * Gets the current user's data from the access token without redirecting.
+   * This is used internally when evaluating discounts.
    */
   private static async getCurrentUser(): Promise<{ id: string } | null> {
     const cookieStore = await cookies();
@@ -206,10 +206,10 @@ export class CartService {
   }
 
   /**
-   * تطبيق كود خصم (كوبون) على السلة الحالية.
+   * Applies a coupon code to the current cart.
    *
-   * ملاحظة: مفيش زيادة في usageCount هنا، ده بيحصل فقط وقت
-   * إنشاء الطلب فعليًا (هيتضاف مع نظام الـ Orders).
+   * The usage count is not incremented here; it is updated only when the
+   * order is actually created.
    */
   static async applyCoupon(
     rawCode: string,
@@ -270,9 +270,7 @@ export class CartService {
     };
   }
 
-  /**
-   * إلغاء الكوبون المطبق حاليًا على السلة
-   */
+  /** Removes the coupon currently applied to the cart. */
   static async removeCoupon(): Promise<HydratedCart> {
     const cart = await this.getCart();
 
@@ -429,7 +427,7 @@ export class CartService {
 
     /*
      * ================================
-     * 1) الكوبون المُدخل (لو موجود)
+     * 1) Entered coupon, if any
      * ================================
      */
     let couponCode: string | null = null;
@@ -455,8 +453,8 @@ export class CartService {
 
     /*
      * ================================
-     * 2) أفضل خصم تلقائي متاح
-     *    (لكل العملاء + للمسجلين الموثقين فقط)
+     * 2) Best available automatic discount
+     *    (for all customers or verified registered customers)
      * ================================
      */
     const currentUser = await this.getCurrentUser();
@@ -496,8 +494,8 @@ export class CartService {
 
     /*
      * ================================
-     * 3) اختيار الخصم الفعلي المطبق: الأعلى قيمة بين
-     *    الكوبون والخصم التلقائي (بدون تراكم بينهم)
+     * 3) Apply whichever is greater: the coupon or automatic discount.
+     *    Discounts do not stack.
      * ================================
      */
     let discountAmount = 0;
@@ -555,8 +553,8 @@ export class CartService {
   }
 
   /**
-   * لعناصر نطاق الوزن: بنستخدم متوسط الوزن كمضاعف لحساب الـ subtotal/discount
-   * لعناصر البيع العادي: المضاعف 1 (بدون تأثير)
+   * Uses the midpoint weight as a multiplier for weight-range items when
+   * calculating the subtotal and discount. Normal items use a multiplier of 1.
    */
   private static weightMultiplier(item: CartItemWithProduct) {
     if (!item.isApprox || !item.weightOption) {
@@ -567,11 +565,11 @@ export class CartService {
   }
 
   /**
-   * التحقق من صلاحية أي خصم (كوبون أو تلقائي) وحساب قيمته.
+   * Validates a coupon or automatic discount and calculates its amount.
    *
-   * قواعد الرفض بالترتيب: غير مفعّل → لم يبدأ بعد → منتهي الصلاحية →
-   * تم استنفاد عدد مرات الاستخدام → أقل من الحد الأدنى للطلب →
-   * قيمة الخصم أكبر من قيمة السلة.
+   * Rejection checks run in this order: inactive, not started, expired,
+   * usage limit reached, below the minimum order amount, or discount greater
+   * than the cart value.
    */
   private static evaluateDiscount(
     discount: DiscountRecord,

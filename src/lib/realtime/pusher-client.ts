@@ -10,12 +10,12 @@ if (!key || !cluster) {
 }
 
 /*
- * Instance واحد مشترك في المتصفح كله، بدل ما نعمل اتصال جديد
- * في كل مرة يتعمل فيها render لأي Component بيستخدمه.
+ * Share one browser instance instead of opening a new connection each time
+ * a component using Pusher renders.
  *
- * "channelAuthorization" مطلوب فقط للـ Private/Presence Channels
- * (زي private-user-orders-*)، الـ Public Channels (زي admin-orders)
- * مش محتاجة أي auth ومش بتستخدم الإعداد ده.
+ * `channelAuthorization` is required only for private and presence channels
+ * such as `private-user-orders-*`; public channels such as `admin-orders`
+ * do not require authorization.
  */
 export const pusherClient = new PusherClient(key, {
   cluster,

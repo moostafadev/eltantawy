@@ -12,8 +12,8 @@ export interface CartItem {
   unit: CartUnit;
 
   /**
-   * موجود فقط لو المنتج نوع بيعه "نطاق وزن"
-   * وقتها qty تمثل عدد العبوات، مش الوزن مباشرة
+   * Present only for weight-range products. In this case, qty is the number
+   * of packages, not the weight itself.
    */
   weightOptionId?: string;
 }
@@ -22,8 +22,8 @@ export interface Cart {
   items: CartItem[];
 
   /**
-   * كود الكوبون المطبق حاليًا على السلة (لو موجود)
-   * بيتخزن دايمًا بحروف كبيرة (Uppercase)
+   * Coupon code currently applied to the cart, if any. It is always stored
+   * in uppercase.
    */
   couponCode?: string;
 }
@@ -57,34 +57,22 @@ export interface CartProduct {
 export interface CartItemWithProduct extends CartItem {
   product: CartProduct;
 
-  /**
-   * السعر بعد الخصم لوحدة واحدة (كيلو/قطعة)
-   */
+  /** Discounted price for one unit (kilogram or piece). */
   price: number;
 
-  /**
-   * السعر التقديري للعنصر (بيمثل متوسط النطاق لو تقريبي)
-   */
+  /** Estimated item price, using the range midpoint when the price is approximate. */
   total: number;
 
-  /**
-   * true لو السعر تقريبي (منتج نطاق وزن)
-   */
+  /** True when the price is approximate for a weight-range product. */
   isApprox: boolean;
 
-  /**
-   * تفاصيل خيار الوزن المختار لو المنتج نطاق وزن
-   */
+  /** Selected weight option details for a weight-range product. */
   weightOption?: CartWeightOption;
 
-  /**
-   * أقل سعر متوقع (لو تقريبي)
-   */
+  /** Minimum expected price when the item price is approximate. */
   minTotal?: number;
 
-  /**
-   * أعلى سعر متوقع (لو تقريبي)
-   */
+  /** Maximum expected price when the item price is approximate. */
   maxTotal?: number;
 }
 
@@ -93,76 +81,52 @@ export interface HydratedCart {
 
   subtotal: number;
 
-  /**
-   * خصومات مستوى المنتج نفسه (discountPrice)
-   */
+  /** Savings from product-level discounts (`discountPrice`). */
   discount: number;
 
   deliveryFee: number;
 
   total: number;
 
-  /**
-   * عدد المنتجات المختلفة
-   */
+  /** Number of distinct products in the cart. */
   itemCount: number;
 
   /**
-   * مجموع الكميات
-   * مثال:
-   * 2 كيلو + 3 قطع = 5
+   * Sum of item quantities. For example, 2 kilograms plus 3 pieces equals 5.
    */
   quantity: number;
 
-  /**
-   * true لو فيه منتج واحد على الأقل سعره تقريبي (نطاق وزن)
-   */
+  /** True when at least one item has an approximate weight-range price. */
   hasApproxItems: boolean;
 
-  /**
-   * أقل إجمالي متوقع للسلة (شامل التوصيل وكل الخصومات)
-   */
+  /** Minimum expected cart total, including delivery and all discounts. */
   minTotal: number;
 
-  /**
-   * أعلى إجمالي متوقع للسلة (شامل التوصيل وكل الخصومات)
-   */
+  /** Maximum expected cart total, including delivery and all discounts. */
   maxTotal: number;
 
   /**
-   * كود الكوبون المُدخل حاليًا (لو صالح بذاته)، أو null.
-   * ملاحظة: مش بالضرورة هو مصدر الخصم الفعلي المطبق،
-   * ممكن يكون فيه خصم تلقائي أعلى منه قيمة (راجع appliedDiscountSource)
+   * Currently entered coupon code when valid on its own, or null. It may not
+   * be the source of the applied discount if an automatic discount is larger
+   * (see `appliedDiscountSource`).
    */
   couponCode: string | null;
 
-  /**
-   * القيمة اللي كان هيوفرها الكوبون المُدخل تحديدًا (لو صالح)
-   */
+  /** Amount saved by the entered coupon, when valid. */
   couponDiscountAmount: number;
 
-  /**
-   * القيمة اللي بيوفرها أفضل خصم تلقائي متاح (لكل العملاء/للمسجلين)
-   */
+  /** Amount saved by the best available automatic discount. */
   autoDiscountAmount: number;
 
-  /**
-   * وصف الخصم التلقائي المتاح (لو موجود)
-   */
+  /** Description of the available automatic discount, if any. */
   autoDiscountLabel: string | null;
 
-  /**
-   * القيمة الفعلية المخصومة من الإجمالي = الأكبر بين الكوبون والخصم التلقائي
-   */
+  /** Actual amount deducted from the total: the larger coupon or auto discount. */
   discountAmount: number;
 
-  /**
-   * مصدر الخصم الفعلي المطبق حاليًا على الإجمالي، أو null لو مفيش خصم
-   */
+  /** Source of the discount currently applied to the total, or null. */
   appliedDiscountSource: DiscountSource | null;
 
-  /**
-   * وصف نصي للخصم الفعلي المطبق (يُعرض في ملخص السلة)
-   */
+  /** Text description of the applied discount for the cart summary. */
   appliedDiscountLabel: string | null;
 }

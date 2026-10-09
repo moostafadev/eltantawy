@@ -23,11 +23,11 @@ interface OrderStatusUpdatedPayload {
 }
 
 /**
- * Component غير مرئي، مهمته فقط الاستماع لأحداث Pusher الخاصة بالطلبات
- * وعرض Toast + تحديث الصفحة الحالية عند وصول أي حدث جديد.
+ * Invisible listener for Pusher order events. It displays a toast and
+ * refreshes the current page when a new event arrives.
  *
- * يُستخدم داخل صفحات الأدمن اللي محتاجة تتابع الطلبات لحظيًا
- * (صفحة الطلبات، ولوحة التحكم الرئيسية).
+ * Use it on admin pages that need live order updates, such as the orders
+ * list and dashboard.
  */
 const OrdersRealtimeListener = () => {
   const router = useRouter();

@@ -1,14 +1,13 @@
 /**
- * أسماء الـ Channel والـ Events الخاصة بالـ Realtime، بتُستخدم في السيرفر
- * والكلاينت عشان نضمن التطابق ونتجنب الـ "Magic Strings" المتكررة
+ * Shared real-time channel and event names used by the server and client to
+ * keep values consistent and avoid repeating magic strings.
  */
 
 export const ADMIN_ORDERS_CHANNEL = "admin-orders";
 
 /**
- * Private channel خاص بكل مستخدم على حدة، بيحتاج Auth Endpoint
- * (راجع src/app/api/pusher/auth/route.ts) عشان يتأكد Pusher إن المستخدم
- * اللي بيعمل subscribe هو فعلاً صاحب الحساب ده
+ * Returns a per-user private channel name. Pusher uses the auth endpoint at
+ * `src/app/api/pusher/auth/route.ts` to verify the subscriber owns the account.
  */
 export const getUserOrdersChannel = (userId: string) =>
   `private-user-orders-${userId}`;
