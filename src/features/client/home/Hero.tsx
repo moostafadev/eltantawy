@@ -1,5 +1,6 @@
 import { LoadingImage as Image } from "@/components/loading-image";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -51,9 +52,12 @@ const Hero = () => {
         </p>
       </div>
 
-      <div className="animate-hero-scroll-bounce absolute bottom-8 left-1/2 -translate-x-1/2 text-main-foreground/50">
+      <Link
+        className="animate-hero-scroll-bounce absolute bottom-8 left-1/2 -translate-x-1/2 text-main-foreground/50"
+        href={"/#best-sellers"}
+      >
         <ChevronDown className="size-7" />
-      </div>
+      </Link>
     </section>
   );
 };

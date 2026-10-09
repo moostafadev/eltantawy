@@ -21,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="ar"
       dir="rtl"
-      className={`${fontFamily.variable} h-full antialiased`}
+      className={`${fontFamily.variable} h-full scroll-smooth antialiased motion-reduce:scroll-auto`}
     >
       <head>
         <meta name="apple-mobile-web-app-title" content="Eltantawy" />

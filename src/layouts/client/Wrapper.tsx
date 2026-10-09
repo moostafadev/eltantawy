@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import { Header } from "./header";
@@ -10,6 +10,12 @@ import useScroll from "@/hooks/useScroll";
 const Wrapper = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const isScrolled = useScroll();
+
+  useEffect(() => {
+    if (window.location.hash) return;
+
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
 
   if (pathname.startsWith("/admin")) {
     return <>{children}</>;

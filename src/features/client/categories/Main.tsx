@@ -5,6 +5,7 @@ import { Card } from "@/components/card";
 import type { getCategoriesForStore } from "./category.service";
 import CategoriesQuickNav from "./CategoriesQuickNav";
 import CategorySection from "./CategorySection";
+import CategoryHashScroll from "./CategoryHashScroll";
 
 interface CategoriesProps {
   categories: Awaited<ReturnType<typeof getCategoriesForStore>>;
@@ -24,6 +25,7 @@ const Categories = ({ categories }: CategoriesProps) => {
 
   return (
     <main className="flex flex-col">
+      <CategoryHashScroll />
       <div className="container py-6 lg:py-8">
         <div className="flex flex-col gap-6 lg:gap-8">
           <header className="flex flex-col gap-4 border-b border-border pb-6">

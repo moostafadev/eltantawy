@@ -11,7 +11,10 @@ const BestSellers = async () => {
   const bestSellers = await getTopSellingProducts(8);
 
   return (
-    <section className="bg-background-second/20 py-15 md:py-20">
+    <section
+      className="bg-background-second/20 py-15 md:py-20"
+      id="best-sellers"
+    >
       <div className="container flex flex-col gap-8 lg:gap-10">
         <div className="flex flex-col items-center text-center">
           <div className="mb-4 flex size-12 items-center justify-center bg-main/10 text-main">
