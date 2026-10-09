@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, MessageCircle } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { Tag } from "@/components/tag";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
@@ -100,18 +101,27 @@ export const ordersTableColumns: TableColumn<OrderRow>[] = [
           rel="noopener noreferrer"
           aria-label="التواصل عبر واتساب"
         >
-          <Button size="icon" color="SUCCESS" variant="soft">
-            <MessageCircle aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="التواصل عبر واتساب" focusable={false}>
+            <Button
+              size="icon"
+              color="SUCCESS"
+              variant="soft"
+            >
+              <MessageCircle aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
 
-        <Link
-          href={`/admin/orders/${order.id}`}
-          aria-label="عرض تفاصيل الطلب"
-        >
-          <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+        <Link href={`/admin/orders/${order.id}`} aria-label="عرض تفاصيل الطلب">
+          <Tooltip content="عرض تفاصيل الطلب" focusable={false}>
+            <Button
+              size="icon"
+              color="NEUTRAL"
+              variant="outline"
+            >
+              <Eye aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
       </div>
     ),

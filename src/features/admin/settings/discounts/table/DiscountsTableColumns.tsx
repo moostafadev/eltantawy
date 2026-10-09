@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, Pen } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { Tag } from "@/components/tag";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
@@ -95,18 +96,30 @@ export const discountsTableColumns: TableColumn<Discount>[] = [
           href={`/admin/settings/discounts/${discount.id}`}
           aria-label="عرض الخصم"
         >
-          <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="عرض الخصم" focusable={false}>
+            <Button
+              size="icon"
+              color="NEUTRAL"
+              variant="outline"
+            >
+              <Eye aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
 
         <Link
           href={`/admin/settings/discounts/${discount.id}/edit`}
           aria-label="تعديل الخصم"
         >
-          <Button size="icon" color="INFO" variant="soft">
-            <Pen aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="تعديل الخصم" focusable={false}>
+            <Button
+              size="icon"
+              color="INFO"
+              variant="soft"
+            >
+              <Pen aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
 
         <DeleteDiscountButton id={discount.id} />

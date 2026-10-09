@@ -11,7 +11,6 @@ import {
 } from "react-hook-form";
 
 import { Button } from "../button";
-import { Tooltip } from "../tooltip";
 import { IProps } from "./types";
 
 /**
@@ -155,22 +154,17 @@ const ImageInput = <T extends FieldValues>({
                     />
                   </div>
 
-                  <Tooltip
-                    content="إزالة الصورة"
-                    focusable={false}
+                  <Button
+                    type="button"
+                    color="DANGER"
+                    size="sm"
+                    className="absolute left-2 top-2"
+                    disabled={disabled || uploading}
+                    onClick={handleRemove}
                   >
-                    <Button
-                      type="button"
-                      color="DANGER"
-                      size="icon"
-                      className="absolute left-2 top-2"
-                      disabled={disabled || uploading}
-                      onClick={handleRemove}
-                      aria-label="إزالة الصورة"
-                    >
-                      <X className="size-4" />
-                    </Button>
-                  </Tooltip>
+                    <X aria-hidden="true" className="size-4" />
+                    <span>إزالة الصورة</span>
+                  </Button>
 
                   {uploading && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/70 backdrop-blur-sm">

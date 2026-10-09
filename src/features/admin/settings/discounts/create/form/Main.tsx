@@ -49,6 +49,7 @@ const DiscountConditionalFields = () => {
           name="maxDiscountAmount"
           label="حد أقصى لقيمة الخصم (ج.م)"
           type="number"
+          showIconLabel
           placeholder="مثال: 100"
         />
       )}
@@ -58,6 +59,7 @@ const DiscountConditionalFields = () => {
           name="usageLimit"
           label="عدد مرات الاستخدام المسموح بها"
           type="number"
+          showIconLabel
           placeholder="اتركه فارغًا لعدد غير محدود"
         />
       )}
@@ -125,6 +127,7 @@ const CreateDiscountForm = () => {
         name="value"
         label="قيمة الخصم"
         type="number"
+        showIconLabel
         placeholder="مثال: 10"
       />
 
@@ -134,6 +137,7 @@ const CreateDiscountForm = () => {
         name="minOrderAmount"
         label="حد أدنى لقيمة الطلب (ج.م)"
         type="number"
+        showIconLabel
         placeholder="اتركه فارغًا بدون حد أدنى"
       />
 

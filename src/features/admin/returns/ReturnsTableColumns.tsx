@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { Tag } from "@/components/tag";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
@@ -103,9 +104,15 @@ export const returnsTableColumns: TableColumn<ReturnRow>[] = [
           href={`/admin/orders/${orderReturn.orderId}`}
           aria-label="عرض الطلب المرتبط"
         >
-          <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="عرض الطلب المرتبط" focusable={false}>
+            <Button
+              size="icon"
+              color="NEUTRAL"
+              variant="outline"
+            >
+              <Eye aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
       </div>
     ),

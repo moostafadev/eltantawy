@@ -64,13 +64,13 @@ const WeightOptionsFields = () => {
 
             <Button
               type="button"
-              size="icon"
+              size="sm"
               color="DANGER"
               variant="outline"
               onClick={() => remove(index)}
-              aria-label="حذف خيار الوزن"
             >
               <X aria-hidden="true" className="size-4" />
+              <span>حذف الخيار</span>
             </Button>
           </div>
 
@@ -85,6 +85,7 @@ const WeightOptionsFields = () => {
               name={`weightOptions.${index}.minWeight`}
               label="الوزن الأدنى (كجم)"
               type="number"
+              showIconLabel
               placeholder="مثال: 0.5"
             />
 
@@ -92,6 +93,7 @@ const WeightOptionsFields = () => {
               name={`weightOptions.${index}.maxWeight`}
               label="الوزن الأعلى (كجم)"
               type="number"
+              showIconLabel
               placeholder="مثال: 1"
             />
           </div>
@@ -218,6 +220,7 @@ const EditProductForm = ({ product, categories }: IProps) => {
         name="price"
         label="السعر"
         type="number"
+        showIconLabel
         placeholder="مثال: 250"
       />
 
@@ -234,6 +237,7 @@ const EditProductForm = ({ product, categories }: IProps) => {
         name="discountValue"
         label="قيمة الخصم (اتركها فارغة بدون خصم)"
         type="number"
+        showIconLabel
         placeholder="مثال: 10 أو 40"
       />
       <p className="-mt-2 text-xs leading-5 text-muted-foreground">

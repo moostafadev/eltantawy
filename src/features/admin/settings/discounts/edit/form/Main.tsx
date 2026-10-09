@@ -47,6 +47,7 @@ const EditDiscountConditionalFields = () => {
           name="maxDiscountAmount"
           label="حد أقصى لقيمة الخصم (ج.م)"
           type="number"
+          showIconLabel
           placeholder="مثال: 100"
         />
       )}
@@ -140,6 +141,7 @@ const EditDiscountForm = ({ discount }: IProps) => {
         name="value"
         label="قيمة الخصم"
         type="number"
+        showIconLabel
         placeholder="مثال: 10"
       />
 
@@ -150,6 +152,7 @@ const EditDiscountForm = ({ discount }: IProps) => {
           name="usageLimit"
           label="عدد مرات الاستخدام المسموح بها"
           type="number"
+          showIconLabel
           placeholder="اتركه فارغًا لعدد غير محدود"
         />
       )}
@@ -158,6 +161,7 @@ const EditDiscountForm = ({ discount }: IProps) => {
         name="minOrderAmount"
         label="حد أدنى لقيمة الطلب (ج.م)"
         type="number"
+        showIconLabel
         placeholder="اتركه فارغًا بدون حد أدنى"
       />
 

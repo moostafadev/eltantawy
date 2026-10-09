@@ -6,6 +6,7 @@ import { Eye, Pen } from "lucide-react";
 import { TableColumn } from "@/components/table/types";
 import { Tag } from "@/components/tag";
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { toArabicNums } from "@/utils/toArabicNums";
 
 import { DeliveryZone } from "./types";
@@ -80,17 +81,29 @@ export const deliveryZonesTableColumns: TableColumn<DeliveryZone>[] = [
           href={`/admin/settings/delivery/${zone.id}`}
           aria-label="عرض منطقة التوصيل"
         >
-          <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="عرض منطقة التوصيل" focusable={false}>
+            <Button
+              size="icon"
+              color="NEUTRAL"
+              variant="outline"
+            >
+              <Eye aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
         <Link
           href={`/admin/settings/delivery/${zone.id}/edit`}
           aria-label="تعديل منطقة التوصيل"
         >
-          <Button size="icon" color="INFO" variant="soft">
-            <Pen aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="تعديل منطقة التوصيل" focusable={false}>
+            <Button
+              size="icon"
+              color="INFO"
+              variant="soft"
+            >
+              <Pen aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
         <DeleteDeliveryZoneButton id={zone.id} />
       </div>

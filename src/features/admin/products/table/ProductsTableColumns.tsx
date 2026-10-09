@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, Pen } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
 
@@ -81,18 +82,30 @@ export const productsTableColumns: TableColumn<Product>[] = [
     render: (product) => (
       <div className="flex justify-center gap-1">
         <Link href={`/admin/products/${product.id}`} aria-label="عرض المنتج">
-          <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="عرض المنتج" focusable={false}>
+            <Button
+              size="icon"
+              color="NEUTRAL"
+              variant="outline"
+            >
+              <Eye aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
 
         <Link
           href={`/admin/products/${product.id}/edit`}
           aria-label="تعديل المنتج"
         >
-          <Button size="icon" color="INFO" variant="soft">
-            <Pen aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="تعديل المنتج" focusable={false}>
+            <Button
+              size="icon"
+              color="INFO"
+              variant="soft"
+            >
+              <Pen aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
 
         <DeleteProductButton id={product.id} />

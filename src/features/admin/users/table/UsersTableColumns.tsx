@@ -5,6 +5,7 @@ import { Eye, MessageCircle } from "lucide-react";
 
 import { Tag } from "@/components/tag";
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
 import { getWhatsAppLink } from "@/utils/whatsapp";
@@ -100,9 +101,18 @@ export const usersTableColumns: TableColumn<UserRow>[] = [
             rel="noopener noreferrer"
             aria-label="التواصل عبر واتساب"
           >
-            <Button size="icon" color="SUCCESS" variant="soft">
-              <MessageCircle aria-hidden="true" className="size-4 lg:size-5" />
-            </Button>
+            <Tooltip content="التواصل عبر واتساب" focusable={false}>
+              <Button
+                size="icon"
+                color="SUCCESS"
+                variant="soft"
+              >
+                <MessageCircle
+                  aria-hidden="true"
+                  className="size-4 lg:size-5"
+                />
+              </Button>
+            </Tooltip>
           </Link>
 
           <Link
@@ -113,9 +123,15 @@ export const usersTableColumns: TableColumn<UserRow>[] = [
             }
             aria-label="عرض تفاصيل المستخدم"
           >
-            <Button size="icon" color="NEUTRAL" variant="outline">
-              <Eye aria-hidden="true" className="size-4 lg:size-5" />
-            </Button>
+            <Tooltip content="عرض تفاصيل المستخدم" focusable={false}>
+              <Button
+                size="icon"
+                color="NEUTRAL"
+                variant="outline"
+              >
+                <Eye aria-hidden="true" className="size-4 lg:size-5" />
+              </Button>
+            </Tooltip>
           </Link>
         </div>
       );

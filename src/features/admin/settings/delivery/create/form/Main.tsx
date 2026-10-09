@@ -91,6 +91,7 @@ const CreateDeliveryZoneForm = ({ zones }: IProps) => {
         name="cost"
         label="تكلفة التوصيل (ج.م)"
         type="number"
+        showIconLabel
         placeholder="مثال: 30"
       />
 

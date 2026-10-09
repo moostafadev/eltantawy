@@ -3,6 +3,7 @@
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/button";
 import { useDialog } from "@/components/dialog";
+import { Tooltip } from "@/components/tooltip";
 import ConfirmDelete from "./Dialog";
 
 interface Props {
@@ -20,14 +21,16 @@ const DeleteCategoryButton = ({ id }: Props) => {
   };
 
   return (
-    <Button
-      size="icon"
-      color="DANGER"
-      onClick={confirmDelete}
-      aria-label="حذف التصنيف"
-    >
-      <Trash2 aria-hidden="true" className="size-4 lg:size-5" />
-    </Button>
+    <Tooltip content="حذف التصنيف" focusable={false}>
+      <Button
+        size="icon"
+        color="DANGER"
+        onClick={confirmDelete}
+        aria-label="حذف التصنيف"
+      >
+        <Trash2 aria-hidden="true" className="size-4 lg:size-5" />
+      </Button>
+    </Tooltip>
   );
 };
 

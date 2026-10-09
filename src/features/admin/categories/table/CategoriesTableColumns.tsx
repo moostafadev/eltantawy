@@ -4,6 +4,7 @@ import { TableColumn } from "@/components/table/types";
 import { Category } from "./types";
 import { toArabicNums } from "@/utils/toArabicNums";
 import { Button } from "@/components/button";
+import { Tooltip } from "@/components/tooltip";
 import Link from "next/link";
 import { Eye, Pen } from "lucide-react";
 import { DeleteCategoryButton } from "./deleteCategory";
@@ -71,17 +72,29 @@ export const categoriesTableColumns: TableColumn<Category>[] = [
           href={`/admin/products/categories/${category.id}`}
           aria-label="عرض التصنيف"
         >
-          <Button size="icon" color="NEUTRAL" variant="outline">
-            <Eye aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="عرض التصنيف" focusable={false}>
+            <Button
+              size="icon"
+              color="NEUTRAL"
+              variant="outline"
+            >
+              <Eye aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
         <Link
           href={`/admin/products/categories/${category.id}/edit`}
           aria-label="تعديل التصنيف"
         >
-          <Button size="icon" color="INFO" variant="soft">
-            <Pen aria-hidden="true" className="size-4 lg:size-5" />
-          </Button>
+          <Tooltip content="تعديل التصنيف" focusable={false}>
+            <Button
+              size="icon"
+              color="INFO"
+              variant="soft"
+            >
+              <Pen aria-hidden="true" className="size-4 lg:size-5" />
+            </Button>
+          </Tooltip>
         </Link>
         <DeleteCategoryButton id={category.id} />
       </div>

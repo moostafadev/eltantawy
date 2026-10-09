@@ -89,12 +89,19 @@ const Input = <T extends FieldValues>({
           }`}
         >
           {TypeIcon && (
-            <Tooltip content={label} focusable={false}>
+            showIconLabel ? (
               <TypeIcon
                 aria-hidden="true"
                 className="size-3.5 text-muted-foreground"
               />
-            </Tooltip>
+            ) : (
+              <Tooltip content={label} focusable={false}>
+                <TypeIcon
+                  aria-hidden="true"
+                  className="size-3.5 text-muted-foreground"
+                />
+              </Tooltip>
+            )
           )}
           <span
             className={TypeIcon && !showIconLabel ? "sr-only" : undefined}
