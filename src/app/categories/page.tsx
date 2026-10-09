@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/seo/metadata";
 export const metadata = buildMetadata({
   title: "التصنيفات",
   description:
-    "تصفح تصنيفات منتجات الطنطاوي من اللحوم والدواجن، كل تصنيف يحتوي على أفضل المنتجات الطازجة المختارة بعناية.",
+    "تصفّح أقسام اللحوم والدواجن لدى الطنطاوي، واعثر بسهولة على المنتجات والأسعار المناسبة لك.",
   path: "/categories",
 });
 

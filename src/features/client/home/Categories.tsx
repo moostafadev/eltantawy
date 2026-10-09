@@ -28,7 +28,7 @@ const HomeCategories = async () => {
           </h2>
 
           <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground md:text-base">
-            اختر التصنيف اللي محتاجه ووصل بسرعة لأفضل المنتجات المناسبة لك.
+            تصفّح الأقسام بسهولة واختر ما يناسب احتياجاتك من اللحوم والدواجن.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ const HomeCategories = async () => {
                 </h3>
 
                 <span className="text-sm font-medium text-white/70">
-                  تسوّق أجود المنتجات الآن
+                  اكتشف المنتجات المتاحة
                 </span>
               </div>
             </Link>

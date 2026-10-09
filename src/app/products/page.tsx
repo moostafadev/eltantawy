@@ -43,7 +43,7 @@ const ProductsPage = async () => {
           </h1>
 
           <p className="max-w-xl text-sm text-muted-foreground lg:text-base">
-            اكتشف جميع منتجاتنا واختر ما يناسبك من أفضل المنتجات المتوفرة
+            تصفّح اللحوم والدواجن المتاحة، واطّلع على السعر والوحدة قبل الإضافة إلى سلتك.
           </p>
         </header>
 

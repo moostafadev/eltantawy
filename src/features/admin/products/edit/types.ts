@@ -25,6 +25,8 @@ export interface Product {
   image: string | null;
   price: number;
   discountPrice: number | null;
+  discountValueType: "PERCENTAGE" | "FIXED" | null;
+  discountValue: number | null;
   unit: "KG" | "PIECE";
   saleType: "NORMAL" | "WEIGHT_RANGE";
   weightOptions: ProductWeightOption[];

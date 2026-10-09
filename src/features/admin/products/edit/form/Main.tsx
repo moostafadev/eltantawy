@@ -125,8 +125,13 @@ const EditProductForm = ({ product, categories }: IProps) => {
     desc: product.desc ?? "",
     image: product.image ?? "",
     price: String(product.price),
-    discountPrice:
-      product.discountPrice !== null ? String(product.discountPrice) : "",
+    discountValueType: product.discountValueType ?? "FIXED",
+    discountValue:
+      product.discountValue !== null
+        ? String(product.discountValue)
+        : product.discountPrice !== null && product.discountPrice < product.price
+          ? String(product.price - product.discountPrice)
+          : "",
     unit: product.unit,
     categoryId: product.categoryId ?? "",
     saleType: product.saleType,
@@ -215,12 +220,25 @@ const EditProductForm = ({ product, categories }: IProps) => {
         placeholder="مثال: 250"
       />
 
-      <Input<EditProductFormValues>
-        name="discountPrice"
-        label="سعر الخصم"
-        type="number"
-        placeholder="مثال: 220"
+      <Select<EditProductFormValues>
+        name="discountValueType"
+        label="نوع الخصم"
+        options={[
+          { value: "PERCENTAGE", label: "نسبة مئوية" },
+          { value: "FIXED", label: "مبلغ ثابت" },
+        ]}
       />
+
+      <Input<EditProductFormValues>
+        name="discountValue"
+        label="قيمة الخصم (اتركها فارغة بدون خصم)"
+        type="number"
+        placeholder="مثال: 10 أو 40"
+      />
+      <p className="-mt-2 text-xs leading-5 text-muted-foreground">
+        مثال: خصم 10% أو 40 ج.م من سعر 400 ج.م يجعل السعر 360 ج.م. تُقرّب
+        الكسور للأعلى.
+      </p>
 
       <Select<EditProductFormValues>
         name="unit"

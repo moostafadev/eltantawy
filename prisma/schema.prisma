@@ -103,6 +103,8 @@ model Product {
 
   price Float
   discountPrice Float?
+  discountValueType DiscountValueType?
+  discountValue Float?
 
   unit ProductUnit
 

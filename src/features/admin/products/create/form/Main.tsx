@@ -23,7 +23,8 @@ const defaultValues: CreateProductFormValues = {
   desc: "",
   image: "",
   price: "",
-  discountPrice: "",
+  discountValueType: "FIXED",
+  discountValue: "",
   unit: "KG",
   categoryId: "",
   saleType: "NORMAL",
@@ -234,12 +235,25 @@ const CreateProductForm = ({ categories }: IProps) => {
         placeholder="مثال: 250"
       />
 
-      <Input<CreateProductFormValues>
-        name="discountPrice"
-        label="سعر الخصم"
-        type="number"
-        placeholder="مثال: 220"
+      <Select<CreateProductFormValues>
+        name="discountValueType"
+        label="نوع الخصم"
+        options={[
+          { value: "PERCENTAGE", label: "نسبة مئوية" },
+          { value: "FIXED", label: "مبلغ ثابت" },
+        ]}
       />
+
+      <Input<CreateProductFormValues>
+        name="discountValue"
+        label="قيمة الخصم (اتركها فارغة بدون خصم)"
+        type="number"
+        placeholder="مثال: 10 أو 40"
+      />
+      <p className="-mt-2 text-xs leading-5 text-muted-foreground">
+        مثال: خصم 10% أو 40 ج.م من سعر 400 ج.م يجعل السعر 360 ج.م. تُقرّب
+        الكسور للأعلى.
+      </p>
 
       <Select<CreateProductFormValues>
         name="unit"

@@ -40,14 +40,14 @@ const Hero = () => {
           style={{ animationDelay: "400ms" }}
           className="animate-hero-fade-up mt-6 text-lg font-medium text-main-foreground/80 sm:text-xl"
         >
-          جودة وطعم أصلي
+          لحوم ودواجن مختارة بعناية
         </p>
 
         <p
           style={{ animationDelay: "500ms" }}
           className="animate-hero-fade-up mt-1 text-sm font-semibold tracking-widest text-main sm:text-base"
         >
-          رقم واحد في مصر
+          من مزارعنا إلى مائدتك
         </p>
       </div>
 

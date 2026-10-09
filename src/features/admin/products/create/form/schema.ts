@@ -36,12 +36,22 @@ export const createProductSchema = z
     price: z
       .string()
       .min(1, "السعر مطلوب")
-      .refine((value) => Number(value) > 0, "السعر يجب أن يكون أكبر من صفر"),
+      .refine(
+        (value) => Number.isFinite(Number(value)) && Number(value) > 0,
+        "السعر يجب أن يكون رقمًا أكبر من صفر",
+      ),
 
-    discountPrice: z
+    discountValueType: z.enum(["PERCENTAGE", "FIXED"]),
+
+    discountValue: z
       .string()
       .optional()
-      .refine((value) => !value || Number(value) >= 0, "سعر الخصم غير صحيح"),
+      .refine(
+        (value) =>
+          !value ||
+          (Number.isFinite(Number(value)) && Number(value) >= 0),
+        "قيمة الخصم غير صحيحة",
+      ),
 
     unit: z.enum(["KG", "PIECE"]),
 
@@ -58,5 +68,16 @@ export const createProductSchema = z
     {
       message: "يجب إضافة خيار وزن واحد على الأقل",
       path: ["weightOptions"],
+    },
+  )
+  .refine(
+    (data) =>
+      !data.discountValue ||
+      (data.discountValueType === "PERCENTAGE"
+        ? Number(data.discountValue) <= 100
+        : Number(data.discountValue) <= Number(data.price)),
+    {
+      message: "قيمة الخصم لا يمكن أن تتجاوز السعر",
+      path: ["discountValue"],
     },
   );

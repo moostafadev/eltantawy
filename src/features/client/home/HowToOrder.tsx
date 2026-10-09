@@ -22,7 +22,7 @@ const HowToOrder = () => {
           </h2>
 
           <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground md:text-base">
-            خطوات بسيطة وسريعة تفصلك عن استلام طلبك.
+            اختر منتجاتك، أكمل بيانات التوصيل، وسنتولى تجهيز طلبك.
           </p>
         </div>
 

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
+import { calculateDiscountedPrice } from "@/lib/products/pricing";
 
 import { createProductSchema } from "./schema";
 
@@ -21,7 +22,8 @@ export const createProductAction = async (values: unknown) => {
     desc,
     image,
     price,
-    discountPrice,
+    discountValue,
+    discountValueType,
     unit,
     categoryId,
     saleType,
@@ -53,7 +55,22 @@ export const createProductAction = async (values: unknown) => {
         desc: desc || null,
         image: image || null,
         price: Number(price),
-        discountPrice: discountPrice ? Number(discountPrice) : null,
+        discountPrice:
+          discountValue && Number(discountValue) > 0
+            ? calculateDiscountedPrice(
+                Number(price),
+                Number(discountValue),
+                discountValueType,
+              )
+            : null,
+        discountValueType:
+          discountValue && Number(discountValue) > 0
+            ? discountValueType
+            : null,
+        discountValue:
+          discountValue && Number(discountValue) > 0
+            ? Number(discountValue)
+            : null,
         unit,
         categoryId: categoryId || null,
         saleType,

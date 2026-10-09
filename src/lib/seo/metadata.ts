@@ -21,6 +21,10 @@ const BASE_KEYWORDS = [
   "6 أكتوبر",
   "الشيخ زايد",
   "لحوم مصرية",
+  "شراء لحوم أونلاين",
+  "توصيل دواجن",
+  "لحوم ودواجن في 6 أكتوبر",
+  "لحوم ودواجن في الشيخ زايد",
 ];
 
 /**
@@ -87,9 +91,7 @@ export const buildMetadata = (
       images: [
         {
           url: ogImage,
-          width: 512,
-          height: 512,
-          alt: SITE_CONFIG.name,
+          alt: `${SITE_CONFIG.name} - لحوم ودواجن`,
         },
       ],
     },

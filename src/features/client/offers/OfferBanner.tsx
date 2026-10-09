@@ -8,8 +8,8 @@ interface Props {
 }
 
 const discountTypeLabels: Record<Props["type"], string> = {
-  ALL_CUSTOMERS: "خصم على كل الطلبات",
-  REGISTERED_ONLY: "خصم لأعضاء الموقع المسجلين",
+  ALL_CUSTOMERS: "جميع العملاء",
+  REGISTERED_ONLY: "العملاء المسجلين",
 };
 
 /**
@@ -34,8 +34,8 @@ const OfferBanner = ({ type, valueType, value, minOrderAmount }: Props) => {
 
         <p className="text-sm text-muted-foreground lg:text-base">
           {type === "REGISTERED_ONLY"
-            ? "سجّل حسابك أو سجّل الدخول للاستفادة من هذا الخصم تلقائيًا عند الدفع"
-            : "الخصم يُطبّق تلقائيًا على السلة عند الدفع، بدون الحاجة لكود"}
+            ? "سجّل الدخول قبل إتمام الطلب ليُطبّق الخصم تلقائيًا على سلتك"
+            : "يُطبّق الخصم تلقائيًا على سلتك عند إتمام الطلب، دون الحاجة إلى كود"}
           {minOrderAmount ? ` (بحد أدنى ${minOrderAmount} ج.م للطلب)` : ""}
         </p>
       </div>

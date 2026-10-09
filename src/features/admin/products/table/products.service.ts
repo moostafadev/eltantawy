@@ -30,6 +30,8 @@ export const getOneProduct = async (id: string) => {
       image: true,
       price: true,
       discountPrice: true,
+      discountValueType: true,
+      discountValue: true,
       unit: true,
       saleType: true,
       categoryId: true,

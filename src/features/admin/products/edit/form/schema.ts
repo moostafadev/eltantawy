@@ -23,10 +23,19 @@ export const editProductSchema = z
       .max(100, "اسم المنتج طويل جدًا"),
     desc: z.string().max(500, "الوصف طويل جدًا").optional(),
     image: z.string().url("رابط الصورة غير صحيح").optional().or(z.literal("")),
-    price: z.coerce.number().positive("السعر يجب أن يكون أكبر من صفر"),
-    discountPrice: z.coerce
+    price: z.coerce
       .number()
-      .positive("سعر الخصم يجب أن يكون أكبر من صفر")
+      .finite("السعر يجب أن يكون رقمًا صحيحًا")
+      .positive("السعر يجب أن يكون أكبر من صفر"),
+    discountValueType: z.enum(["PERCENTAGE", "FIXED"]),
+    discountValue: z
+      .string()
+      .refine(
+        (value) =>
+          value === "" ||
+          (Number.isFinite(Number(value)) && Number(value) >= 0),
+        "قيمة الخصم غير صحيحة",
+      )
       .optional()
       .or(z.literal("")),
     unit: z.enum(["KG", "PIECE"]),
@@ -41,5 +50,16 @@ export const editProductSchema = z
     {
       message: "يجب إضافة خيار وزن واحد على الأقل",
       path: ["weightOptions"],
+    },
+  )
+  .refine(
+    (data) =>
+      !data.discountValue ||
+      (data.discountValueType === "PERCENTAGE"
+        ? Number(data.discountValue) <= 100
+        : Number(data.discountValue) <= Number(data.price)),
+    {
+      message: "قيمة الخصم لا يمكن أن تتجاوز السعر",
+      path: ["discountValue"],
     },
   );
