@@ -291,39 +291,64 @@ export const AdminTableLoading = () => (
   <div
     role="status"
     aria-label="جاري تحميل الصفحة"
-    className="flex flex-col gap-3 lg:gap-4"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
   >
     <AdminPageHeader action />
-    <section className="overflow-hidden border border-border bg-background">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border p-3 lg:p-4">
+    <section className="min-w-0 overflow-hidden border border-border bg-background">
+      <div className="flex flex-col gap-3 border-b border-border p-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between lg:p-4">
         <Skeleton width={220} height={38} className="max-w-full" />
-        <Skeleton width={120} height={36} />
+        <Skeleton width={120} height={36} className="max-w-full" />
       </div>
-      <div className="overflow-hidden p-3 lg:p-4">
-        <div className="flex gap-3 border-b border-border bg-muted/50 p-3">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Skeleton key={index} height={16} className="flex-1" />
+      <div className="p-2 sm:p-3 lg:p-4">
+        <div className="flex flex-col gap-2 sm:hidden">
+          {Array.from({ length: 5 }).map((_, row) => (
+            <div
+              key={row}
+              className="flex min-w-0 flex-col gap-3 border border-border/60 p-3"
+            >
+              <div className="flex min-w-0 items-center gap-3">
+                <Skeleton width={36} height={36} className="shrink-0" />
+                <Skeleton height={16} className="min-w-0 flex-1" />
+              </div>
+              <div className="grid grid-cols-2 gap-x-3 gap-y-2 border-t border-border/60 pt-3">
+                {Array.from({ length: 4 }).map((_, col) => (
+                  <div key={col} className="flex min-w-0 flex-col gap-1.5">
+                    <Skeleton width={64} height={10} />
+                    <Skeleton height={13} />
+                  </div>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
-        {Array.from({ length: 8 }).map((_, row) => (
-          <div
-            key={row}
-            className="flex items-center gap-3 border-b border-border/60 p-3 last:border-0"
-          >
-            {Array.from({ length: 5 }).map((_, col) => (
-              <Skeleton
-                key={col}
-                width={col === 0 ? 120 : undefined}
-                height={col === 0 ? 34 : 16}
-                className={col === 0 ? "shrink-0" : "flex-1"}
-              />
+        <div className="hidden overflow-x-auto sm:block">
+          <div className="min-w-120">
+            <div className="flex gap-3 border-b border-border bg-muted/50 p-3">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Skeleton key={index} height={16} className="flex-1" />
+              ))}
+            </div>
+            {Array.from({ length: 8 }).map((_, row) => (
+              <div
+                key={row}
+                className="flex items-center gap-3 border-b border-border/60 p-3 last:border-0"
+              >
+                {Array.from({ length: 5 }).map((_, col) => (
+                  <Skeleton
+                    key={col}
+                    width={col === 0 ? 120 : undefined}
+                    height={col === 0 ? 34 : 16}
+                    className={col === 0 ? "shrink-0" : "flex-1"}
+                  />
+                ))}
+              </div>
             ))}
           </div>
-        ))}
+        </div>
       </div>
-      <div className="flex justify-end gap-2 border-t border-border p-3">
-        <Skeleton width={80} height={32} />
-        <Skeleton width={80} height={32} />
+      <div className="flex justify-center gap-2 border-t border-border p-3 sm:justify-end">
+        <Skeleton width={80} height={32} className="max-w-full" />
+        <Skeleton width={80} height={32} className="max-w-full" />
       </div>
     </section>
   </div>
@@ -333,7 +358,7 @@ export const AdminFormLoading = () => (
   <div
     role="status"
     aria-label="جاري تحميل الصفحة"
-    className="flex flex-col gap-3 lg:gap-4"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
   >
     <AdminBreadcrumb />
     <AdminPageHeader />
@@ -361,7 +386,7 @@ export const AdminDetailLoading = () => (
   <div
     role="status"
     aria-label="جاري تحميل الصفحة"
-    className="flex flex-col gap-3 lg:gap-4"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
   >
     <AdminBreadcrumb />
     <AdminPageHeader action />
@@ -395,7 +420,7 @@ export const AdminCategoryDetailLoading = () => (
   <div
     role="status"
     aria-label="جاري تحميل الصفحة"
-    className="flex flex-col gap-3 lg:gap-4"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
   >
     <AdminDetailLoading />
     <section className="flex flex-col gap-3 border border-border bg-background p-3 lg:p-4">
@@ -415,7 +440,7 @@ export const AdminRecordLoading = () => (
   <div
     role="status"
     aria-label="جاري تحميل الصفحة"
-    className="flex flex-col gap-3 lg:gap-4"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
   >
     <AdminBreadcrumb />
     <AdminPageHeader action />
@@ -450,7 +475,7 @@ export const AdminOrderLoading = () => (
   <div
     role="status"
     aria-label="جاري تحميل الصفحة"
-    className="flex flex-col gap-3 lg:gap-4"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
   >
     <AdminBreadcrumb />
     <AdminPageHeader action />
@@ -496,7 +521,7 @@ export const AdminUserLoading = () => (
   <div
     role="status"
     aria-label="جاري تحميل الصفحة"
-    className="flex flex-col gap-3 lg:gap-4"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
   >
     <AdminBreadcrumb />
     <PageTitle width={190} />
@@ -545,7 +570,7 @@ export const AdminSettingsLoading = () => (
   <div
     role="status"
     aria-label="جاري تحميل الصفحة"
-    className="flex flex-col gap-3 lg:gap-4"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
   >
     <AdminPageHeader />
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:gap-4">

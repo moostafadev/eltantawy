@@ -24,6 +24,7 @@ const Skeleton = ({
           className={`animate-pulse ${getColor(color)} ${className}`}
           style={{
             width: width ? `${width}px` : "100%",
+            maxWidth: "100%",
             height: aspectRatio ? undefined : `${height}px`,
             aspectRatio,
           }}

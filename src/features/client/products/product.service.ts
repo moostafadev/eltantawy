@@ -1,8 +1,10 @@
 "use server";
 
+import { cache } from "react";
+
 import { prisma } from "@/lib/prisma";
 
-export const getProductForStore = async (id: string) => {
+const getCachedProductForStore = cache(async (id: string) => {
   return prisma.product.findUnique({
     where: {
       id,
@@ -35,7 +37,10 @@ export const getProductForStore = async (id: string) => {
       updatedAt: true,
     },
   });
-};
+});
+
+export const getProductForStore = async (id: string) =>
+  getCachedProductForStore(id);
 
 /**
  * Returns related products from the same category for the product details

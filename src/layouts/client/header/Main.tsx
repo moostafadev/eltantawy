@@ -81,7 +81,6 @@ const Header = ({ isScrolled }: HeaderProps) => {
               alt="الطنطاوي"
               width={200}
               height={200}
-              priority
               className={`w-auto object-contain transition-[height] duration-300 py-0.5 ${
                 isScrolled ? "h-14" : "h-18"
               }`}

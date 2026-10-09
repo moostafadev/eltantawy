@@ -1,25 +1,33 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 import { SITE_CONFIG } from "@/lib/seo/config";
 import { seoSettingsSchema } from "./schema";
 
+const SEO_SETTINGS_CACHE_TAG = "seo-settings";
+
 /**
  * SEO settings are stored as a single database record. If no record exists
  * yet, this returns the default values from `SITE_CONFIG`.
  */
-export const getSeoSettings = async () => {
-  const settings = await prisma.siteSeoSettings.findFirst();
+const getCachedSeoSettings = unstable_cache(
+  async () => {
+    const settings = await prisma.siteSeoSettings.findFirst();
 
-  return {
-    siteTitle: settings?.siteTitle ?? SITE_CONFIG.name,
-    siteDescription: settings?.siteDescription ?? SITE_CONFIG.description,
-    keywords: settings?.keywords ?? [],
-    ogImage: settings?.ogImage ?? SITE_CONFIG.defaultImage,
-  };
-};
+    return {
+      siteTitle: settings?.siteTitle ?? SITE_CONFIG.name,
+      siteDescription: settings?.siteDescription ?? SITE_CONFIG.description,
+      keywords: settings?.keywords ?? [],
+      ogImage: settings?.ogImage ?? SITE_CONFIG.defaultImage,
+    };
+  },
+  ["seo-settings"],
+  { revalidate: 3600, tags: [SEO_SETTINGS_CACHE_TAG] },
+);
+
+export const getSeoSettings = async () => getCachedSeoSettings();
 
 export const updateSeoSettingsAction = async (values: unknown) => {
   const result = seoSettingsSchema.safeParse(values);
@@ -64,6 +72,7 @@ export const updateSeoSettingsAction = async (values: unknown) => {
       });
     }
 
+    revalidateTag(SEO_SETTINGS_CACHE_TAG, { expire: 0 });
     revalidatePath("/admin/settings/seo");
     revalidatePath("/", "layout");
 

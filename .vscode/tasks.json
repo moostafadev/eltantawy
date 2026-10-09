@@ -53,6 +53,121 @@
 			"problemMatcher": [
 				"$tsc"
 			]
+		},
+		{
+			"label": "Validate performance SEO build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Validate SEO lint",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Lint changed product service",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint",
+				"--",
+				"src/features/client/products/product.service.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Lint product pagination",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint",
+				"--",
+				"src/app/products/page.tsx",
+				"src/features/client/products/product.service.ts"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Lint final performance changes",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint",
+				"--",
+				"src/app/products/page.tsx",
+				"src/app/layout.tsx",
+				"src/app/robots.ts",
+				"src/features/admin/settings/seo/seo.service.ts",
+				"src/features/client/home/home.service.ts",
+				"src/features/client/categories/category.service.ts",
+				"src/features/client/products/product.service.ts",
+				"src/layouts/client/header/Main.tsx",
+				"src/app/login/page.tsx",
+				"src/app/register/page.tsx"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check Prisma orderBy fix",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint",
+				"--",
+				"src/app/products/page.tsx"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Lint mobile dashboard skeletons",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"lint",
+				"--",
+				"src/components/skeleton/Main.tsx",
+				"src/components/loading/PageSkeleton.tsx",
+				"src/layouts/admin/Client.tsx",
+				"src/features/admin/Skeleton.tsx",
+				"src/features/admin/sales/Skeleton.tsx",
+				"src/features/admin/page-views/Skeleton.tsx"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck dashboard loading UI",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"tsc",
+				"--noEmit"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			]
 		}
 	]
 }

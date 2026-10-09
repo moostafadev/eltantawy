@@ -11,7 +11,7 @@ import { organizationStructuredData } from "@/lib/seo/structuredData";
 const fontFamily = Cairo({
   variable: "--font-cairo",
   subsets: ["arabic", "latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  weight: "variable",
 });
 
 export const generateMetadata = async () => getRootMetadata();

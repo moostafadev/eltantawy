@@ -22,7 +22,6 @@ const Register = () => {
           alt="الطنطاوي"
           width={500}
           height={500}
-          priority
         />
       </div>
     </div>

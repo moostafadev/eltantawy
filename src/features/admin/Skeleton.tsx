@@ -18,7 +18,7 @@ const tableColors: COLOR[] = [
 
 const AdminDashboardSkeleton = () => {
   return (
-    <div className="flex flex-col gap-3 lg:gap-4">
+    <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
       {/* Header */}
       <div className="flex flex-col gap-1">
         <Skeleton width={180} height={32} className="max-w-full" />

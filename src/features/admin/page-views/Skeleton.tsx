@@ -11,7 +11,26 @@ const SectionHeadingSkeleton = () => (
 
 const TableSkeleton = () => (
   <div className="w-full overflow-hidden border border-background-second/60 bg-background shadow-sm">
-    <div className="w-full overflow-x-auto">
+    <div className="flex flex-col gap-2 p-2 sm:hidden">
+      {Array.from({ length: 5 }).map((_, rowIndex) => (
+        <div
+          key={rowIndex}
+          className="flex flex-col gap-3 border border-background-second/30 p-3"
+        >
+          {[140, 190, 80].map((width, columnIndex) => (
+            <div
+              key={columnIndex}
+              className="flex items-center justify-between gap-3"
+            >
+              <Skeleton width={72} height={12} />
+              <Skeleton width={width} height={14} />
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+
+    <div className="hidden w-full overflow-x-auto sm:block">
       <table className="w-full min-w-200 border-collapse">
         <thead>
           <tr className="bg-background-second/20">
@@ -44,6 +63,7 @@ const TableSkeleton = () => (
         </tbody>
       </table>
     </div>
+
     <div className="flex items-center justify-between border-t border-background-second/50 bg-background-second/5 px-2 py-1.5 lg:px-5 lg:py-2.5">
       <Skeleton width={36} height={28} />
     </div>
@@ -51,7 +71,7 @@ const TableSkeleton = () => (
 );
 
 const PageViewsSkeleton = () => (
-  <div className="flex flex-col gap-3 lg:gap-4">
+  <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
     <div className="flex flex-col gap-2">
       <Skeleton width={240} height={32} />
       <Skeleton width={340} height={16} className="max-w-full" />

@@ -16,36 +16,25 @@ export const getTopSellingProducts = async (
   limit = 8,
   minimum = MIN_TOP_SELLING_PRODUCTS,
 ) => {
-  const items = await prisma.orderItem.findMany({
+  const topItems = await prisma.orderItem.groupBy({
+    by: ["productId"],
     where: {
       order: {
         status: "DELIVERED",
       },
     },
-    select: {
-      productId: true,
-      qty: true,
+    _sum: {
       total: true,
     },
+    orderBy: {
+      _sum: {
+        total: "desc",
+      },
+    },
+    take: limit,
   });
 
-  const totalsMap = new Map<string, { qty: number; total: number }>();
-
-  for (const item of items) {
-    const existing = totalsMap.get(item.productId);
-
-    if (existing) {
-      existing.qty += item.qty;
-      existing.total += item.total;
-    } else {
-      totalsMap.set(item.productId, { qty: item.qty, total: item.total });
-    }
-  }
-
-  const topIds = Array.from(totalsMap.entries())
-    .sort((a, b) => b[1].total - a[1].total)
-    .slice(0, limit)
-    .map(([productId]) => productId);
+  const topIds = topItems.map((item) => item.productId);
 
   const productSelect = {
     id: true,

@@ -22,6 +22,7 @@ export const getCategoriesForStore = async () => {
         orderBy: {
           createdAt: "desc",
         },
+        take: 8,
         select: {
           id: true,
           title: true,
@@ -30,7 +31,14 @@ export const getCategoriesForStore = async () => {
           discountPrice: true,
           unit: true,
           saleType: true,
-          weightOptions: true,
+          weightOptions: {
+            select: {
+              id: true,
+              name: true,
+              minWeight: true,
+              maxWeight: true,
+            },
+          },
         },
       },
     },
