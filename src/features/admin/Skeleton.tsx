@@ -88,6 +88,26 @@ const AdminDashboardSkeleton = () => {
         ))}
       </section>
 
+      {/* Page Views */}
+      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="border-b border-border pb-3 lg:pb-4">
+          <Skeleton width={150} height={20} />
+          <Skeleton className="mt-1" width={300} height={14} />
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {[0, 1, 2].map((row) => (
+            <div
+              key={row}
+              className="flex items-center justify-between border-b border-background-second/30 pb-3 last:border-b-0"
+            >
+              <Skeleton width={180} height={14} />
+              <Skeleton width={60} height={14} />
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Tables Shortcuts */}
       <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
         <div className="border-b border-border pb-3 lg:pb-4">

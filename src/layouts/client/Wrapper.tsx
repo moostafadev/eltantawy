@@ -18,6 +18,23 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, [pathname]);
 
+  useEffect(() => {
+    if (!pathname || pathname === "/admin" || pathname.startsWith("/admin/")) {
+      return;
+    }
+
+    void fetch("/api/page-views", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ path: pathname }),
+      keepalive: true,
+    }).catch((error: unknown) => {
+      console.error("Record page view error:", error);
+    });
+  }, [pathname]);
+
   if (pathname.startsWith("/admin")) {
     return <>{children}</>;
   }

@@ -1,5 +1,6 @@
 import {
   ArrowLeft,
+  Eye,
   Package,
   Percent,
   Plus,
@@ -20,6 +21,8 @@ import { COLOR } from "@/constants/types";
 import { prisma } from "@/lib/prisma";
 import { toArabicNums } from "@/utils/toArabicNums";
 
+import PageViewsTable from "./page-views/PageViewsTable";
+import { getPageViewStatistics } from "./page-views";
 import { getStatColorClasses } from "./statColors";
 import { getSalesSummary } from "./sales";
 
@@ -32,6 +35,7 @@ const AdminDashboard = async () => {
     discountsCount,
     activeDiscountsCount,
     salesSummary,
+    pageViewStatistics,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.product.count(),
@@ -40,7 +44,10 @@ const AdminDashboard = async () => {
     prisma.discount.count(),
     prisma.discount.count({ where: { isActive: true } }),
     getSalesSummary(),
+    getPageViewStatistics(),
   ]);
+  const pageViews = pageViewStatistics.pages;
+  const totalPageViews = pageViewStatistics.totalViews;
 
   /*
    * Financial performance: highlight key sales and return metrics at the
@@ -363,6 +370,33 @@ const AdminDashboard = async () => {
             },
           )}
         </div>
+      </section>
+
+      {/* Page Views */}
+      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="flex items-center gap-2.5 border-b border-border pb-3 lg:pb-4">
+          <div className="flex size-9 shrink-0 items-center justify-center bg-info/10 text-info">
+            <Eye className="size-4.5" />
+          </div>
+
+          <div>
+            <h2 className="font-bold">مشاهدات الصفحات</h2>
+
+            <p className="mt-1 text-sm text-muted-foreground">
+              إجمالي {toArabicNums(totalPageViews)} مشاهدة؛ تُحتسب زيارة واحدة
+              لكل عنوان IP على الصفحة يوميًا
+            </p>
+          </div>
+          <Link
+            href="/admin/page-views"
+            className="mr-auto flex items-center gap-1 text-xs font-medium text-main hover:underline"
+          >
+            <span>عرض الإحصائيات</span>
+            <ArrowLeft className="size-3.5" />
+          </Link>
+        </div>
+
+        <PageViewsTable data={pageViews} />
       </section>
 
       {/* Tables Shortcuts */}

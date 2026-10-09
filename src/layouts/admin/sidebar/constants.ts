@@ -1,5 +1,6 @@
 import {
   ChartNoAxesCombined,
+  Eye,
   LayoutDashboard,
   Package,
   RotateCcw,
@@ -65,6 +66,13 @@ export const sidebarData: SidebarItem[] = [
     link: "/admin/sales",
     title: "المبيعات",
     icon: ChartNoAxesCombined,
+    items: [],
+    isActive: true,
+  },
+  {
+    link: "/admin/page-views",
+    title: "المشاهدات",
+    icon: Eye,
     items: [],
     isActive: true,
   },

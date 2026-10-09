@@ -310,3 +310,13 @@ model SiteSeoSettings {
 
   updatedAt DateTime @updatedAt
 }
+
+model PageView {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  path     String
+  ipHash   String
+  dateKey  String
+  viewedAt DateTime @default(now())
+
+  @@unique([path, ipHash, dateKey])
+}
