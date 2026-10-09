@@ -61,19 +61,19 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
                   : "cursor-not-allowed opacity-50"
               } ${
                 hasActiveChild ? "bg-main text-main" : ""
-              } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center"} py-3 lg:py-4 font-medium `}
+              } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center lg:px-4 lg:justify-start"} py-3 lg:py-4 font-medium `}
             >
               <Icon className="size-5 shrink-0" />
 
-              {isOpen && (
-                <>
-                  <span className="flex-1 text-right">{title}</span>
+              <span
+                className={`${isOpen ? "flex-1" : "hidden lg:flex lg:flex-1"} text-right`}
+              >
+                {title}
+              </span>
 
-                  <ChevronDown
-                    className={`size-4 duration-300 ${isOpenItem ? "rotate-180" : ""} `}
-                  />
-                </>
-              )}
+              <ChevronDown
+                className={`size-4 duration-300 ${isOpenItem ? "rotate-180" : ""} ${isOpen ? "" : "hidden lg:block"}`}
+              />
             </button>
           ) : (
             <Link
@@ -84,16 +84,20 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
                 isCurrent
                   ? "bg-main text-background"
                   : "bg-main/5 hover:bg-main/10"
-              } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center"} py-3 lg:py-4 font-medium `}
+              } ${isOpen ? "px-3 lg:px-4" : "px-1 justify-center lg:px-4 lg:justify-start"} py-3 lg:py-4 font-medium `}
             >
               <Icon className="size-5 shrink-0" />
 
-              {isOpen && <span>{title}</span>}
+              <span className={isOpen ? "" : "hidden lg:inline"}>{title}</span>
             </Link>
           )}
 
           {/* Sub Items */}
-          {hasItems && isOpen && isOpenItem && <SubItems items={items} />}
+          {hasItems && isOpenItem && (
+            <div className={isOpen ? "" : "hidden lg:block"}>
+              <SubItems items={items} />
+            </div>
+          )}
         </li>
       );
     });
@@ -101,14 +105,14 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
   return (
     <aside
       className={`z-50 ${
-        isOpen ? "w-3xs" : "w-16"
+        isOpen ? "w-3xs" : "w-16 lg:w-3xs"
       } bg-background duration-300 flex flex-col gap-3 lg:gap-4 items-center py-3 lg:py-4 fixed top-0 right-0 h-full overflow-hidden shadow-sm border-l border-l-background-second/20 `}
     >
       {/* Toggle */}
       <Button
         size="icon"
         color="MAIN"
-        className={`fixed ${isOpen ? "right-68" : "right-20"} top-3.5 lg:top-4.5 z-50`}
+        className={`fixed ${isOpen ? "right-68" : "right-20"} top-3.5 lg:top-4.5 z-50 lg:hidden`}
         onClick={() => setIsOpen((open) => !open)}
       >
         {isOpen ? <X /> : <Menu />}
@@ -118,7 +122,7 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
       <div
         className={`fixed top-0 right-64 ${
           isOpen ? "w-full lg:w-0 opacity-100" : "w-0 opacity-0"
-        } transition-opacity h-full bg-foreground/20 z-40 `}
+        } transition-opacity h-full bg-foreground/20 z-40 lg:hidden`}
         onClick={() => setIsOpen(false)}
       />
 
@@ -127,7 +131,7 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
         href="/admin"
         onClick={() => setIsOpen(false)}
         className={`flex items-center justify-center max-w-40 ${
-          isOpen ? "mx-3 lg:mx-4" : "mx-1"
+          isOpen ? "mx-3 lg:mx-4" : "mx-1 lg:mx-4"
         } pb-3 lg:pb-4 border-b border-b-background-second `}
       >
         <Image
@@ -147,31 +151,27 @@ const SidebarAdmin = ({ isOpen, setIsOpen }: IProps) => {
 
       {/* Logout */}
       <div
-        className={`mt-auto flex flex-col gap-1 ${isOpen ? "px-3 lg:px-4" : "px-0"} w-full shrink-0`}
+        className={`mt-auto flex flex-col gap-1 ${isOpen ? "px-3 lg:px-4" : "px-0 lg:px-4"} w-full shrink-0`}
       >
         <Link href={"/"}>
           <Button
-            className={`flex items-center justify-center gap-3 lg:gap-4 w-full ${isOpen ? "" : "px-3! lg:px-4!"}`}
+            className={`flex items-center justify-center gap-3 lg:gap-4 w-full ${isOpen ? "lg:justify-start" : "px-3! lg:px-4! lg:justify-start"}`}
             color="NEUTRAL"
             variant="outline"
             size="sm"
           >
             <Globe className="size-5" />
-            {isOpen ? <span>الصفحة الرئيسية</span> : <></>}
+            <span className={isOpen ? "" : "hidden lg:inline"}>
+              الصفحة الرئيسية
+            </span>
           </Button>
         </Link>
         <LogoutButton
-          className={`w-full justify-center ${isOpen ? "" : "px-3! lg:px-4!"}`}
+          className={`w-full justify-center lg:justify-start ${isOpen ? "" : "px-3! lg:px-4!"}`}
           size="sm"
         >
           <LogOut className="size-5" />
-          {isOpen ? (
-            <>
-              <span>تسجيل الخروج</span>
-            </>
-          ) : (
-            <></>
-          )}
+          <span className={isOpen ? "" : "hidden lg:inline"}>تسجيل الخروج</span>
         </LogoutButton>
       </div>
     </aside>

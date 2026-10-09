@@ -12,9 +12,7 @@ const ClientAdmin = ({ children }: IProps) => {
       <HeaderAdmin isOpen={isOpen} />
       <main className="min-h-[calc(100dvh-4rem)] w-full">
         <SidebarAdmin isOpen={isOpen} setIsOpen={setIsOpen} />
-        <article
-          className={`mt-16 ${isOpen ? "lg:mr-64" : ""} mr-16 p-3 lg:p-4 duration-300`}
-        >
+        <article className="mt-16 mr-16 p-3 duration-300 lg:mr-64 lg:p-4">
           {children}
         </article>
       </main>

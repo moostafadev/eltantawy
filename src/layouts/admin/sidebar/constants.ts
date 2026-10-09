@@ -1,15 +1,11 @@
 import {
-  Boxes,
   ChartNoAxesCombined,
   LayoutDashboard,
   Package,
-  Percent,
   RotateCcw,
-  Search,
   Settings,
   ShoppingCart,
   Tags,
-  Truck,
   Users,
 } from "lucide-react";
 import { SidebarItem } from "./types";
@@ -72,40 +68,11 @@ export const sidebarData: SidebarItem[] = [
     items: [],
     isActive: true,
   },
-  // {
-  //   link: "/admin/inventory",
-  //   title: "المخزون",
-  //   icon: Boxes,
-  //   items: [],
-  //   isActive: false,
-  // },
   {
     link: "/admin/settings",
     title: "الإعدادات",
     icon: Settings,
-    items: [
-      {
-        link: "/admin/settings/delivery",
-        title: "مناطق التوصيل",
-        icon: Truck,
-        items: [],
-        isActive: true,
-      },
-      {
-        link: "/admin/settings/discounts",
-        title: "الخصومات",
-        icon: Percent,
-        items: [],
-        isActive: true,
-      },
-      {
-        link: "/admin/settings/seo",
-        title: "إعدادات SEO",
-        icon: Search,
-        items: [],
-        isActive: true,
-      },
-    ],
+    items: [],
     isActive: true,
   },
 ];
