@@ -4,3 +4,7 @@
 @import "../styles/theme.css";
 @import "../styles/animations.css";
 @import "../styles/utilities.css";
+
+.css {
+  clear: auto;
+}
