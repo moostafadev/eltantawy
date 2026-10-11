@@ -151,10 +151,11 @@ const PageViews = async ({
       </section>
 
       <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
-        <div className="border-b border-border pb-3 lg:pb-4">
-          <h2 className="font-bold">أكثر الصفحات مشاهدة</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            ترتيب الصفحات حسب إجمالي عدد المشاهدات
+        <div className="min-w-0 border-b border-border pb-2.5 sm:pb-3 lg:pb-4">
+          <h2 className="text-sm font-bold sm:text-base">مشاهدات الصفحات</h2>
+          <p className="mt-1 max-w-full text-xs leading-relaxed text-muted-foreground sm:text-sm">
+            إجمالي {toArabicNums(stats.totalViews)} مشاهدة؛ تُحتسب زيارة واحدة
+            لكل عنوان IP على الصفحة يوميًا
           </p>
         </div>
         <PageViewsTable

@@ -34,6 +34,7 @@ const Table = <T,>({
   loading = false,
   loadingRows = 8,
   className = "",
+  mobileContent,
   pagination,
   sorting,
 }: TableProps<T>) => {
@@ -109,7 +110,11 @@ const Table = <T,>({
     <div
       className={`w-full min-w-0 overflow-hidden border border-background-second/60 bg-background shadow-sm ${className}`}
     >
-      <div className="w-full overflow-x-auto">
+      {mobileContent && (
+        <div className="sm:hidden">{mobileContent}</div>
+      )}
+
+      <div className={mobileContent ? "hidden w-full overflow-x-auto sm:block" : "w-full overflow-x-auto"}>
         <table className="w-full min-w-200 border-collapse text-sm">
           <thead>
             <tr className="bg-background-second/20">

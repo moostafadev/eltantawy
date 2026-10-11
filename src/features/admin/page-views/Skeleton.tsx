@@ -69,7 +69,13 @@ const PageViewsSkeleton = () => (
     </section>
 
     <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
-      <SectionHeadingSkeleton />
+      <div className="min-w-0 border-b border-border pb-2.5 sm:pb-3 lg:pb-4">
+        <Skeleton width={132} height={18} className="max-w-full" />
+        <div className="mt-1 flex flex-col gap-1 sm:flex-row sm:items-center">
+          <Skeleton width={150} height={14} className="max-w-full" />
+          <Skeleton width={220} height={14} className="max-w-full" />
+        </div>
+      </div>
       <PageViewsTable data={[]} loading />
     </section>
   </div>

@@ -44,7 +44,7 @@ const AdminDashboard = async () => {
     prisma.discount.count(),
     prisma.discount.count({ where: { isActive: true } }),
     getSalesSummary(),
-    getPageViewStatistics(),
+    getPageViewStatistics(1),
   ]);
   const pageViews = pageViewStatistics.pages;
   const totalPageViews = pageViewStatistics.totalViews;
@@ -374,22 +374,22 @@ const AdminDashboard = async () => {
 
       {/* Page Views */}
       <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
-        <div className="flex items-center gap-2.5 border-b border-border pb-3 lg:pb-4">
-          <div className="flex size-9 shrink-0 items-center justify-center bg-info/10 text-info">
-            <Eye className="size-4.5" />
+        <div className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-start gap-x-2 gap-y-1.5 border-b border-border pb-3 sm:flex sm:items-center sm:gap-2.5 lg:pb-4">
+          <div className="row-span-2 flex size-8 shrink-0 items-center justify-center bg-info/10 text-info sm:size-9">
+            <Eye className="size-4 sm:size-4.5" />
           </div>
 
-          <div className="min-w-0 flex-1">
-            <h2 className="font-bold">مشاهدات الصفحات</h2>
+          <div className="col-start-2 row-start-1 min-w-0 sm:flex-1">
+            <h2 className="text-sm font-bold sm:text-base">مشاهدات الصفحات</h2>
 
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-xs leading-relaxed text-muted-foreground sm:text-sm">
               إجمالي {toArabicNums(totalPageViews)} مشاهدة؛ تُحتسب زيارة واحدة
               لكل عنوان IP على الصفحة يوميًا
             </p>
           </div>
           <Link
             href="/admin/page-views"
-            className="mr-auto flex shrink-0 items-center gap-1 text-xs font-medium text-main hover:underline"
+            className="col-start-2 row-start-2 mr-auto flex w-fit shrink-0 items-center gap-1 text-xs font-medium text-main hover:underline sm:col-auto sm:row-auto"
           >
             <span>عرض الإحصائيات</span>
             <ArrowLeft className="size-3.5" />

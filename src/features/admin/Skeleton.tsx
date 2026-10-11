@@ -110,14 +110,45 @@ const AdminDashboardSkeleton = () => {
 
       {/* Page Views */}
       <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
-        <div className="flex min-w-0 items-center gap-2.5 border-b border-border pb-3 lg:pb-4">
-          <Skeleton width={36} height={36} color="INFO" className="shrink-0" />
-          <div className="min-w-0 flex-1">
-            <Skeleton width={150} height={24} />
-            <Skeleton className="mt-1" height={20} />
-            <Skeleton className="sm:hidden" width={220} height={20} />
+        <div className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-start gap-x-2 gap-y-1.5 border-b border-border pb-3 sm:flex sm:items-center sm:gap-2.5 lg:pb-4">
+          <Skeleton
+            width={32}
+            height={32}
+            color="INFO"
+            className="row-span-2 sm:hidden"
+          />
+          <Skeleton
+            width={36}
+            height={36}
+            color="INFO"
+            className="hidden shrink-0 sm:block"
+          />
+          <div className="col-start-2 row-start-1 min-w-0 sm:flex-1">
+            <Skeleton
+              width={150}
+              height={18}
+              className="max-w-full sm:hidden"
+            />
+            <Skeleton
+              width={150}
+              height={24}
+              className="hidden max-w-full sm:block"
+            />
+            <div className="mt-1 flex flex-col gap-1 sm:hidden">
+              <Skeleton width={220} height={12} className="max-w-full" />
+              <Skeleton width={174} height={12} className="max-w-full" />
+            </div>
+            <Skeleton
+              width={360}
+              height={20}
+              className="mt-1 hidden max-w-full sm:block"
+            />
           </div>
-          <Skeleton width={105} height={14} className="shrink-0" />
+          <Skeleton
+            width={105}
+            height={14}
+            className="col-start-2 row-start-2 mr-auto max-w-full sm:col-auto sm:row-auto sm:mr-0"
+          />
         </div>
 
         <PageViewsTable data={[]} loading />
