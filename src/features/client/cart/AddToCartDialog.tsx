@@ -1,6 +1,6 @@
 "use client";
 
-import { LoadingImage as Image } from "@/components/loading-image";
+import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import { Check, Minus, Plus, ShoppingCart } from "lucide-react";
 
@@ -93,13 +93,16 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
   return (
     <div className="flex flex-col gap-3 lg:gap-4">
       <div className="flex gap-3">
-        <div className="relative size-16 overflow-hidden bg-muted">
+        <div className="relative size-16 shrink-0 overflow-hidden bg-muted">
           {product.image ? (
             <Image
               src={product.image}
               alt={product.title}
               fill
               sizes="64px"
+              loading="eager"
+              fetchPriority="high"
+              unoptimized
               className="object-cover"
             />
           ) : (
@@ -109,7 +112,7 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
           )}
         </div>
 
-        <div>
+        <div className="min-w-0">
           <h3 className="font-semibold">{product.title}</h3>
 
           <p className="text-sm text-muted-foreground">

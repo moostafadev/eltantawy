@@ -1,1 +1,1 @@
-export { AdminUserLoading as default } from "@/components/loading";
+export { default } from "@/features/admin/users/Loading";

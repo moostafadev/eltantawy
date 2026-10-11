@@ -8,6 +8,7 @@ import { Tooltip } from "@/components/tooltip";
 import { useToast } from "@/components/toaster";
 import useScroll from "@/hooks/useScroll";
 import { useCart } from "@/lib/cart/provider";
+import { aboutFeatures } from "../home/constants";
 
 interface WeightOption {
   id: string;
@@ -233,6 +234,28 @@ const ProductDetailPurchase = ({
         <ShoppingCart className="size-4" />
         إضافة للسلة
       </Button>
+
+      <ul
+        aria-label="نقاط قوتنا"
+        className="grid grid-cols-1 gap-2 sm:grid-cols-2"
+      >
+        {aboutFeatures.map(({ title, desc, icon: Icon }) => (
+          <li
+            key={title}
+            className="flex items-start gap-2.5 border border-background-second/60 bg-background p-2.5"
+          >
+            <span className="flex size-8 shrink-0 items-center justify-center bg-main/10 text-main">
+              <Icon className="size-4" strokeWidth={1.75} />
+            </span>
+            <span className="flex min-w-0 flex-col gap-0.5">
+              <span className="text-xs font-semibold">{title}</span>
+              <span className="text-xs leading-5 text-muted-foreground">
+                {desc}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
 
       <Button
         type="button"

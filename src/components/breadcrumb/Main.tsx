@@ -27,9 +27,10 @@ const Breadcrumb = ({ items, className = "" }: BreadcrumbProps) => {
   return (
     <nav
       aria-label="مسار التنقل"
-      className={`w-full overflow-hidden ${className}`}
+      tabIndex={0}
+      className={`scrollbar-hide w-full overflow-x-auto overscroll-x-contain focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-main ${className}`}
     >
-      <ol className="flex min-w-0 items-center gap-1.5 text-sm sm:gap-2">
+      <ol className="flex w-max min-w-full flex-nowrap items-center gap-1.5 text-sm sm:gap-2">
         <li className="flex shrink-0 items-center">
           <Tooltip content="الرئيسية" focusable={false}>
             <Link
@@ -48,30 +49,30 @@ const Breadcrumb = ({ items, className = "" }: BreadcrumbProps) => {
           return (
             <li
               key={index}
-              className="flex min-w-0 shrink-0 items-center gap-1.5 sm:gap-2"
+              className="flex shrink-0 items-center gap-1.5 sm:gap-2"
             >
               <ChevronLeft className="size-4 shrink-0 text-muted-foreground/50" />
 
               {isLast ? (
-                <span className="flex min-w-0 max-w-36 items-center gap-1.5 truncate font-semibold text-foreground sm:max-w-60">
+                <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap font-semibold text-foreground">
                   {item.icon && <span className="shrink-0">{item.icon}</span>}
 
-                  <span className="truncate">{item.label}</span>
+                  <span>{item.label}</span>
                 </span>
               ) : item.href ? (
                 <Link
                   href={item.href}
-                  className="flex min-w-0 max-w-28 items-center gap-1.5 truncate text-muted-foreground transition-colors hover:text-main sm:max-w-48"
+                  className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted-foreground transition-colors hover:text-main"
                 >
                   {item.icon && <span className="shrink-0">{item.icon}</span>}
 
-                  <span className="truncate">{item.label}</span>
+                  <span>{item.label}</span>
                 </Link>
               ) : (
-                <span className="flex min-w-0 max-w-28 items-center gap-1.5 truncate text-muted-foreground sm:max-w-48">
+                <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap text-muted-foreground">
                   {item.icon && <span className="shrink-0">{item.icon}</span>}
 
-                  <span className="truncate">{item.label}</span>
+                  <span>{item.label}</span>
                 </span>
               )}
             </li>

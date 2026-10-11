@@ -1,1 +1,1 @@
-export { AdminSettingsLoading as default } from "@/components/loading";
+export { AdminSettingsLoading as default } from "@/features/admin/settings/Loading";

@@ -1,1 +1,1 @@
-export { AdminFormLoading as default } from "@/components/loading";
+export { AdminFormLoading as default } from "@/features/admin/Loading";

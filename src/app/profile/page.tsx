@@ -2,9 +2,14 @@ import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard } from "lucide-react";
+import {
+  ArrowLeft,
+  LayoutDashboard,
+  ShoppingBag,
+  ShoppingCart,
+  UserRound,
+} from "lucide-react";
 
-import { Button } from "@/components/button";
 import { LogoutButton } from "@/components/logoutButton";
 import { verifyAccessToken } from "@/lib/auth";
 import { ProfileCard, ProfileSkeleton } from "@/features/client/profile";
@@ -67,34 +72,98 @@ const Profile = async () => {
   return (
     <div className="flex flex-1 items-stretch bg-background-second/20 py-6 lg:py-8">
       <div className="container">
-        <div className="flex w-full flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold text-foreground">الملف الشخصي</h1>
+        <div className="flex w-full flex-col gap-5 lg:gap-6">
+          <header className="flex items-center gap-3">
+            <div className="flex size-12 shrink-0 items-center justify-center bg-main/10 text-main">
+              <UserRound className="size-6" strokeWidth={1.75} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-foreground lg:text-3xl">
+                الملف الشخصي
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                بيانات حسابك وطلباتك في مكان واحد
+              </p>
+            </div>
+          </header>
 
-            <p className="text-sm text-muted-foreground">
-              إدارة بيانات حسابك الشخصي
-            </p>
-          </div>
+          <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-5">
+            <div className="flex min-w-0 flex-col gap-4">
+              <Suspense fallback={<ProfileSkeleton />}>
+                <ProfileCard userId={payload.userId} />
+              </Suspense>
 
-          <Suspense fallback={<ProfileSkeleton />}>
-            <ProfileCard userId={payload.userId} />
-          </Suspense>
+              <Suspense fallback={<RecentOrdersSkeleton />}>
+                <RecentOrders userId={payload.userId} />
+              </Suspense>
+            </div>
 
-          <Suspense fallback={<RecentOrdersSkeleton />}>
-            <RecentOrders userId={payload.userId} />
-          </Suspense>
+            <aside className="flex flex-col gap-3 border border-background-second/60 bg-background p-3 shadow-sm lg:p-4">
+              <div className="border-b border-background-second/60 pb-3">
+                <h2 className="font-bold">الوصول السريع</h2>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  تابع مشترياتك أو أكمل التسوق
+                </p>
+              </div>
 
-          <div className="flex flex-wrap justify-between gap-2 lg:items-center">
-            <LogoutButton />
-
-            {payload.role === "ADMIN" && (
-              <Link href="/admin" className="mr-auto">
-                <Button className="flex items-center justify-center gap-4">
-                  <LayoutDashboard className="size-5" />
-                  <span>الداشبورد</span>
-                </Button>
+              <Link
+                href="/profile/orders"
+                className="group flex items-center gap-3 border border-background-second/60 p-3 transition-colors hover:border-main/30 hover:bg-main/5"
+              >
+                <span className="flex size-10 shrink-0 items-center justify-center bg-main/10 text-main">
+                  <ShoppingBag className="size-5" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold">طلباتي</span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    راجع حالة طلباتك السابقة
+                  </span>
+                </span>
+                <ArrowLeft className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-main" />
               </Link>
-            )}
+
+              <Link
+                href="/products"
+                className="group flex items-center gap-3 border border-background-second/60 p-3 transition-colors hover:border-main/30 hover:bg-main/5"
+              >
+                <span className="flex size-10 shrink-0 items-center justify-center bg-main/10 text-main">
+                  <ShoppingCart className="size-5" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold">
+                    تصفح المنتجات
+                  </span>
+                  <span className="mt-0.5 block text-xs text-muted-foreground">
+                    اكتشف منتجاتنا وعروضنا
+                  </span>
+                </span>
+                <ArrowLeft className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-main" />
+              </Link>
+
+              {payload.role === "ADMIN" && (
+                <Link
+                  href="/admin"
+                  className="group flex items-center gap-3 border border-background-second/60 p-3 transition-colors hover:border-main/30 hover:bg-main/5"
+                >
+                  <span className="flex size-10 shrink-0 items-center justify-center bg-main/10 text-main">
+                    <LayoutDashboard className="size-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold">
+                      لوحة التحكم
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                      إدارة المتجر والطلبات
+                    </span>
+                  </span>
+                  <ArrowLeft className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-main" />
+                </Link>
+              )}
+
+              <div className="border-t border-background-second/60 pt-3">
+                <LogoutButton className="w-full justify-center" />
+              </div>
+            </aside>
           </div>
         </div>
       </div>

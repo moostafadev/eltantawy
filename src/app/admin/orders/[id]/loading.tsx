@@ -1,1 +1,1 @@
-export { AdminOrderLoading as default } from "@/components/loading";
+export { default } from "@/features/admin/orders/Loading";

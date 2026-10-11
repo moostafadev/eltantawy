@@ -1,1 +1,1 @@
-export { ClientOffersLoading as default } from "@/components/loading";
+export { default } from "@/features/client/offers/Loading";

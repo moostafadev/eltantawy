@@ -70,7 +70,8 @@ current page and is not rendered as a link.
 
 #### `Tooltip`
 
-Displays a small, project-styled hint when its child is hovered or focused.
+Displays a small, project-styled hint when its child is hovered or focused on
+devices with a fine pointer. Tooltips are disabled on touch-first devices.
 Import it from `@/components/tooltip` and provide the trigger as `children`
 and the hint as `content`.
 
@@ -229,13 +230,9 @@ Pulsing placeholder block. `width` is specified in pixels and defaults to
 
 #### Page loading components
 
-Import page-shaped loading placeholders from `@/components/loading`. The
-barrel exports `AdminTableLoading`, `AdminFormLoading`,
-`AdminDetailLoading`, `AdminCategoryDetailLoading`, `AdminOrderLoading`,
-`AdminRecordLoading`, `AdminSettingsLoading`, `AdminUserLoading`,
-`ClientCartLoading`, `ClientCatalogLoading`, `ClientCategoriesLoading`,
-`ClientCheckoutLoading`, `ClientOffersLoading`, `ClientOrdersLoading`,
-`ClientProductLoading`, and `ClientProfileLoading`.
+Page loading placeholders live with their owning features under
+`@/features/client` and `@/features/admin`. The reusable `Skeleton` primitive
+remains available from `@/components/skeleton`.
 
 #### `Spin`
 

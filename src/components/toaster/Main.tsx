@@ -141,7 +141,7 @@ const Toaster = ({
               className={`pointer-events-auto relative flex w-full select-none touch-none cursor-grab items-start gap-3 overflow-hidden border p-4 shadow-lg backdrop-blur-md transition-transform duration-300 active:cursor-grabbing ${item.className}`}
             >
               <div
-                className={`flex size-10 shrink-0 items-center justify-center rounded-full ${item.iconClass}`}
+                className={`flex size-10 shrink-0 items-center justify-center ${item.iconClass}`}
               >
                 <Icon
                   className={`size-5 ${
@@ -160,7 +160,7 @@ const Toaster = ({
                   onPointerDown={(e) => e.stopPropagation()}
                   onClick={() => removeToast(toast.id)}
                   aria-label="إغلاق"
-                  className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full text-current/70 transition hover:bg-current/10 hover:text-current active:scale-95"
+                  className="flex size-8 shrink-0 cursor-pointer items-center justify-center text-current/70 transition hover:bg-current/10 hover:text-current active:scale-95"
                 >
                   <X className="size-4" />
                 </button>

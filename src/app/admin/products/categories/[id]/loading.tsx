@@ -1,1 +1,1 @@
-export { AdminCategoryDetailLoading as default } from "@/components/loading";
+export { default } from "@/features/admin/categories/Loading";

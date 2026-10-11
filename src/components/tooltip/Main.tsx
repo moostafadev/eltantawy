@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useId, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 
 import type { TooltipProps, TooltipSide } from "./types";
@@ -43,6 +50,7 @@ const Tooltip = ({
   const isFocusedRef = useRef(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [canHover, setCanHover] = useState(false);
   const [position, setPosition] = useState<Position | null>(null);
   const [resolvedSide, setResolvedSide] = useState<FixedTooltipSide>(
     side === "auto" ? "top" : side,
@@ -78,6 +86,8 @@ const Tooltip = ({
   }, [cancelClose]);
 
   const open = useCallback(() => {
+    if (!canHover) return;
+
     cancelClose();
     setIsMounted(true);
     openFrameRef.current = requestAnimationFrame(() => {
@@ -86,7 +96,29 @@ const Tooltip = ({
         setIsOpen(true);
       }
     });
-  }, [cancelClose]);
+  }, [canHover, cancelClose]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const updateCanHover = () => setCanHover(mediaQuery.matches);
+
+    updateCanHover();
+    mediaQuery.addEventListener("change", updateCanHover);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateCanHover);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (canHover) return;
+
+    cancelClose();
+    isHoveredRef.current = false;
+    isFocusedRef.current = false;
+    setIsOpen(false);
+    setIsMounted(false);
+  }, [canHover, cancelClose]);
 
   useLayoutEffect(() => {
     if (!isMounted) return;
@@ -208,7 +240,8 @@ const Tooltip = ({
         {children}
       </span>
 
-      {isMounted &&
+      {canHover &&
+        isMounted &&
         typeof document !== "undefined" &&
         createPortal(
           <div

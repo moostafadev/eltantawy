@@ -1,1 +1,1 @@
-export { AdminTableLoading as default } from "@/components/loading";
+export { AdminTableLoading as default } from "@/features/admin/Loading";

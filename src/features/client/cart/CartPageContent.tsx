@@ -37,7 +37,7 @@ const CartPageContent = () => {
                 </p>
               </div>
 
-              <Link href="/">
+              <Link href="/products">
                 <Button color="MAIN" className="mt-1 gap-2">
                   <Store className="size-4" />
                   تصفح المنتجات

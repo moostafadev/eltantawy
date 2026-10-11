@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { TrendingUp } from "lucide-react";
+import { ArrowLeft, TrendingUp } from "lucide-react";
 
-import { Button } from "@/components/button";
 import { Carousel, CarouselItem } from "@/components/carousel";
 import { ProductCard } from "@/features/client/product-card";
 
@@ -42,10 +41,12 @@ const BestSellers = async () => {
           ))}
         </Carousel>
 
-        <Link href="/products" className="mx-auto">
-          <Button size="sm" variant="ghost">
-            عرض جميع المنتجات
-          </Button>
+        <Link
+          href="/products"
+          className="mx-auto inline-flex items-center gap-1 text-sm font-medium text-main transition-colors hover:text-main/80 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-4"
+        >
+          تصفّح كل المنتجات
+          <ArrowLeft className="size-4" aria-hidden="true" />
         </Link>
       </div>
     </section>

@@ -1,1 +1,1 @@
-export { AdminRecordLoading as default } from "@/components/loading";
+export { SettingRecordLoading as default } from "@/features/admin/settings/Loading";

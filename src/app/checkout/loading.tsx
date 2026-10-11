@@ -1,1 +1,1 @@
-export { ClientCheckoutLoading as default } from "@/components/loading";
+export { default } from "@/features/client/checkout/Loading";
