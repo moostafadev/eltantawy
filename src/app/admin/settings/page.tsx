@@ -27,8 +27,8 @@ const settingsSections = [
 
 const SettingsPage = () => {
   return (
-    <div className="flex flex-col gap-3 lg:gap-4">
-      <div>
+    <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
+      <div className="min-w-0">
         <h1 className="text-2xl font-bold">الإعدادات</h1>
 
         <p className="mt-1 text-sm text-muted-foreground">
@@ -36,7 +36,7 @@ const SettingsPage = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:gap-4">
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:gap-4">
         {settingsSections.map(
           ({ title, description, href, icon: Icon, isActive }) =>
             isActive ? (

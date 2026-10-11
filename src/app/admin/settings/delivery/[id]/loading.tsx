@@ -1,1 +1,7 @@
-export { SettingRecordLoading as default } from "@/features/admin/settings/Loading";
+import { AdminRecordPageLoading } from "@/features/admin/InternalLoading";
+
+const DeliveryDetailLoading = () => (
+  <AdminRecordPageLoading kind="delivery" />
+);
+
+export default DeliveryDetailLoading;

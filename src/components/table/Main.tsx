@@ -24,7 +24,7 @@ const Table = <T,>({
 }: TableProps<T>) => {
   return (
     <div
-      className={`w-full overflow-hidden border border-background-second/60 bg-background shadow-sm ${className}`}
+      className={`w-full min-w-0 overflow-hidden border border-background-second/60 bg-background shadow-sm ${className}`}
     >
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-200 border-collapse text-sm">

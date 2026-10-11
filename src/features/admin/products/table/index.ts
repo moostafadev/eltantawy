@@ -1,3 +1,7 @@
 export { default as ProductsTable } from "./Main";
 
-export { getProducts, getOneProduct } from "./products.service";
+export {
+  getProducts,
+  getProductsByCategory,
+  getOneProduct,
+} from "./products.service";

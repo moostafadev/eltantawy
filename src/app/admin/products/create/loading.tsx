@@ -1,1 +1,7 @@
-export { AdminFormLoading as default } from "@/features/admin/Loading";
+import { AdminFormPageLoading } from "@/features/admin/InternalLoading";
+
+const CreateProductLoading = () => (
+  <AdminFormPageLoading kind="product" />
+);
+
+export default CreateProductLoading;

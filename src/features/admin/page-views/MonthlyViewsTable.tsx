@@ -44,11 +44,19 @@ const columns: TableColumn<MonthlyPageViews>[] = [
   },
 ];
 
-const MonthlyViewsTable = ({ data }: { data: MonthlyPageViews[] }) => (
+const MonthlyViewsTable = ({
+  data,
+  loading = false,
+}: {
+  data: MonthlyPageViews[];
+  loading?: boolean;
+}) => (
   <Table
     data={data}
     columns={columns}
     emptyMessage="لا توجد بيانات مشاهدات بعد"
+    loading={loading}
+    loadingRows={6}
   />
 );
 

@@ -10,7 +10,7 @@ interface Props {
 
 const MonthlyCards = ({ data }: Props) => {
   return (
-    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 lg:gap-3">
+    <div className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 lg:gap-3">
       {data.map((month) => {
         const isUp = month.change !== null && month.change > 0;
         const isDown = month.change !== null && month.change < 0;
@@ -30,7 +30,7 @@ const MonthlyCards = ({ data }: Props) => {
         return (
           <div
             key={month.label}
-            className="flex flex-col gap-2 border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+            className="flex min-w-0 flex-col gap-2 border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
           >
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-medium text-muted-foreground">
@@ -45,7 +45,7 @@ const MonthlyCards = ({ data }: Props) => {
             </div>
 
             <div className="flex flex-col gap-0.5">
-              <span className="text-lg font-bold tabular-nums">
+              <span className="break-words text-lg font-bold tabular-nums">
                 {toArabicNums(String(Math.round(month.value)))}
               </span>
 

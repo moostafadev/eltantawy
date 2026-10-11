@@ -15,7 +15,7 @@ const CategoriesLoading = () => (
           <div className="flex flex-col gap-2">
             <Skeleton width={100} height={28} className="lg:hidden" />
             <Skeleton width={110} height={32} className="hidden lg:block" />
-            <Skeleton width={300} height={20} className="max-w-full" />
+            <Skeleton width={200} height={20} className="max-w-full" />
           </div>
         </div>
         <div className="flex gap-2">
@@ -26,7 +26,7 @@ const CategoriesLoading = () => (
     </div>
     <div className="sticky top-0 z-20 bg-background/50 backdrop-blur-sm lg:top-16">
       <div className="container">
-        <div className="flex items-center gap-2 overflow-hidden py-3">
+        <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto py-3">
           {Array.from({ length: 5 }).map((_, index) => (
             <Skeleton
               key={index}
@@ -46,16 +46,12 @@ const CategoriesLoading = () => (
               <Skeleton width={36} height={36} className="lg:hidden" />
               <Skeleton width={40} height={40} className="hidden lg:block" />
               <Skeleton width={120} height={28} className="lg:hidden" />
-              <Skeleton
-                width={130}
-                height={32}
-                className="hidden lg:block"
-              />
+              <Skeleton width={130} height={32} className="hidden lg:block" />
             </div>
             <Skeleton width={56} height={16} />
           </div>
           <ProductCardsSkeleton
-            count={4}
+            count={8}
             className="grid-cols-2 gap-3 lg:grid-cols-4"
           />
         </section>

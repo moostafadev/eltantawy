@@ -93,7 +93,7 @@ const Sales = async () => {
   ];
 
   return (
-    <div className="flex flex-col gap-3 lg:gap-4">
+    <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
       {/* Header */}
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold tracking-tight">المبيعات</h1>
@@ -111,7 +111,7 @@ const Sales = async () => {
           return (
             <div
               key={title}
-              className={`group relative overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
+              className={`group relative min-w-0 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
             >
               <span
                 className={`absolute inset-x-0 top-0 h-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
@@ -123,7 +123,7 @@ const Sales = async () => {
                     {title}
                   </p>
 
-                  <p className="text-2xl font-bold tracking-tight tabular-nums lg:text-3xl">
+                  <p className="break-words text-2xl font-bold tracking-tight tabular-nums lg:text-3xl">
                     {value}
                   </p>
 
@@ -141,11 +141,11 @@ const Sales = async () => {
         })}
       </section>
 
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
+      <div className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
         {/* Monthly Sales Cards */}
-        <section className="flex flex-col gap-4 border border-background-second/20 bg-background p-3 shadow-sm lg:col-span-2 lg:p-4">
+        <section className="flex min-w-0 flex-col gap-4 border border-background-second/20 bg-background p-3 shadow-sm lg:col-span-2 lg:p-4">
           <div className="flex items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
-            <div>
+            <div className="min-w-0">
               <h2 className="font-bold">المبيعات الشهرية</h2>
 
               <p className="mt-1 text-sm text-muted-foreground">
@@ -162,9 +162,9 @@ const Sales = async () => {
         </section>
 
         {/* Returns Breakdown */}
-        <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
           <div className="flex items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
-            <div>
+            <div className="min-w-0">
               <h2 className="font-bold">حالة المرتجعات</h2>
 
               <p className="mt-1 text-sm text-muted-foreground">
@@ -195,7 +195,7 @@ const Sales = async () => {
       </div>
 
       {/* Monthly Sales Detail Table */}
-      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
         <div className="border-b border-border pb-3 lg:pb-4">
           <h2 className="font-bold">تفاصيل المبيعات الشهرية</h2>
 
@@ -212,7 +212,7 @@ const Sales = async () => {
       </section>
 
       {/* Top Products */}
-      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
         <div className="border-b border-border pb-3 lg:pb-4">
           <h2 className="font-bold">الأكثر مبيعًا</h2>
 

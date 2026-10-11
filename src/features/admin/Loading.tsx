@@ -1,24 +1,78 @@
+import type { ReactNode } from "react";
 import { Skeleton } from "@/components/skeleton";
 
-export const PageTitle = ({ width = 180 }: { width?: number }) => (
-  <div className="flex flex-col gap-2">
-    <Skeleton width={width} height={28} className="max-w-full" />
-    <Skeleton width={300} height={16} className="max-w-full" />
+export const PageTitle = ({
+  width = 180,
+  descriptionWidth = 300,
+}: {
+  width?: number;
+  descriptionWidth?: number;
+}) => (
+  <div className="flex min-w-0 flex-col gap-1">
+    <Skeleton width={width} height={32} className="max-w-full" />
+    <Skeleton width={descriptionWidth} height={20} className="max-w-full" />
   </div>
 );
 
-export const AdminBreadcrumb = () => (
-  <div className="flex items-center gap-2">
-    <Skeleton width={72} height={14} />
-    <Skeleton width={12} height={14} />
-    <Skeleton width={96} height={14} />
+export const AdminBreadcrumb = ({ count = 2 }: { count?: number } = {}) => (
+  <div className="scrollbar-hide flex min-w-0 items-center gap-1.5 overflow-hidden">
+    {Array.from({ length: count + 1 }).map((_, index) => (
+      <div key={index} className="flex shrink-0 items-center gap-1.5">
+        {index > 0 && <Skeleton width={16} height={16} />}
+        <Skeleton
+          width={index === 0 ? 36 : index === count ? 100 : 84}
+          height={20}
+        />
+      </div>
+    ))}
   </div>
 );
 
-export const AdminPageHeader = ({ action = false }: { action?: boolean }) => (
+export const AdminPageHeader = ({
+  action = false,
+  actionHeight = 36,
+  titleWidth,
+  descriptionWidth,
+}: {
+  action?: boolean;
+  actionHeight?: number;
+  titleWidth?: number;
+  descriptionWidth?: number;
+}) => (
   <div className="flex flex-wrap items-center justify-between gap-4">
-    <PageTitle />
-    {action && <Skeleton width={120} height={36} />}
+    <PageTitle width={titleWidth} descriptionWidth={descriptionWidth} />
+    {action && <Skeleton width={120} height={actionHeight} className="self-end" />}
+  </div>
+);
+
+export const AdminListPageLoading = ({
+  children,
+  breadcrumb = false,
+  action = false,
+  actionHeight = 32,
+  titleWidth = 150,
+  descriptionWidth = 240,
+}: {
+  children: ReactNode;
+  breadcrumb?: boolean;
+  action?: boolean;
+  actionHeight?: number;
+  titleWidth?: number;
+  descriptionWidth?: number;
+}) => (
+  <div
+    role="status"
+    aria-label="جاري تحميل الصفحة"
+    className="flex min-w-0 flex-col gap-3 lg:gap-4"
+  >
+    {breadcrumb && <AdminBreadcrumb />}
+    <AdminPageHeader
+      action={action}
+      actionHeight={actionHeight}
+      titleWidth={titleWidth}
+      descriptionWidth={descriptionWidth}
+    />
+    {children}
   </div>
 );
 

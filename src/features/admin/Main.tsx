@@ -236,7 +236,7 @@ const AdminDashboard = async () => {
   ];
 
   return (
-    <div className="flex flex-col gap-4 lg:gap-5">
+    <div className="flex min-w-0 flex-col gap-4 lg:gap-5">
       {/* Header */}
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold tracking-tight">لوحة التحكم</h1>
@@ -247,14 +247,14 @@ const AdminDashboard = async () => {
       </div>
 
       {/* Financial Performance (Sales & Returns) */}
-      <section className="flex flex-col gap-3 lg:gap-4">
+      <section className="flex min-w-0 flex-col gap-3 lg:gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <div className="flex size-9 shrink-0 items-center justify-center bg-success/10 text-success">
               <ReceiptText className="size-4.5" />
             </div>
 
-            <div>
+            <div className="min-w-0">
               <h2 className="font-bold">الأداء المالي</h2>
 
               <p className="text-xs text-muted-foreground">
@@ -272,7 +272,7 @@ const AdminDashboard = async () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
           {financialStats.map(
             ({ title, value, icon: Icon, description, color }) => {
               const styles = getStatColorClasses(color);
@@ -280,7 +280,7 @@ const AdminDashboard = async () => {
               return (
                 <div
                   key={title}
-                  className={`group relative overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
+                  className={`group relative min-w-0 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
                 >
                   <span
                     className={`absolute inset-x-0 top-0 h-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
@@ -292,7 +292,7 @@ const AdminDashboard = async () => {
                         {title}
                       </p>
 
-                      <p className="text-2xl font-bold tracking-tight tabular-nums lg:text-3xl">
+                      <p className="break-words text-2xl font-bold tracking-tight tabular-nums lg:text-3xl">
                         {value}
                       </p>
 
@@ -315,13 +315,13 @@ const AdminDashboard = async () => {
       </section>
 
       {/* Featured Stats */}
-      <section className="flex flex-col gap-3 lg:gap-4">
+      <section className="flex min-w-0 flex-col gap-3 lg:gap-4">
         <div className="flex items-center gap-2.5">
           <div className="flex size-9 shrink-0 items-center justify-center bg-info/10 text-info">
             <TrendingUp className="size-4.5" />
           </div>
 
-          <div>
+          <div className="min-w-0 flex-1">
             <h2 className="font-bold">نشاط الموقع</h2>
 
             <p className="text-xs text-muted-foreground">
@@ -330,7 +330,7 @@ const AdminDashboard = async () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:gap-4">
+        <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3 lg:gap-4">
           {featuredStats.map(
             ({ title, value, icon: Icon, description, color }) => {
               const styles = getStatColorClasses(color);
@@ -338,7 +338,7 @@ const AdminDashboard = async () => {
               return (
                 <div
                   key={title}
-                  className={`group relative overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
+                  className={`group relative min-w-0 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
                 >
                   <span
                     className={`absolute inset-x-0 top-0 h-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
@@ -350,7 +350,7 @@ const AdminDashboard = async () => {
                         {title}
                       </p>
 
-                      <p className="text-4xl font-bold tracking-tight tabular-nums">
+                      <p className="break-words text-4xl font-bold tracking-tight tabular-nums">
                         {toArabicNums(value)}
                       </p>
 
@@ -373,13 +373,13 @@ const AdminDashboard = async () => {
       </section>
 
       {/* Page Views */}
-      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
         <div className="flex items-center gap-2.5 border-b border-border pb-3 lg:pb-4">
           <div className="flex size-9 shrink-0 items-center justify-center bg-info/10 text-info">
             <Eye className="size-4.5" />
           </div>
 
-          <div>
+          <div className="min-w-0 flex-1">
             <h2 className="font-bold">مشاهدات الصفحات</h2>
 
             <p className="mt-1 text-sm text-muted-foreground">
@@ -389,7 +389,7 @@ const AdminDashboard = async () => {
           </div>
           <Link
             href="/admin/page-views"
-            className="mr-auto flex items-center gap-1 text-xs font-medium text-main hover:underline"
+            className="mr-auto flex shrink-0 items-center gap-1 text-xs font-medium text-main hover:underline"
           >
             <span>عرض الإحصائيات</span>
             <ArrowLeft className="size-3.5" />

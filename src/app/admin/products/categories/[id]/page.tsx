@@ -4,7 +4,10 @@ import { Pencil } from "lucide-react";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Button } from "@/components/button";
+import { Table } from "@/components/table";
 import { CategoryGraph } from "@/features/admin/categories/create/Graph";
+import { productsTableColumns } from "@/features/admin/products/table/ProductsTableColumns";
+import { getProductsByCategory } from "@/features/admin/products/table";
 import {
   getCategoriesForGraph,
   getOneCategory,
@@ -19,9 +22,10 @@ interface CategoryProps {
 const Category = async ({ params }: CategoryProps) => {
   const { id } = await params;
 
-  const [category, categories] = await Promise.all([
+  const [category, categories, products] = await Promise.all([
     getOneCategory(id),
     getCategoriesForGraph(),
+    getProductsByCategory(id),
   ]);
 
   if (!category) {
@@ -131,6 +135,20 @@ const Category = async ({ params }: CategoryProps) => {
           </div>
         </section>
       </div>
+
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="border-b border-border pb-3 lg:pb-4">
+          <h2 className="font-bold">منتجات التصنيف</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            المنتجات المرتبطة بهذا التصنيف
+          </p>
+        </div>
+        <Table
+          data={products}
+          columns={productsTableColumns}
+          emptyMessage="لا توجد منتجات مرتبطة بهذا التصنيف"
+        />
+      </section>
 
       {/* Category Graph */}
       <CategoryGraph categories={categories} selectedId={category.id} />

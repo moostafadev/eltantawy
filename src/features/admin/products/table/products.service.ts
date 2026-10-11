@@ -18,6 +18,25 @@ export const getProducts = async () => {
   });
 };
 
+export const getProductsByCategory = async (categoryId: string) => {
+  return prisma.product.findMany({
+    where: {
+      categoryId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      category: {
+        select: {
+          id: true,
+          title: true,
+        },
+      },
+    },
+  });
+};
+
 export const getOneProduct = async (id: string) => {
   return prisma.product.findUnique({
     where: {

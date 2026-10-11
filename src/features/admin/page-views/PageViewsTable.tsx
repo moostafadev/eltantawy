@@ -43,11 +43,19 @@ const pageViewColumns: TableColumn<PageViewRow>[] = [
   },
 ];
 
-const PageViewsTable = ({ data }: { data: PageViewRow[] }) => (
+const PageViewsTable = ({
+  data,
+  loading = false,
+}: {
+  data: PageViewRow[];
+  loading?: boolean;
+}) => (
   <Table
     data={data}
     columns={pageViewColumns}
     emptyMessage="لا توجد مشاهدات مسجلة حتى الآن"
+    loading={loading}
+    loadingRows={5}
   />
 );
 

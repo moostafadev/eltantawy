@@ -10,7 +10,7 @@ import { discountsTableColumns } from "@/features/admin/settings/discounts/table
 
 const DiscountsPage = () => {
   return (
-    <div className="flex flex-col gap-3 lg:gap-4">
+    <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
       <Breadcrumb
         items={[
           {
@@ -23,8 +23,8 @@ const DiscountsPage = () => {
         ]}
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold">الخصومات</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">

@@ -9,9 +9,9 @@ import { categoriesTableColumns } from "@/features/admin/categories/table/Catego
 
 const Categories = async () => {
   return (
-    <div className="flex flex-col gap-3 lg:gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
+    <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
+      <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 sm:gap-4">
+        <div className="min-w-0">
           <h1 className="text-2xl font-bold">التصنيفات</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">

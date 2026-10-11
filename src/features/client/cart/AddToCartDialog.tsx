@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import { Check, Minus, Plus, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { LoadingImage as Image } from "@/components/loading-image";
 import { Tooltip } from "@/components/tooltip";
 import { useDialog } from "@/components/dialog";
 import { useCart } from "@/lib/cart/provider";
