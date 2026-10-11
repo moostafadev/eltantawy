@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 
 import { Table } from "@/components/table";
 import { TableColumn } from "@/components/table/types";
@@ -29,14 +30,15 @@ const pageViewColumns: TableColumn<PageViewRow>[] = [
       <Link
         href={path}
         target="_blank"
-        rel="noreferrer"
-        className="text-main hover:underline"
-        dir="ltr"
+        rel="noopener noreferrer"
+        aria-label={`فتح الصفحة: ${path}`}
+        className="inline-flex items-center gap-1.5 font-medium text-main hover:underline"
       >
-        {path}
+        <span>فتح الصفحة</span>
+        <ExternalLink aria-hidden="true" className="size-3.5" />
       </Link>
     ),
-    className: "break-all",
+    className: "text-center",
   },
   {
     key: "views",
