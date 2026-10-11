@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, Pen } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Skeleton } from "@/components/skeleton";
 import { Tag } from "@/components/tag";
 import { Tooltip } from "@/components/tooltip";
 import { TableColumn } from "@/components/table/types";
@@ -54,6 +55,11 @@ export const productsTableColumns: TableColumn<Product>[] = [
   {
     key: "unit",
     title: <div className="flex justify-center">الوحدة</div>,
+    skeleton: (
+      <div className="flex justify-center">
+        <Skeleton width={42} height={18} className="rounded-full" />
+      </div>
+    ),
     render: (product) => (
       <div className="flex justify-center">
         <Tag color="INFO" size="sm">
@@ -66,6 +72,11 @@ export const productsTableColumns: TableColumn<Product>[] = [
   {
     key: "saleType",
     title: <div className="flex justify-center">نوع البيع</div>,
+    skeleton: (
+      <div className="flex justify-center">
+        <Skeleton width={66} height={18} className="rounded-full" />
+      </div>
+    ),
     render: (product) => (
       <div className="flex justify-center">
         <Tag

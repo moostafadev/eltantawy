@@ -69,7 +69,9 @@ const PageViews = async ({
   return (
     <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold tracking-tight">إحصائيات المشاهدات</h1>
+        <h1 className="text-2xl font-bold tracking-tight">
+          إحصائيات المشاهدات
+        </h1>
         <p className="text-sm text-muted-foreground">
           نظرة شاملة على زيارات صفحات الموقع خلال آخر ٦ أشهر
         </p>
@@ -92,7 +94,7 @@ const PageViews = async ({
                   <p className="text-sm font-medium text-muted-foreground">
                     {title}
                   </p>
-                  <p className="break-words text-2xl font-bold tabular-nums lg:text-3xl">
+                  <p className="wrap-break-word text-2xl font-bold tabular-nums lg:text-3xl">
                     {value}
                   </p>
                   <p className="text-xs text-muted-foreground">{description}</p>
@@ -125,7 +127,7 @@ const PageViews = async ({
               <span className="text-xs font-medium text-muted-foreground">
                 {label}
               </span>
-              <span className="break-words text-lg font-bold tabular-nums">
+              <span className="wrap-break-word text-lg font-bold tabular-nums">
                 {toArabicNums(value)}
               </span>
               <span className={`text-xs font-semibold ${color}`}>

@@ -5,6 +5,7 @@ export interface TableColumn<T> {
   key: keyof T | string;
   title: ReactNode;
   render?: (item: T, index: number) => ReactNode;
+  skeleton?: ReactNode;
   className?: string;
   sortKey?: string;
   defaultSortDirection?: "asc" | "desc";

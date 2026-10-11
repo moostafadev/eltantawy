@@ -119,7 +119,7 @@ const Table = <T,>({
                   className={`whitespace-nowrap border-b border-background-second/50 px-4 py-3 text-right text-xs font-bold text-foreground/70 lg:px-5 lg:py-4 ${column.className ?? ""}`}
                 >
                   {loading ? (
-                    <Skeleton height={12} className="w-20" />
+                    <Skeleton width={80} height={12} />
                   ) : column.sortKey && pagination ? (
                     <Link
                       href={sortHref(
@@ -161,10 +161,12 @@ const Table = <T,>({
                       key={String(column.key)}
                       className={`whitespace-nowrap px-4 py-1.5 text-right text-foreground lg:px-5 lg:py-2.5 ${column.className ?? ""}`}
                     >
-                      <Skeleton
-                        height={14}
-                        className={` ${columnIndex === 0 ? "w-32" : "w-20"}`}
-                      />
+                      {column.skeleton ?? (
+                        <Skeleton
+                          width={columnIndex === 0 ? 128 : 80}
+                          height={14}
+                        />
+                      )}
                     </td>
                   ))}
                 </tr>
