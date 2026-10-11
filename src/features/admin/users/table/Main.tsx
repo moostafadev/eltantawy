@@ -1,26 +1,30 @@
 import { Table } from "@/components/table";
 
 import { usersTableColumns } from "./UsersTableColumns";
-import { getUsers, getGuestUsers } from "./user.service";
-import { UserRow } from "./types";
+import { getUsersPage } from "./user.service";
 
-const UsersTable = async () => {
-  const [users, guests] = await Promise.all([getUsers(), getGuestUsers()]);
-
-  const rows: UserRow[] = [
-    ...users.map((user) => ({ kind: "REGISTERED" as const, data: user })),
-    ...guests.map((guest) => ({ kind: "GUEST" as const, data: guest })),
-  ].sort(
-    (a, b) =>
-      new Date(b.data.createdAt).getTime() -
-      new Date(a.data.createdAt).getTime(),
+const UsersTable = async ({
+  page,
+  sort,
+  direction,
+}: {
+  page: number;
+  sort?: string;
+  direction?: string;
+}) => {
+  const { data, pagination, sorting } = await getUsersPage(
+    page,
+    sort,
+    direction,
   );
 
   return (
     <Table
-      data={rows}
+      data={data}
       columns={usersTableColumns}
       emptyMessage="لا يوجد مستخدمين"
+      pagination={{ ...pagination, basePath: "/admin/users" }}
+      sorting={sorting}
     />
   );
 };

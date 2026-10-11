@@ -4,11 +4,18 @@ import { Plus } from "lucide-react";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Button } from "@/components/button";
-import { Table } from "@/components/table";
+import { Table, parsePage } from "@/components/table";
 import { DiscountsTable } from "@/features/admin/settings/discounts/table";
 import { discountsTableColumns } from "@/features/admin/settings/discounts/table/DiscountsTableColumns";
 
-const DiscountsPage = () => {
+const DiscountsPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; sort?: string; direction?: string }>;
+}) => {
+  const params = await searchParams;
+  const page = parsePage(params.page);
+
   return (
     <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
       <Breadcrumb
@@ -53,7 +60,11 @@ const DiscountsPage = () => {
           />
         }
       >
-        <DiscountsTable />
+        <DiscountsTable
+          page={page}
+          sort={params.sort}
+          direction={params.direction}
+        />
       </Suspense>
     </div>
   );

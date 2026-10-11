@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, Pen } from "lucide-react";
 
 import { Button } from "@/components/button";
+import { Tag } from "@/components/tag";
 import { Tooltip } from "@/components/tooltip";
 import { TableColumn } from "@/components/table/types";
 import { toArabicNums } from "@/utils/toArabicNums";
@@ -27,6 +28,8 @@ export const productsTableColumns: TableColumn<Product>[] = [
   {
     key: "price",
     title: <div className="flex justify-center">السعر</div>,
+    sortKey: "price",
+    defaultSortDirection: "desc",
     render: (product) => (
       <span className="flex justify-center font-medium">
         {toArabicNums(String(product.price))} ج.م
@@ -37,6 +40,8 @@ export const productsTableColumns: TableColumn<Product>[] = [
   {
     key: "discountPrice",
     title: <div className="flex justify-center">سعر الخصم</div>,
+    sortKey: "discountPrice",
+    defaultSortDirection: "desc",
     render: (product) => (
       <span className="flex justify-center font-medium">
         {product.discountPrice !== null
@@ -50,9 +55,11 @@ export const productsTableColumns: TableColumn<Product>[] = [
     key: "unit",
     title: <div className="flex justify-center">الوحدة</div>,
     render: (product) => (
-      <span className="flex justify-center">
-        {product.unit === "KG" ? "كيلو" : "قطعة"}
-      </span>
+      <div className="flex justify-center">
+        <Tag color="INFO" size="sm">
+          {product.unit === "KG" ? "كيلو" : "قطعة"}
+        </Tag>
+      </div>
     ),
   },
 
@@ -60,9 +67,14 @@ export const productsTableColumns: TableColumn<Product>[] = [
     key: "saleType",
     title: <div className="flex justify-center">نوع البيع</div>,
     render: (product) => (
-      <span className="flex justify-center">
-        {product.saleType === "WEIGHT_RANGE" ? "نطاق وزن" : "عادي"}
-      </span>
+      <div className="flex justify-center">
+        <Tag
+          color={product.saleType === "WEIGHT_RANGE" ? "WARNING" : "SUCCESS"}
+          size="sm"
+        >
+          {product.saleType === "WEIGHT_RANGE" ? "نطاق وزن" : "عادي"}
+        </Tag>
+      </div>
     ),
   },
 
@@ -83,11 +95,7 @@ export const productsTableColumns: TableColumn<Product>[] = [
       <div className="flex justify-center gap-1">
         <Link href={`/admin/products/${product.id}`} aria-label="عرض المنتج">
           <Tooltip content="عرض المنتج" focusable={false}>
-            <Button
-              size="icon"
-              color="NEUTRAL"
-              variant="outline"
-            >
+            <Button size="icon" color="NEUTRAL" variant="outline">
               <Eye aria-hidden="true" className="size-4 lg:size-5" />
             </Button>
           </Tooltip>
@@ -98,11 +106,7 @@ export const productsTableColumns: TableColumn<Product>[] = [
           aria-label="تعديل المنتج"
         >
           <Tooltip content="تعديل المنتج" focusable={false}>
-            <Button
-              size="icon"
-              color="INFO"
-              variant="soft"
-            >
+            <Button size="icon" color="INFO" variant="soft">
               <Pen aria-hidden="true" className="size-4 lg:size-5" />
             </Button>
           </Tooltip>

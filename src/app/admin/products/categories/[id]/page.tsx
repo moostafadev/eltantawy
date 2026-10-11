@@ -4,7 +4,7 @@ import { Pencil } from "lucide-react";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Button } from "@/components/button";
-import { Table } from "@/components/table";
+import { Table, parsePage } from "@/components/table";
 import { CategoryGraph } from "@/features/admin/categories/create/Graph";
 import { productsTableColumns } from "@/features/admin/products/table/ProductsTableColumns";
 import { getProductsByCategory } from "@/features/admin/products/table";
@@ -17,15 +17,18 @@ interface CategoryProps {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{ page?: string; sort?: string; direction?: string }>;
 }
 
-const Category = async ({ params }: CategoryProps) => {
+const Category = async ({ params, searchParams }: CategoryProps) => {
   const { id } = await params;
+  const query = await searchParams;
+  const page = parsePage(query.page);
 
-  const [category, categories, products] = await Promise.all([
+  const [category, categories, productsPage] = await Promise.all([
     getOneCategory(id),
     getCategoriesForGraph(),
-    getProductsByCategory(id),
+    getProductsByCategory(id, page, query.sort, query.direction),
   ]);
 
   if (!category) {
@@ -144,9 +147,14 @@ const Category = async ({ params }: CategoryProps) => {
           </p>
         </div>
         <Table
-          data={products}
+          data={productsPage.data}
           columns={productsTableColumns}
           emptyMessage="لا توجد منتجات مرتبطة بهذا التصنيف"
+          pagination={{
+            ...productsPage.pagination,
+            basePath: `/admin/products/categories/${category.id}`,
+          }}
+          sorting={productsPage.sorting}
         />
       </section>
 

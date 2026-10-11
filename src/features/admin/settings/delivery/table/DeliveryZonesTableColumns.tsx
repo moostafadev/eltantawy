@@ -28,6 +28,8 @@ export const deliveryZonesTableColumns: TableColumn<DeliveryZone>[] = [
   {
     key: "cost",
     title: <div className="flex justify-center">تكلفة التوصيل</div>,
+    sortKey: "cost",
+    defaultSortDirection: "asc",
     render: (zone) => (
       <span className="flex justify-center font-medium">
         {zone.cost !== null
@@ -40,6 +42,8 @@ export const deliveryZonesTableColumns: TableColumn<DeliveryZone>[] = [
   {
     key: "children",
     title: <div className="flex justify-center">المناطق الفرعية</div>,
+    sortKey: "childrenCount",
+    defaultSortDirection: "desc",
     render: (zone) => (
       <span className="font-medium flex justify-center">
         {String(toArabicNums(zone._count.children))}

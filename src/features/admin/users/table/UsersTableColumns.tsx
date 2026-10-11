@@ -60,6 +60,8 @@ export const usersTableColumns: TableColumn<UserRow>[] = [
   {
     key: "ordersCount",
     title: <div className="flex justify-center">عدد الطلبات</div>,
+    sortKey: "ordersCount",
+    defaultSortDirection: "desc",
     render: (row) => (
       <span className="flex justify-center font-medium">
         {toArabicNums(

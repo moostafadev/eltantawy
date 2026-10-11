@@ -4,6 +4,10 @@ import Link from "next/link";
 
 import { Table } from "@/components/table";
 import { TableColumn } from "@/components/table/types";
+import type {
+  TablePaginationData,
+  TableSortState,
+} from "@/components/table/pagination";
 import { toArabicNums } from "@/utils/toArabicNums";
 
 type PageViewRow = {
@@ -37,6 +41,8 @@ const pageViewColumns: TableColumn<PageViewRow>[] = [
   {
     key: "views",
     title: "عدد المشاهدات",
+    sortKey: "views",
+    defaultSortDirection: "desc",
     render: ({ views }) => (
       <span className="font-bold tabular-nums">{toArabicNums(views)}</span>
     ),
@@ -46,9 +52,13 @@ const pageViewColumns: TableColumn<PageViewRow>[] = [
 const PageViewsTable = ({
   data,
   loading = false,
+  pagination,
+  sorting,
 }: {
   data: PageViewRow[];
   loading?: boolean;
+  pagination?: TablePaginationData & { basePath: string };
+  sorting?: TableSortState;
 }) => (
   <Table
     data={data}
@@ -56,6 +66,8 @@ const PageViewsTable = ({
     emptyMessage="لا توجد مشاهدات مسجلة حتى الآن"
     loading={loading}
     loadingRows={5}
+    pagination={pagination}
+    sorting={sorting}
   />
 );
 

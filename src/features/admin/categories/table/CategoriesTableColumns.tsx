@@ -37,6 +37,8 @@ export const categoriesTableColumns: TableColumn<Category>[] = [
   {
     key: "products",
     title: <div className="flex justify-center">المنتجات</div>,
+    sortKey: "productCount",
+    defaultSortDirection: "desc",
     render: (category) => (
       <span className="font-medium flex justify-center">
         {String(toArabicNums(category._count.products))}
@@ -47,6 +49,8 @@ export const categoriesTableColumns: TableColumn<Category>[] = [
   {
     key: "children",
     title: <div className="flex justify-center">التصنيفات الفرعية</div>,
+    sortKey: "childrenCount",
+    defaultSortDirection: "desc",
     render: (category) => (
       <span className="font-medium flex justify-center">
         {String(toArabicNums(category._count.children))}

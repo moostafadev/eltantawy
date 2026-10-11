@@ -1,12 +1,34 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import {
+  getTablePagination,
+  resolveTableSort,
+  TABLE_PAGE_SIZE,
+} from "@/components/table/pagination";
 
-export const getDeliveryZones = async () => {
-  return prisma.deliveryZone.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
+const sortableDeliveryFields = ["cost", "childrenCount"] as const;
+
+export const getDeliveryZones = async (
+  requestedPage = 1,
+  sortField?: string,
+  sortDirection?: string,
+) => {
+  const totalItems = await prisma.deliveryZone.count();
+  const pagination = getTablePagination(requestedPage, totalItems);
+  const sorting = resolveTableSort(
+    sortField,
+    sortDirection,
+    sortableDeliveryFields,
+  );
+  const rows = await prisma.deliveryZone.findMany({
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+    ...(sorting
+      ? {}
+      : {
+          skip: (pagination.page - 1) * TABLE_PAGE_SIZE,
+          take: TABLE_PAGE_SIZE,
+        }),
     include: {
       parent: {
         select: {
@@ -21,6 +43,27 @@ export const getDeliveryZones = async () => {
       },
     },
   });
+  const data = sorting
+    ? rows
+        .sort((a, b) => {
+          const aValue =
+            sorting.field === "cost" ? (a.cost ?? -Infinity) : a._count.children;
+          const bValue =
+            sorting.field === "cost" ? (b.cost ?? -Infinity) : b._count.children;
+          const difference = aValue - bValue;
+          return difference === 0
+            ? a.id.localeCompare(b.id)
+            : sorting.direction === "asc"
+              ? difference
+              : -difference;
+        })
+        .slice(
+          (pagination.page - 1) * TABLE_PAGE_SIZE,
+          pagination.page * TABLE_PAGE_SIZE,
+        )
+    : rows;
+
+  return { data, pagination, sorting };
 };
 
 export const getOneDeliveryZone = async (id: string) => {

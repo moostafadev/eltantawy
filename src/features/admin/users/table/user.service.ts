@@ -1,12 +1,15 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import {
+  getTablePagination,
+  resolveTableSort,
+  TABLE_PAGE_SIZE,
+} from "@/components/table/pagination";
 
 export const getUsers = async () => {
   return prisma.user.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }],
     select: {
       id: true,
       fName: true,
@@ -35,9 +38,7 @@ export const getGuestUsers = async () => {
     where: {
       userId: null,
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }],
     select: {
       customerName: true,
       customerPhone: true,
@@ -79,4 +80,83 @@ export const getGuestUsers = async () => {
   }
 
   return Array.from(map.values());
+};
+
+export const getUsersPage = async (
+  requestedPage = 1,
+  sortField?: string,
+  sortDirection?: string,
+) => {
+  const [registeredUsersCount, guests] = await Promise.all([
+    prisma.user.count(),
+    getGuestUsers(),
+  ]);
+  const sorting = resolveTableSort(
+    sortField,
+    sortDirection,
+    ["ordersCount"],
+  );
+  const pagination = getTablePagination(
+    requestedPage,
+    registeredUsersCount + guests.length,
+  );
+  const candidateCount = sorting
+    ? registeredUsersCount
+    : pagination.page * TABLE_PAGE_SIZE;
+  const users = await prisma.user.findMany({
+    orderBy: [{ createdAt: "desc" }, { id: "asc" }],
+    take: candidateCount,
+    select: {
+      id: true,
+      fName: true,
+      lName: true,
+      phone: true,
+      role: true,
+      createdAt: true,
+      _count: {
+        select: {
+          orders: true,
+        },
+      },
+    },
+  });
+
+  const rows = [
+    ...users.map((user) => ({ kind: "REGISTERED" as const, data: user })),
+    ...guests.map((guest) => ({ kind: "GUEST" as const, data: guest })),
+  ];
+  rows.sort((a, b) => {
+    if (sorting?.field === "ordersCount") {
+      const aCount =
+        a.kind === "REGISTERED" ? a.data._count.orders : a.data.ordersCount;
+      const bCount =
+        b.kind === "REGISTERED" ? b.data._count.orders : b.data.ordersCount;
+      const difference = aCount - bCount;
+
+      if (difference !== 0) {
+        return sorting.direction === "asc" ? difference : -difference;
+      }
+    }
+
+    const createdAtDifference =
+      new Date(b.data.createdAt).getTime() -
+      new Date(a.data.createdAt).getTime();
+    if (createdAtDifference !== 0) return createdAtDifference;
+    if (a.kind !== b.kind) {
+      return a.kind === "REGISTERED" ? -1 : 1;
+    }
+
+    const aKey = a.kind === "REGISTERED" ? a.data.id : a.data.customerPhone;
+    const bKey = b.kind === "REGISTERED" ? b.data.id : b.data.customerPhone;
+    return aKey < bKey ? -1 : aKey > bKey ? 1 : 0;
+  });
+
+  return {
+    data: rows.slice(
+      (pagination.page - 1) * TABLE_PAGE_SIZE,
+      pagination.page * TABLE_PAGE_SIZE,
+    ),
+    pagination,
+    sorting,
+  };
 };

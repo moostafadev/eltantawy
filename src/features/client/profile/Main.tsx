@@ -92,7 +92,7 @@ const ProfileItem = ({ icon: Icon, label, value }: ProfileItemProps) => {
       </span>
       <div className="flex min-w-0 flex-col gap-1">
         <p className="text-xs font-medium text-muted-foreground">{label}</p>
-        <p className="break-words text-sm font-semibold text-foreground">
+        <p className="wrap-break-word text-sm font-semibold text-foreground">
           {value}
         </p>
       </div>

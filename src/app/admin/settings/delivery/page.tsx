@@ -4,11 +4,18 @@ import { Plus } from "lucide-react";
 
 import { Breadcrumb } from "@/components/breadcrumb";
 import { Button } from "@/components/button";
-import { Table } from "@/components/table";
+import { Table, parsePage } from "@/components/table";
 import { DeliveryZonesTable } from "@/features/admin/settings/delivery/table";
 import { deliveryZonesTableColumns } from "@/features/admin/settings/delivery/table/DeliveryZonesTableColumns";
 
-const DeliveryZonesPage = () => {
+const DeliveryZonesPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string; sort?: string; direction?: string }>;
+}) => {
+  const params = await searchParams;
+  const page = parsePage(params.page);
+
   return (
     <div className="flex min-w-0 flex-col gap-3 lg:gap-4">
       <Breadcrumb
@@ -53,7 +60,11 @@ const DeliveryZonesPage = () => {
           />
         }
       >
-        <DeliveryZonesTable />
+        <DeliveryZonesTable
+          page={page}
+          sort={params.sort}
+          direction={params.direction}
+        />
       </Suspense>
     </div>
   );

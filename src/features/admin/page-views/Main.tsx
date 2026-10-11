@@ -8,8 +8,16 @@ import MonthlyViewsTable from "./MonthlyViewsTable";
 import PageViewsTable from "./PageViewsTable";
 import { getPageViewStatistics } from "./pageViews.service";
 
-const PageViews = async () => {
-  const stats = await getPageViewStatistics();
+const PageViews = async ({
+  page,
+  sort,
+  direction,
+}: {
+  page: number;
+  sort?: string;
+  direction?: string;
+}) => {
+  const stats = await getPageViewStatistics(page, sort, direction);
 
   const mainStats: {
     title: string;
@@ -147,7 +155,14 @@ const PageViews = async () => {
             ترتيب الصفحات حسب إجمالي عدد المشاهدات
           </p>
         </div>
-        <PageViewsTable data={stats.pages} />
+        <PageViewsTable
+          data={stats.pages}
+          pagination={{
+            ...stats.pagesPagination,
+            basePath: "/admin/page-views",
+          }}
+          sorting={stats.pagesSorting}
+        />
       </section>
     </div>
   );

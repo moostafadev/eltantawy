@@ -62,6 +62,8 @@ export const returnsTableColumns: TableColumn<ReturnRow>[] = [
   {
     key: "refundAmount",
     title: <div className="flex justify-center">القيمة</div>,
+    sortKey: "refundAmount",
+    defaultSortDirection: "desc",
     render: (orderReturn) => (
       <span className="flex justify-center font-medium">
         {toArabicNums(String(orderReturn.refundAmount))} ج.م

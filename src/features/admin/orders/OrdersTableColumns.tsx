@@ -29,6 +29,7 @@ export const ordersTableColumns: TableColumn<OrderRow>[] = [
   {
     key: "orderNumber",
     title: "رقم الطلب",
+    sortKey: "orderNumber",
     render: (order) => (
       <span dir="ltr" className="font-bold text-main">
         {toArabicNums(order.orderNumber)}#
@@ -58,6 +59,8 @@ export const ordersTableColumns: TableColumn<OrderRow>[] = [
   {
     key: "total",
     title: <div className="flex justify-center">الإجمالي</div>,
+    sortKey: "total",
+    defaultSortDirection: "desc",
     render: (order) => (
       <span className="flex justify-center font-medium">
         {toArabicNums(String(order.total))} ج.م

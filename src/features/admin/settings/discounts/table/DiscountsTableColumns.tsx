@@ -41,6 +41,8 @@ export const discountsTableColumns: TableColumn<Discount>[] = [
   {
     key: "value",
     title: <div className="flex justify-center">القيمة</div>,
+    sortKey: "value",
+    defaultSortDirection: "desc",
     render: (discount) => (
       <span className="flex justify-center font-medium">
         {discount.valueType === "PERCENTAGE"
@@ -53,6 +55,8 @@ export const discountsTableColumns: TableColumn<Discount>[] = [
   {
     key: "usage",
     title: <div className="flex justify-center">الاستخدام</div>,
+    sortKey: "usageCount",
+    defaultSortDirection: "desc",
     render: (discount) => (
       <span className="flex justify-center font-medium">
         {toArabicNums(discount.usageCount)}
