@@ -49,3 +49,7 @@ export async function applyCouponAction(code: string) {
 export async function removeCouponAction() {
   return CartService.removeCoupon();
 }
+
+export async function getCartAction() {
+  return CartService.getHydratedCart();
+}

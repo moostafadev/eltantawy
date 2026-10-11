@@ -1,5 +1,7 @@
 "use server";
 
+import { unstable_cache } from "next/cache";
+
 import { prisma } from "@/lib/prisma";
 
 export const getCategoriesForStore = async () => {
@@ -120,7 +122,14 @@ export const getCategoriesForStore = async () => {
  * direct and descendant product counts without loading product lists or the
  * complete nested category tree.
  */
-export const getHomeCategories = async (limit = 6) => {
+export const getHomeCategories = async (limit = 6) =>
+  unstable_cache(
+    () => fetchHomeCategories(limit),
+    ["home-categories", String(limit)],
+    { revalidate: 300, tags: ["home-categories"] },
+  )();
+
+const fetchHomeCategories = async (limit: number) => {
   const categories = await prisma.category.findMany({
     where: {
       parentId: null,

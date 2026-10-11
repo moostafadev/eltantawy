@@ -4,19 +4,24 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
 import {
   addToCartAction,
   applyCouponAction,
+  getCartAction,
   removeCouponAction,
   removeFromCartAction,
   updateCartItemAction,
 } from "../actions";
 
 import { CartContextValue, CartProviderProps } from "./types";
+
+import { EMPTY_HYDRATED_CART } from "../empty";
 
 import { CartUnit, HydratedCart } from "../types";
 
@@ -28,13 +33,49 @@ const getKey = (productId: string, unit: CartUnit, weightOptionId?: string) =>
     : `${productId}-${unit}`;
 
 const CartProvider = ({ children, initialCart }: CartProviderProps) => {
-  const [cart, setCart] = useState<HydratedCart>(initialCart);
+  const [cart, setCart] = useState<HydratedCart>(
+    initialCart ?? EMPTY_HYDRATED_CART,
+  );
+
+  const [isHydrating, setIsHydrating] = useState(!initialCart);
+
+  const hasLocalMutation = useRef(false);
 
   const [updatingItems, setUpdatingItems] = useState<Record<string, boolean>>(
     {},
   );
 
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+
+  useEffect(() => {
+    if (initialCart) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const hydrateCart = async () => {
+      try {
+        const nextCart = await getCartAction();
+
+        if (!cancelled && !hasLocalMutation.current) {
+          setCart(nextCart);
+        }
+      } catch (error) {
+        console.error("Hydrate cart error:", error);
+      } finally {
+        if (!cancelled) {
+          setIsHydrating(false);
+        }
+      }
+    };
+
+    void hydrateCart();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [initialCart]);
 
   const markUpdating = useCallback((key: string, value: boolean) => {
     setUpdatingItems((prev) => ({
@@ -44,6 +85,7 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
   }, []);
 
   const syncCart = useCallback((newCart: HydratedCart) => {
+    hasLocalMutation.current = true;
     setCart(newCart);
   }, []);
 
@@ -147,6 +189,8 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
     () => ({
       cart,
 
+      isHydrating,
+
       items: cart.items ?? [],
 
       syncCart,
@@ -171,6 +215,7 @@ const CartProvider = ({ children, initialCart }: CartProviderProps) => {
     }),
     [
       cart,
+      isHydrating,
       syncCart,
       updatingItems,
       addItem,

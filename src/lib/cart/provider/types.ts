@@ -2,7 +2,7 @@ import { CartUnit, CartItemWithProduct, HydratedCart } from "../types";
 
 export interface CartProviderProps {
   children: React.ReactNode;
-  initialCart: HydratedCart;
+  initialCart?: HydratedCart;
 }
 
 export interface ApplyCouponResult {
@@ -12,6 +12,8 @@ export interface ApplyCouponResult {
 
 export interface CartContextValue {
   cart: HydratedCart;
+
+  isHydrating: boolean;
 
   items: CartItemWithProduct[];
 

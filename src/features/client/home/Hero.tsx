@@ -1,4 +1,3 @@
-import { LoadingImage as Image } from "@/components/loading-image";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 
@@ -14,16 +13,19 @@ const Hero = () => {
       </div>
 
       <div className="relative text-center">
-        <div style={{ animationDelay: "0ms" }} className="animate-hero-fade-up">
-          <Image
-            src="/logo-2.png"
+        <picture>
+          <source srcSet="/logo-lcp.avif" type="image/avif" />
+          <source srcSet="/logo-lcp.webp" type="image/webp" />
+          <img
+            src="/logo-lcp.webp"
             alt="شعار الطنطاوي"
             width={240}
             height={219}
+            fetchPriority="high"
+            decoding="async"
             className="animate-hero-float mx-auto h-46 w-auto sm:h-50"
-            priority
           />
-        </div>
+        </picture>
 
         <h1
           style={{ animationDelay: "150ms" }}

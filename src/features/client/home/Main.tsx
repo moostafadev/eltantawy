@@ -1,17 +1,24 @@
+import { Suspense } from "react";
+
 import Hero from "./Hero";
 import BestSellers from "./BestSellers";
 import AboutUs from "./AboutUs";
 import HowToOrder from "./HowToOrder";
 import HomeCategories from "./Categories";
+import SectionFallback from "./SectionFallback";
 
 const Home = () => {
   return (
     <>
       <Hero />
-      <BestSellers />
+      <Suspense fallback={<SectionFallback />}>
+        <BestSellers />
+      </Suspense>
       <AboutUs />
       <HowToOrder />
-      <HomeCategories />
+      <Suspense fallback={<SectionFallback />}>
+        <HomeCategories />
+      </Suspense>
     </>
   );
 };

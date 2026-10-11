@@ -1,6 +1,5 @@
 "use client";
 
-import { LoadingImage as Image } from "@/components/loading-image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -76,11 +75,12 @@ const Header = ({ isScrolled }: HeaderProps) => {
             className="flex h-full items-center -ml-2 lg:ml-0"
             onClick={() => setIsMenuOpen(false)}
           >
-            <Image
-              src="/logo-2.png"
+            <img
+              src="/logo-header.webp"
               alt="الطنطاوي"
-              width={200}
-              height={200}
+              width={175}
+              height={160}
+              decoding="async"
               className={`w-auto object-contain transition-[height] duration-300 py-0.5 ${
                 isScrolled ? "h-14" : "h-18"
               }`}

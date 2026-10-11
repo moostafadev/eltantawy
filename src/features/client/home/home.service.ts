@@ -1,5 +1,7 @@
 "use server";
 
+import { unstable_cache } from "next/cache";
+
 import { prisma } from "@/lib/prisma";
 
 const MIN_TOP_SELLING_PRODUCTS = 4;
@@ -12,9 +14,9 @@ const MIN_TOP_SELLING_PRODUCTS = 4;
  * remaining slots with unique products from the catalog so the home-page
  * section does not appear sparse.
  */
-export const getTopSellingProducts = async (
-  limit = 8,
-  minimum = MIN_TOP_SELLING_PRODUCTS,
+const fetchTopSellingProducts = async (
+  limit: number,
+  minimum: number,
 ) => {
   const topItems = await prisma.orderItem.groupBy({
     by: ["productId"],
@@ -96,20 +98,31 @@ export const getTopSellingProducts = async (
 
     const excludeIds = orderedProducts.map((product) => product.id);
 
-    const randomCandidates = await prisma.product.findMany({
+    const fillCandidates = await prisma.product.findMany({
       where: {
         id: {
           notIn: excludeIds,
         },
       },
       select: productSelect,
-      take: 50,
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: needed,
     });
 
-    const shuffled = [...randomCandidates].sort(() => Math.random() - 0.5);
-
-    orderedProducts = [...orderedProducts, ...shuffled.slice(0, needed)];
+    orderedProducts = [...orderedProducts, ...fillCandidates];
   }
 
   return orderedProducts;
 };
+
+export const getTopSellingProducts = async (
+  limit = 8,
+  minimum = MIN_TOP_SELLING_PRODUCTS,
+) =>
+  unstable_cache(
+    () => fetchTopSellingProducts(limit, minimum),
+    ["home-top-selling", String(limit), String(minimum)],
+    { revalidate: 300, tags: ["home-top-selling"] },
+  )();

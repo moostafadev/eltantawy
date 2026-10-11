@@ -7,6 +7,7 @@ import {
   CART_COOKIE_NAME,
   CART_COOKIE_OPTIONS,
 } from "./constants";
+import { EMPTY_HYDRATED_CART } from "./empty";
 
 import {
   addCartItem,
@@ -644,41 +645,7 @@ export class CartService {
   }
 
   private static emptyCart(): HydratedCart {
-    return {
-      items: [],
-
-      subtotal: 0,
-
-      discount: 0,
-
-      deliveryFee: 0,
-
-      total: 0,
-
-      itemCount: 0,
-
-      quantity: 0,
-
-      hasApproxItems: false,
-
-      minTotal: 0,
-
-      maxTotal: 0,
-
-      couponCode: null,
-
-      couponDiscountAmount: 0,
-
-      autoDiscountAmount: 0,
-
-      autoDiscountLabel: null,
-
-      discountAmount: 0,
-
-      appliedDiscountSource: null,
-
-      appliedDiscountLabel: null,
-    };
+    return { ...EMPTY_HYDRATED_CART };
   }
 
   private static validateWeightOption(

@@ -56,7 +56,7 @@ const AboutUs = () => {
           {/* Image */}
           <div className="relative order-first aspect-4/3 w-full overflow-hidden border border-background-second/60 bg-background shadow-sm lg:order-last">
             <Image
-              src="/logo-alt.png"
+              src="/logo-alt.webp"
               alt="الطنطاوي"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"

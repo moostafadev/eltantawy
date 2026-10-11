@@ -2,15 +2,12 @@ import { ReactNode } from "react";
 
 import { DialogProvider } from "@/components/dialog";
 import { CartProvider } from "@/lib/cart/provider";
-import { CartService } from "@/lib/cart/service";
 
 import Wrapper from "./Wrapper";
 
-const LayoutClient = async ({ children }: { children: ReactNode }) => {
-  const cart = await CartService.getHydratedCart();
-
+const LayoutClient = ({ children }: { children: ReactNode }) => {
   return (
-    <CartProvider initialCart={cart}>
+    <CartProvider>
       <DialogProvider>
         <Wrapper>{children}</Wrapper>
       </DialogProvider>
