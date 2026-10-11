@@ -292,7 +292,7 @@ const AdminDashboard = async () => {
                         {title}
                       </p>
 
-                      <p className="break-words text-2xl font-bold tracking-tight tabular-nums lg:text-3xl">
+                      <p className="wrap-break-word text-2xl font-bold tracking-tight tabular-nums lg:text-3xl">
                         {value}
                       </p>
 
@@ -350,7 +350,7 @@ const AdminDashboard = async () => {
                         {title}
                       </p>
 
-                      <p className="break-words text-4xl font-bold tracking-tight tabular-nums">
+                      <p className="wrap-break-word text-4xl font-bold tracking-tight tabular-nums">
                         {toArabicNums(value)}
                       </p>
 

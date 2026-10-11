@@ -8,7 +8,7 @@ const deliveryAreas = ["مدينة 6 أكتوبر", "الشيخ زايد"];
 
 const contactInfo = [
   { icon: Phone, label: "0104 440 7002", dir: "ltr" },
-  { icon: Mail, label: "support@eltantawymeats.com", dir: "ltr" },
+  { icon: Mail, label: "eltantawymarket@gmail.com", dir: "ltr" },
   { icon: Clock, label: "يوميًا من 9 صباحًا حتى 12 منتصف الليل" },
 ];
 
