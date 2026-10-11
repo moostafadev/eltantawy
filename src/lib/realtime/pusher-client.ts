@@ -24,3 +24,15 @@ export const pusherClient = new PusherClient(key, {
     transport: "ajax",
   },
 });
+
+if (typeof window !== "undefined") {
+  window.addEventListener("pagehide", () => {
+    pusherClient.disconnect();
+  });
+
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      pusherClient.connect();
+    }
+  });
+}

@@ -22,6 +22,7 @@ const Register = () => {
           alt="الطنطاوي"
           width={500}
           height={500}
+          className="h-auto max-w-full"
         />
       </div>
     </div>

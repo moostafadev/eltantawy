@@ -2,7 +2,9 @@
 
 import {
   createContext,
+  lazy,
   ReactNode,
+  Suspense,
   useCallback,
   useContext,
   useMemo,
@@ -10,8 +12,9 @@ import {
   useState,
 } from "react";
 
-import Toaster from "./Main";
 import { Toast, ToastContextValue, ToastOptions, ToastType } from "./types";
+
+const Toaster = lazy(() => import("./Main"));
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
@@ -181,12 +184,16 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
     <ToastContext.Provider value={value}>
       {children}
 
-      <Toaster
-        toasts={toasts}
-        removeToast={removeToast}
-        pauseToast={pauseToast}
-        resumeToast={resumeToast}
-      />
+      {toasts.length > 0 && (
+        <Suspense fallback={null}>
+          <Toaster
+            toasts={toasts}
+            removeToast={removeToast}
+            pauseToast={pauseToast}
+            resumeToast={resumeToast}
+          />
+        </Suspense>
+      )}
     </ToastContext.Provider>
   );
 };

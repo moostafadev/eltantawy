@@ -46,7 +46,7 @@ const Hero = () => {
 
         <p
           style={{ animationDelay: "500ms" }}
-          className="animate-hero-fade-up mt-1 text-sm font-semibold tracking-widest text-main sm:text-base"
+          className="animate-hero-fade-up mt-1 text-sm font-semibold tracking-widest text-[#ff858a] sm:text-base"
         >
           رقم واحد في مصر
         </p>
@@ -55,8 +55,9 @@ const Hero = () => {
       <Link
         className="animate-hero-scroll-bounce absolute bottom-8 left-1/2 -translate-x-1/2 text-main-foreground/50"
         href={"/#best-sellers"}
+        aria-label="انتقل إلى المنتجات الأكثر مبيعًا"
       >
-        <ChevronDown className="size-7" />
+        <ChevronDown aria-hidden="true" className="size-7" />
       </Link>
     </section>
   );

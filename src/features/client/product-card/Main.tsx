@@ -1,5 +1,6 @@
 "use client";
 
+import { lazy, Suspense } from "react";
 import Link from "next/link";
 import { Package, ShoppingCart } from "lucide-react";
 import { LoadingImage as Image } from "@/components/loading-image";
@@ -9,8 +10,9 @@ import { Card } from "@/components/card";
 import { ProductCardProps } from "./types";
 import ProductPrice from "./ProductPrice";
 import { useDialog } from "@/components/dialog";
-import { AddToCartDialog } from "../cart";
 import { Tooltip } from "@/components/tooltip";
+
+const AddToCartDialog = lazy(() => import("../cart/AddToCartDialog"));
 
 const ProductCard = ({ product, className = "" }: ProductCardProps) => {
   const { openDialog } = useDialog();
@@ -63,7 +65,11 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
               openDialog({
                 title: "إضافة إلى السلة",
                 size: "md",
-                children: <AddToCartDialog product={product} />,
+                children: (
+                  <Suspense fallback={<p>جارٍ تحميل تفاصيل المنتج...</p>}>
+                    <AddToCartDialog product={product} />
+                  </Suspense>
+                ),
               })
             }
             aria-label="إضافة إلى السلة"

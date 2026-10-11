@@ -2,7 +2,9 @@
 
 import {
   createContext,
+  lazy,
   ReactNode,
+  Suspense,
   useCallback,
   useContext,
   useMemo,
@@ -10,7 +12,8 @@ import {
 } from "react";
 
 import { DialogContextValue, DialogOptions } from "./types";
-import Dialog from "./Main";
+
+const Dialog = lazy(() => import("./Main"));
 
 const DialogContext = createContext<DialogContextValue | null>(null);
 
@@ -52,7 +55,11 @@ const DialogProvider = ({ children }: Props) => {
     <DialogContext.Provider value={value}>
       {children}
 
-      {dialog && <Dialog {...dialog} closing={closing} onClose={closeDialog} />}
+      {dialog && (
+        <Suspense fallback={null}>
+          <Dialog {...dialog} closing={closing} onClose={closeDialog} />
+        </Suspense>
+      )}
     </DialogContext.Provider>
   );
 };

@@ -10,8 +10,9 @@ import { organizationStructuredData } from "@/lib/seo/structuredData";
 
 const fontFamily = Cairo({
   variable: "--font-cairo",
-  subsets: ["arabic", "latin"],
+  subsets: ["arabic"],
   weight: "variable",
+  display: "swap",
 });
 
 export const generateMetadata = async () => getRootMetadata();
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="ar"
       dir="rtl"
+      data-scroll-behavior="smooth"
       className={`${fontFamily.variable} h-full scroll-smooth antialiased motion-reduce:scroll-auto`}
     >
       <head>

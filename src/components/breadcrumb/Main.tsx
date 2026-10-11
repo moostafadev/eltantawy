@@ -51,7 +51,10 @@ const Breadcrumb = ({ items, className = "" }: BreadcrumbProps) => {
               key={index}
               className="flex shrink-0 items-center gap-1.5 sm:gap-2"
             >
-              <ChevronLeft className="size-4 shrink-0 text-muted-foreground/50" />
+              <ChevronLeft
+                aria-hidden="true"
+                className="size-4 shrink-0 text-muted-foreground/50"
+              />
 
               {isLast ? (
                 <span className="flex shrink-0 items-center gap-1.5 whitespace-nowrap font-semibold text-foreground">

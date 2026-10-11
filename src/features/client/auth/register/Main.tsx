@@ -66,6 +66,7 @@ const RegisterForm = () => {
           alt="الطنطاوي"
           width={300}
           height={300}
+          className="h-auto max-w-full"
           priority
         />
       </div>

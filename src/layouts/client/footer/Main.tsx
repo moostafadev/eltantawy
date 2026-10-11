@@ -37,13 +37,13 @@ const Footer = () => {
               />
             </div>
 
-            <p className="max-w-64 text-sm leading-6 text-white/50">
+            <p className="max-w-64 text-sm leading-6 text-white/80">
               تسوّق اللحوم والدواجن التي تحتاجها، ونوصل طلبك بعناية إلى بابك.
             </p>
 
             <Link
               href="/products"
-              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-main transition-colors hover:text-main/80"
+              className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-[#ff858a] transition-colors hover:text-[#ffa3a7]"
             >
               <span>تصفح المنتجات</span>
               <ArrowLeft className="size-3.5" />
@@ -60,7 +60,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/"
-                  className="text-white/50 transition-colors hover:text-main"
+                  className="text-white/80 transition-colors hover:text-[#ff858a]"
                 >
                   الرئيسية
                 </Link>
@@ -70,7 +70,7 @@ const Footer = () => {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-white/50 transition-colors hover:text-main"
+                    className="text-white/80 transition-colors hover:text-[#ff858a]"
                   >
                     {link.label}
                   </Link>
@@ -80,7 +80,7 @@ const Footer = () => {
               <li>
                 <Link
                   href="/cart"
-                  className="text-white/50 transition-colors hover:text-main"
+                  className="text-white/80 transition-colors hover:text-[#ff858a]"
                 >
                   السلة
                 </Link>
@@ -97,16 +97,16 @@ const Footer = () => {
             <ul className="flex flex-col gap-2.5">
               {deliveryAreas.map((area) => (
                 <li key={area} className="flex items-center gap-2.5 text-sm">
-                  <span className="flex size-6 shrink-0 items-center justify-center bg-main/15 text-main">
+                  <span className="flex size-6 shrink-0 items-center justify-center bg-main/15 text-[#ff858a]">
                     <MapPin className="size-3.5" />
                   </span>
 
-                  <span className="text-white/50">{area}</span>
+                  <span className="text-white/80">{area}</span>
                 </li>
               ))}
             </ul>
 
-            <p className="text-xs leading-5 text-white/35">
+            <p className="text-xs leading-5 text-white/75">
               نوسّع نطاق التوصيل تدريجيًا. تحقّق من توفر الخدمة عند إتمام طلبك.
             </p>
           </div>
@@ -120,11 +120,11 @@ const Footer = () => {
             <ul className="flex flex-col gap-2.5">
               {contactInfo.map(({ icon: Icon, label, dir }) => (
                 <li key={label} className="flex items-center gap-2.5 text-sm">
-                  <span className="flex size-6 shrink-0 items-center justify-center bg-main/15 text-main">
+                  <span className="flex size-6 shrink-0 items-center justify-center bg-main/15 text-[#ff858a]">
                     <Icon className="size-3.5" />
                   </span>
 
-                  <span dir={dir} className="text-white/50">
+                  <span dir={dir} className="text-white/80">
                     {label}
                   </span>
                 </li>
@@ -134,11 +134,11 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col items-center gap-2 border-t border-white/10 pt-6 lg:pt-8 text-center sm:flex-row sm:justify-between">
-          <p className="text-xs text-white/40">
+          <p className="text-xs text-white/75">
             © {year} الطنطاوي. جميع الحقوق محفوظة.
           </p>
 
-          <p className="text-xs font-medium tracking-widest text-main">
+          <p className="text-xs font-medium tracking-widest text-[#ff858a]">
             جودة وطعم أصلي
           </p>
         </div>

@@ -23,16 +23,19 @@ const Wrapper = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    void fetch("/api/page-views", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ path: pathname }),
-      keepalive: true,
-    }).catch((error: unknown) => {
-      console.error("Record page view error:", error);
+    const payload = new Blob([JSON.stringify({ path: pathname })], {
+      type: "application/json",
     });
+
+    if (!navigator.sendBeacon("/api/page-views", payload)) {
+      void fetch("/api/page-views", {
+        method: "POST",
+        body: payload,
+        keepalive: true,
+      }).catch((error: unknown) => {
+        console.warn("Record page view fallback failed:", error);
+      });
+    }
   }, [pathname]);
 
   if (pathname.startsWith("/admin")) {

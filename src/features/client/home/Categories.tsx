@@ -58,13 +58,13 @@ const HomeCategories = async () => {
               <div className="pointer-events-none absolute inset-0 bg-linear-to-br from-main/0 via-transparent to-main/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
               {/* Floating Arrow Button */}
-              <div className="absolute left-4 top-4 flex size-10 -translate-x-2 scale-90 items-center justify-center border border-white/20 bg-main/60 text-white opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100">
+              <div className="absolute left-4 top-4 flex size-10 -translate-x-2 scale-90 items-center justify-center border border-white/20 bg-main text-white opacity-0 backdrop-blur-sm transition-all duration-300 group-hover:translate-x-0 group-hover:scale-100 group-hover:opacity-100">
                 <ArrowLeft className="size-4" />
               </div>
 
               {/* Count Badge */}
-              <div className="absolute right-4 top-4 flex items-center gap-1.5 border border-white/10 bg-black/30 px-2.5 py-1.5 text-white backdrop-blur-sm">
-                <Package className="size-3.5 text-main" />
+              <div className="absolute right-4 top-4 flex items-center gap-1.5 border border-white/10 bg-black/80 px-2.5 py-1.5 text-white backdrop-blur-sm">
+                <Package className="size-3.5 text-[#ff858a]" />
                 <span className="text-xs font-semibold">
                   {category.totalProductsCount} منتج
                 </span>

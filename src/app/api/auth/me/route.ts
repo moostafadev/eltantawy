@@ -15,7 +15,6 @@ export async function GET() {
         {
           authenticated: false,
         },
-        { status: 401 },
       );
     }
 
@@ -26,7 +25,6 @@ export async function GET() {
         {
           authenticated: false,
         },
-        { status: 401 },
       );
     }
 
@@ -48,7 +46,6 @@ export async function GET() {
         {
           authenticated: false,
         },
-        { status: 401 },
       );
     }
 
@@ -63,7 +60,7 @@ export async function GET() {
       {
         authenticated: false,
       },
-      { status: 401 },
+      { status: 500 },
     );
   }
 }

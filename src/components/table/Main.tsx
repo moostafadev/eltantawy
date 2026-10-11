@@ -206,7 +206,7 @@ const Table = <T,>({
                       {emptyMessage}
                     </p>
 
-                    <p className="text-xs text-foreground/50">
+                    <p className="text-xs text-muted-foreground">
                       لا توجد بيانات لعرضها حاليًا
                     </p>
                   </div>
@@ -276,7 +276,9 @@ const Table = <T,>({
 
               <span className="flex h-8 min-w-16 items-center justify-center bg-main/10 px-2 font-bold tabular-nums text-main sm:hidden">
                 {pagination.page}
-                <span className="mx-1 font-normal text-main/60">/</span>
+                <span aria-hidden="true" className="mx-1 font-normal text-main/60">
+                  /
+                </span>
                 {totalPages}
               </span>
 
