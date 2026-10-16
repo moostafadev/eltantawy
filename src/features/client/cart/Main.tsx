@@ -14,7 +14,6 @@ const CartSummary = () => {
 
   const { cart, isUpdating } = useCart();
   const {
-    subtotal,
     discount,
     discountAmount,
     appliedDiscountLabel,
@@ -23,6 +22,23 @@ const CartSummary = () => {
     minTotal,
     maxTotal,
   } = cart;
+
+  /*
+   * Compute the subtotal as a range when the cart has weight-range items,
+   * so the subtotal line is consistent with the total line and with the
+   * checkout summary.
+   */
+  const minSubtotal = cart.items.reduce((sum, item) => {
+    const multiplier =
+      item.isApprox && item.weightOption ? item.weightOption.minWeight : 1;
+    return sum + item.product.price * item.qty * multiplier;
+  }, 0);
+
+  const maxSubtotal = cart.items.reduce((sum, item) => {
+    const multiplier =
+      item.isApprox && item.weightOption ? item.weightOption.maxWeight : 1;
+    return sum + item.product.price * item.qty * multiplier;
+  }, 0);
 
   return (
     <aside className="flex h-fit flex-col gap-3 border border-border bg-background p-3 lg:gap-4 lg:p-4 lg:sticky lg:top-20">
@@ -35,11 +51,15 @@ const CartSummary = () => {
           <span className="text-muted-foreground">مجموع المنتجات</span>
 
           {isUpdating ? (
-            <Skeleton width={80} height={16} />
+            <Skeleton width={100} height={16} />
+          ) : hasApproxItems ? (
+            <span className="font-medium tabular-nums">
+              {minSubtotal.toLocaleString("ar-EG")} -{" "}
+              {maxSubtotal.toLocaleString("ar-EG")} ج.م
+            </span>
           ) : (
-            <span className="font-medium">
-              {subtotal.toLocaleString("ar-EG")}
-              ج.م
+            <span className="font-medium tabular-nums">
+              {cart.subtotal.toLocaleString("ar-EG")} ج.م
             </span>
           )}
         </div>
@@ -49,11 +69,10 @@ const CartSummary = () => {
             <span className="text-muted-foreground">خصومات المنتجات</span>
 
             {isUpdating ? (
-              <Skeleton width={65} height={16} />
+              <Skeleton width={80} height={16} />
             ) : (
-              <span className="font-medium text-success">
-                -{discount.toLocaleString("ar-EG")}
-                ج.م
+              <span className="font-medium text-success tabular-nums">
+                -{discount.toLocaleString("ar-EG")} ج.م
               </span>
             )}
           </div>
@@ -66,11 +85,10 @@ const CartSummary = () => {
             </span>
 
             {isUpdating ? (
-              <Skeleton width={65} height={16} />
+              <Skeleton width={80} height={16} />
             ) : (
-              <span className="font-medium text-success">
-                -{discountAmount.toLocaleString("ar-EG")}
-                ج.م
+              <span className="font-medium text-success tabular-nums">
+                -{discountAmount.toLocaleString("ar-EG")} ج.م
               </span>
             )}
           </div>
@@ -81,17 +99,15 @@ const CartSummary = () => {
             <span className="font-semibold">الإجمالي</span>
 
             {isUpdating ? (
-              <Skeleton width={100} height={25} />
+              <Skeleton width={120} height={25} />
             ) : hasApproxItems ? (
-              <strong className="text-lg text-main">
+              <strong className="text-lg text-main tabular-nums">
                 {minTotal.toLocaleString("ar-EG")} -{" "}
-                {maxTotal.toLocaleString("ar-EG")}
-                ج.م
+                {maxTotal.toLocaleString("ar-EG")} ج.م
               </strong>
             ) : (
-              <strong className="text-xl text-main">
-                {total.toLocaleString("ar-EG")}
-                ج.م
+              <strong className="text-xl text-main tabular-nums">
+                {total.toLocaleString("ar-EG")} ج.م
               </strong>
             )}
           </div>

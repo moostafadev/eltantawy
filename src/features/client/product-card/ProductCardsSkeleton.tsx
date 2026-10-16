@@ -21,6 +21,7 @@ const ProductCardSkeleton = () => (
         className="absolute bottom-2 left-2 hidden lg:block"
       />
     </div>
+
     <div className="flex flex-1 flex-col gap-1 p-2 lg:gap-2 lg:p-3">
       <div className="flex min-w-0 flex-1 flex-col gap-0.5 lg:gap-1.5">
         {/* Matches the line-clamp-2 + min-h on the real title */}
@@ -30,6 +31,7 @@ const ProductCardSkeleton = () => (
         </div>
         <Skeleton width={48} height={14} />
       </div>
+
       <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
         <Skeleton width={90} height={22} />
         <Skeleton width={70} height={14} />
@@ -42,7 +44,7 @@ const ProductCardsSkeleton = ({
   count = 8,
   className = "grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5",
 }: ProductCardsSkeletonProps) => (
-  <div className={`grid ${className}`}>
+  <div className={`grid min-w-0 ${className}`}>
     {Array.from({ length: count }).map((_, index) => (
       <ProductCardSkeleton key={index} />
     ))}
