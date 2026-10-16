@@ -18,6 +18,7 @@ const getCachedProductForStore = cache(async (id: string) => {
       discountPrice: true,
       unit: true,
       saleType: true,
+      status: true,
       weightOptions: {
         select: {
           id: true,
@@ -58,9 +59,8 @@ export const getRelatedProducts = async (
   return prisma.product.findMany({
     where: {
       categoryId,
-      NOT: {
-        id: excludeId,
-      },
+      NOT: { id: excludeId },
+      status: { not: "HIDDEN" },
     },
     take: limit,
     orderBy: {
@@ -74,6 +74,7 @@ export const getRelatedProducts = async (
       discountPrice: true,
       unit: true,
       saleType: true,
+      status: true,
       weightOptions: true,
     },
   });

@@ -54,6 +54,7 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
         discountPrice: true,
         unit: true,
         saleType: true,
+        status: true,
         weightOptions: {
           select: {
             id: true,
@@ -85,7 +86,8 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
           </h1>
 
           <p className="max-w-xl text-sm text-muted-foreground lg:text-base">
-            تصفّح اللحوم والدواجن المتاحة، واطّلع على السعر والوحدة قبل الإضافة إلى سلتك.
+            تصفّح اللحوم والدواجن المتاحة، واطّلع على السعر والوحدة قبل الإضافة
+            إلى سلتك.
           </p>
         </header>
 

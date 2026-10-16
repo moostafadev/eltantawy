@@ -23,6 +23,7 @@ interface Props {
   discountPrice: number | null;
   unit: "KG" | "PIECE";
   saleType: "NORMAL" | "WEIGHT_RANGE";
+  status: "AVAILABLE" | "HIDDEN" | "OUT_OF_STOCK";
   weightOptions: WeightOption[];
 }
 
@@ -45,6 +46,8 @@ const ProductDetailPurchase = ({
 
   const isWeightRange = saleType === "WEIGHT_RANGE" && weightOptions.length > 0;
   const isKg = unit === "KG";
+
+  const isOutOfStock = status === "OUT_OF_STOCK";
 
   const [quantity, setQuantity] = useState(1);
   const [mode, setMode] = useState<"KG" | "HALF_KG">("KG");
@@ -227,12 +230,12 @@ const ProductDetailPurchase = ({
         color="SUCCESS"
         size="lg"
         loading={isLoading}
-        disabled={isWeightRange && !selectedOption}
+        disabled={isOutOfStock || (isWeightRange && !selectedOption)}
         onClick={handleAdd}
         className="w-full"
       >
         <ShoppingCart className="size-4" />
-        إضافة للسلة
+        {isOutOfStock ? "غير متوفر" : "إضافة للسلة"}
       </Button>
 
       <ul
@@ -262,7 +265,9 @@ const ProductDetailPurchase = ({
         color="SUCCESS"
         size="icon"
         loading={isLoading}
-        disabled={!isScrolled || (isWeightRange && !selectedOption)}
+        disabled={
+          !isScrolled || isOutOfStock || (isWeightRange && !selectedOption)
+        }
         onClick={handleAdd}
         aria-label="إضافة المنتج إلى السلة"
         aria-hidden={!isScrolled}

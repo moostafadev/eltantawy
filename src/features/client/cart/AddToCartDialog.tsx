@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { Check, Minus, Plus, ShoppingCart } from "lucide-react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 
 import { Button } from "@/components/button";
 import { LoadingImage as Image } from "@/components/loading-image";
@@ -22,6 +22,8 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
     product.weightOptions.length > 0;
 
   const isKg = product.unit === "KG";
+
+  const isOutOfStock = product.status === "OUT_OF_STOCK";
 
   const [quantity, setQuantity] = useState(1);
   const [mode, setMode] = useState<"KG" | "HALF_KG">("KG");
@@ -261,7 +263,7 @@ const AddToCartDialog = ({ product }: AddToCartDialogProps) => {
           color="SUCCESS"
           onClick={handleAdd}
           loading={isLoading}
-          disabled={isWeightRange && !selectedOption}
+          disabled={isOutOfStock || (isWeightRange && !selectedOption)}
         >
           <ShoppingCart className="size-4" />
           إضافة للسلة

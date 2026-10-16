@@ -52,6 +52,8 @@ export interface CartProduct {
   unit: CartUnit;
 
   saleType: ProductSaleType;
+
+  status: "AVAILABLE" | "HIDDEN" | "OUT_OF_STOCK";
 }
 
 export interface CartItemWithProduct extends CartItem {

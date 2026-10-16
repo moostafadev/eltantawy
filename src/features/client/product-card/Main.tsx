@@ -19,11 +19,13 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
 
   const unitLabel = product.unit === "KG" ? "كيلو" : "قطعة";
 
+  const isOutOfStock = product.status === "OUT_OF_STOCK";
+
   return (
     <Card
-      className={`group relative flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-main/20 hover:shadow-sm ${className}`}
+      className={`group relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-main/20 hover:shadow-sm ${className}`}
     >
-      <div className="relative aspect-square w-full overflow-hidden bg-muted">
+      <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-muted">
         <Link
           href={`/products/${product.id}`}
           aria-label={product.title}
@@ -35,7 +37,9 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
               alt={product.title}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
+                isOutOfStock ? "opacity-60" : ""
+              }`}
             />
           ) : (
             <div className="flex size-full items-center justify-center text-main/60">
@@ -51,17 +55,21 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
             </span>
           )}
 
-        <Tooltip
-          content="إضافة إلى السلة"
-          focusable={false}
-        >
+        {isOutOfStock && (
+          <span className="pointer-events-none absolute left-2 top-2 z-10 bg-foreground/80 px-2 py-1 text-xs font-semibold text-background">
+            غير متوفر
+          </span>
+        )}
+
+        <Tooltip content="إضافة إلى السلة" focusable={false}>
           <Button
             type="button"
             className="absolute bottom-2 left-2 z-10 flex size-7 items-center justify-center backdrop-blur-sm transition-all duration-200 lg:size-8"
             size="icon"
             color="SUCCESS"
             variant="soft"
-            onClick={() =>
+            onClick={() => {
+              if (isOutOfStock) return;
               openDialog({
                 title: "إضافة إلى السلة",
                 size: "md",
@@ -70,8 +78,8 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
                     <AddToCartDialog product={product} />
                   </Suspense>
                 ),
-              })
-            }
+              });
+            }}
             aria-label="إضافة إلى السلة"
           >
             <ShoppingCart
@@ -86,8 +94,11 @@ const ProductCard = ({ product, className = "" }: ProductCardProps) => {
         href={`/products/${product.id}`}
         className="flex flex-1 flex-col gap-1 p-2 lg:gap-2 lg:p-3"
       >
-        <div className="min-w-0 flex flex-col gap-0.5 lg:gap-1.5">
-          <h3 className="text-base font-semibold transition-colors group-hover:text-main lg:text-lg">
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5 lg:gap-1.5">
+          <h3
+            className="line-clamp-2 min-h-12 text-base font-semibold leading-6 transition-colors group-hover:text-main lg:min-h-14 lg:text-lg lg:leading-7"
+            title={product.title}
+          >
             {product.title}
           </h3>
           <span className="block text-xs text-muted-foreground">

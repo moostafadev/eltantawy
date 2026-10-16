@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 
@@ -30,6 +30,8 @@ export const deleteProductAction = async (id: string) => {
 
     revalidatePath("/admin/products");
     revalidatePath(`/admin/products/${id}`);
+    revalidateTag("home-top-selling", { expire: 0 });
+    revalidateTag("home-categories", { expire: 0 });
 
     return {
       success: true,

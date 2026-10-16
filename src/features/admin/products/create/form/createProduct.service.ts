@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 import { calculateDiscountedPrice } from "@/lib/products/pricing";
@@ -27,6 +27,7 @@ export const createProductAction = async (values: unknown) => {
     unit,
     categoryId,
     saleType,
+    status,
     weightOptions,
   } = result.data;
 
@@ -64,9 +65,7 @@ export const createProductAction = async (values: unknown) => {
               )
             : null,
         discountValueType:
-          discountValue && Number(discountValue) > 0
-            ? discountValueType
-            : null,
+          discountValue && Number(discountValue) > 0 ? discountValueType : null,
         discountValue:
           discountValue && Number(discountValue) > 0
             ? Number(discountValue)
@@ -74,6 +73,7 @@ export const createProductAction = async (values: unknown) => {
         unit,
         categoryId: categoryId || null,
         saleType,
+        status,
         weightOptions:
           saleType === "WEIGHT_RANGE" && weightOptions?.length
             ? {
@@ -88,6 +88,8 @@ export const createProductAction = async (values: unknown) => {
     });
 
     revalidatePath("/admin/products");
+    revalidateTag("home-top-selling", { expire: 0 });
+    revalidateTag("home-categories", { expire: 0 });
 
     return {
       success: true,

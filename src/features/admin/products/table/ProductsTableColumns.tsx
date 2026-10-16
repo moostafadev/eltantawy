@@ -12,6 +12,7 @@ import { toArabicNums } from "@/utils/toArabicNums";
 
 import { Product } from "./types";
 import { DeleteProductButton } from "./deleteProduct";
+import { productStatusColors, productStatusLabels } from "../status";
 
 export const productsTableColumns: TableColumn<Product>[] = [
   {
@@ -84,6 +85,23 @@ export const productsTableColumns: TableColumn<Product>[] = [
           size="sm"
         >
           {product.saleType === "WEIGHT_RANGE" ? "نطاق وزن" : "عادي"}
+        </Tag>
+      </div>
+    ),
+  },
+
+  {
+    key: "status",
+    title: <div className="flex justify-center">الحالة</div>,
+    skeleton: (
+      <div className="flex justify-center">
+        <Skeleton width={62} height={18} className="rounded-full" />
+      </div>
+    ),
+    render: (product) => (
+      <div className="flex justify-center">
+        <Tag color={productStatusColors[product.status]} size="sm">
+          {productStatusLabels[product.status]}
         </Tag>
       </div>
     ),

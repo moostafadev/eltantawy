@@ -3,10 +3,7 @@ import { cookies } from "next/headers";
 import { prisma } from "../prisma";
 import { verifyAccessToken } from "../auth";
 
-import {
-  CART_COOKIE_NAME,
-  CART_COOKIE_OPTIONS,
-} from "./constants";
+import { CART_COOKIE_NAME, CART_COOKIE_OPTIONS } from "./constants";
 import { EMPTY_HYDRATED_CART } from "./empty";
 
 import {
@@ -120,6 +117,7 @@ export class CartService {
         id: true,
         unit: true,
         saleType: true,
+        status: true,
         weightOptions: {
           select: {
             id: true,
@@ -130,6 +128,14 @@ export class CartService {
 
     if (!product) {
       throw new Error("المنتج غير موجود");
+    }
+
+    if (product.status === "HIDDEN") {
+      throw new Error("المنتج غير متوفر");
+    }
+
+    if (product.status === "OUT_OF_STOCK") {
+      throw new Error("المنتج غير متوفر حاليًا");
     }
 
     if (product.unit !== data.unit) {
@@ -304,6 +310,7 @@ export class CartService {
         discountPrice: true,
         unit: true,
         saleType: true,
+        status: true,
         weightOptions: {
           select: {
             id: true,
@@ -348,6 +355,7 @@ export class CartService {
         discountPrice: product.discountPrice,
         unit: product.unit as CartUnit,
         saleType: product.saleType,
+        status: product.status as "AVAILABLE" | "HIDDEN" | "OUT_OF_STOCK",
       };
 
       if (isApprox && weightOption) {

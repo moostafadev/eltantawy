@@ -3,11 +3,20 @@ import { Skeleton } from "@/components/skeleton";
 import { COLOR } from "@/constants/types";
 import PageViewsTable from "./page-views/PageViewsTable";
 
+const orderStatusColors: COLOR[] = [
+  "WARNING",
+  "INFO",
+  "MAIN",
+  "MAIN",
+  "SUCCESS",
+  "DANGER",
+];
+
 const financialColors: COLOR[] = ["SUCCESS", "INFO", "MAIN", "DANGER"];
 
 const featuredColors: COLOR[] = ["INFO", "SUCCESS", "DANGER"];
 
-const secondaryColors: COLOR[] = ["WARNING", "MAIN"];
+const secondaryColors: COLOR[] = ["WARNING", "MAIN", "INFO", "SUCCESS"];
 
 const tableColors: COLOR[] = [
   "INFO",
@@ -27,9 +36,46 @@ const AdminDashboardSkeleton = () => {
         <Skeleton width={300} height={20} className="max-w-full" />
       </div>
 
+      {/* Order Status Distribution */}
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
+          <div className="flex items-center gap-2.5">
+            <Skeleton width={36} height={36} color="INFO" />
+            <div className="flex flex-col gap-1">
+              <Skeleton width={110} height={24} />
+              <Skeleton width={190} height={16} className="max-w-full" />
+            </div>
+          </div>
+
+          <Skeleton width={110} height={14} className="max-w-full" />
+        </div>
+
+        <div className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3">
+          {orderStatusColors.map((color, index) => (
+            <div
+              key={index}
+              className="relative flex min-w-0 flex-col gap-2 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm"
+            >
+              <Skeleton
+                height={4}
+                color={color}
+                className="absolute inset-x-0 top-0"
+              />
+
+              <Skeleton width={32} height={32} color={color} />
+
+              <div className="flex min-w-0 flex-col gap-1">
+                <Skeleton width={40} height={26} />
+                <Skeleton width={72} height={14} className="max-w-full" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Financial Performance */}
-      <section className="flex min-w-0 flex-col gap-3 lg:gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
           <div className="flex items-center gap-2.5">
             <Skeleton width={36} height={36} color="SUCCESS" />
             <div className="flex flex-col gap-1">
@@ -41,26 +87,29 @@ const AdminDashboardSkeleton = () => {
           <Skeleton width={140} height={14} className="max-w-full" />
         </div>
 
-        <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
           {financialColors.map((color, index) => (
             <div
               key={index}
-              className="relative min-w-0 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm lg:p-5"
+              className="relative flex min-w-0 items-center gap-3 overflow-hidden border border-border bg-background p-3 lg:p-4"
             >
               <Skeleton
-                height={4}
+                width={4}
                 color={color}
-                className="absolute inset-x-0 top-0"
+                className="absolute inset-y-0 right-0 h-full"
               />
 
-              <div className="flex items-start justify-between gap-3 lg:gap-4">
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <Skeleton width={100} height={20} />
-                  <Skeleton width={90} height={32} />
-                  <Skeleton width={140} height={16} className="max-w-full" />
-                </div>
+              <Skeleton
+                width={44}
+                height={44}
+                color={color}
+                className="shrink-0"
+              />
 
-                <Skeleton width={48} height={48} color={color} />
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <Skeleton width={90} height={14} className="max-w-full" />
+                <Skeleton width={80} height={24} className="max-w-full" />
+                <Skeleton width={130} height={12} className="max-w-full" />
               </div>
             </div>
           ))}
@@ -68,40 +117,42 @@ const AdminDashboardSkeleton = () => {
       </section>
 
       {/* Featured Stats */}
-      <section className="flex min-w-0 flex-col gap-3 lg:gap-4">
-        <div className="flex items-center gap-2.5">
-          <Skeleton width={36} height={36} color="INFO" />
-          <div className="flex flex-col gap-1">
-            <Skeleton width={110} height={24} />
-            <Skeleton width={240} height={16} className="max-w-full" />
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
+          <div className="flex items-center gap-2.5">
+            <Skeleton width={36} height={36} color="INFO" />
+            <div className="flex flex-col gap-1">
+              <Skeleton width={110} height={24} />
+              <Skeleton width={240} height={16} className="max-w-full" />
+            </div>
           </div>
+
+          <Skeleton width={72} height={26} color="NEUTRAL" />
         </div>
 
-        <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3 lg:gap-4">
+        <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 lg:gap-3">
           {featuredColors.map((color, index) => (
             <div
               key={index}
-              className="relative min-w-0 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm lg:p-5"
+              className="relative flex min-w-0 items-center gap-3 overflow-hidden border border-border bg-background p-3 lg:p-4"
             >
               <Skeleton
-                height={4}
+                width={4}
                 color={color}
-                className="absolute inset-x-0 top-0"
+                className="absolute inset-y-0 right-0 h-full"
               />
 
-              <div className="flex items-start justify-between gap-3 lg:gap-4">
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <Skeleton width={90} height={20} />
-                  <Skeleton width={80} height={44} />
-                  <Skeleton width={120} height={16} />
-                </div>
+              <Skeleton
+                width={44}
+                height={44}
+                color={color}
+                className="shrink-0"
+              />
 
-                <Skeleton
-                  width={52}
-                  height={52}
-                  color={color}
-                  className="shrink-0"
-                />
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <Skeleton width={90} height={14} className="max-w-full" />
+                <Skeleton width={80} height={30} className="max-w-full" />
+                <Skeleton width={130} height={12} className="max-w-full" />
               </div>
             </div>
           ))}
@@ -156,23 +207,49 @@ const AdminDashboardSkeleton = () => {
 
       {/* Tables Shortcuts */}
       <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
-        <div className="border-b border-border pb-3 lg:pb-4">
-          <Skeleton width={90} height={24} />
-          <Skeleton className="mt-1" width={230} height={20} />
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
+          <div className="flex items-center gap-2.5">
+            <Skeleton width={36} height={36} color="MAIN" />
+            <div className="flex flex-col gap-1">
+              <Skeleton width={80} height={24} />
+              <Skeleton width={240} height={16} className="max-w-full" />
+            </div>
+          </div>
+
+          <Skeleton width={72} height={26} color="NEUTRAL" />
         </div>
 
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3">
+        <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 lg:gap-3">
           {tableColors.map((color, index) => (
             <div
               key={index}
-              className="flex flex-col items-center gap-2 border border-border p-3 text-center"
+              className="relative flex min-w-0 items-center gap-3 overflow-hidden border border-border bg-background p-3 lg:p-4"
             >
-              <Skeleton width={40} height={40} color={color} />
+              <Skeleton
+                width={4}
+                color={color}
+                className="absolute inset-y-0 right-0 h-full"
+              />
 
-              <div className="flex w-full flex-col items-center gap-1">
-                <Skeleton width={70} height={20} />
-                <Skeleton width={50} height={16} />
+              <Skeleton
+                width={44}
+                height={44}
+                color={color}
+                className="shrink-0"
+              />
+
+              <div className="flex min-w-0 flex-1 flex-col gap-1">
+                <Skeleton width={90} height={16} className="max-w-full" />
+                <Skeleton width={130} height={12} className="max-w-full" />
+                <Skeleton width={60} height={20} className="max-w-full" />
               </div>
+
+              <Skeleton
+                width={16}
+                height={16}
+                color="NEUTRAL"
+                className="shrink-0"
+              />
             </div>
           ))}
         </div>
@@ -180,7 +257,7 @@ const AdminDashboardSkeleton = () => {
 
       {/* Main Content */}
       <div className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
-        {/* Overview */}
+        {/* Site Summary */}
         <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:col-span-2 lg:gap-4 lg:p-4">
           <div className="flex items-center justify-between gap-3 border-b border-border pb-3 lg:gap-4 lg:pb-4">
             <div className="flex flex-col gap-1">
@@ -195,12 +272,25 @@ const AdminDashboardSkeleton = () => {
             {secondaryColors.map((color, index) => (
               <div
                 key={index}
-                className="flex items-center gap-3 bg-muted p-2 lg:p-3"
+                className="relative flex min-w-0 items-center gap-3 overflow-hidden border border-border bg-background p-3 lg:p-4"
               >
-                <Skeleton width={36} height={36} color={color} />
+                <Skeleton
+                  width={4}
+                  color={color}
+                  className="absolute inset-y-0 right-0 h-full"
+                />
+
+                <Skeleton
+                  width={44}
+                  height={44}
+                  color={color}
+                  className="shrink-0"
+                />
+
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <Skeleton width={70} height={16} />
-                  <Skeleton width={50} height={24} />
+                  <Skeleton width={70} height={14} className="max-w-full" />
+                  <Skeleton width={50} height={26} className="max-w-full" />
+                  <Skeleton width={130} height={12} className="max-w-full" />
                 </div>
               </div>
             ))}
@@ -221,11 +311,16 @@ const AdminDashboardSkeleton = () => {
                   key={index}
                   className="flex min-w-0 items-center gap-3 border border-border p-3"
                 >
-                  <Skeleton width={40} height={40} color={color} />
+                  <Skeleton
+                    width={40}
+                    height={40}
+                    color={color}
+                    className="shrink-0"
+                  />
 
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <Skeleton width={100} height={20} />
-                    <Skeleton width={180} height={16} />
+                    <Skeleton width={180} height={16} className="max-w-full" />
                   </div>
                 </div>
               ),

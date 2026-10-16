@@ -1,7 +1,10 @@
 import {
   ArrowLeft,
+  CheckCircle2,
+  Clock,
   Eye,
   Package,
+  PackageCheck,
   Percent,
   Plus,
   ReceiptText,
@@ -12,6 +15,8 @@ import {
   Truck,
   Users,
   Wallet,
+  XCircle,
+  type LucideIcon,
 } from "lucide-react";
 
 import Link from "next/link";
@@ -25,6 +30,21 @@ import PageViewsTable from "./page-views/PageViewsTable";
 import { getPageViewStatistics } from "./page-views";
 import { getStatColorClasses } from "./statColors";
 import { getSalesSummary } from "./sales";
+import {
+  getOrderStatusDistribution,
+  orderStatusColors,
+  orderStatusLabels,
+  type OrderStatusEnum,
+} from "./orders";
+
+const orderStatusIcons: Record<OrderStatusEnum, LucideIcon> = {
+  PENDING: Clock,
+  CONFIRMED: CheckCircle2,
+  PREPARING: Package,
+  OUT_FOR_DELIVERY: Truck,
+  DELIVERED: PackageCheck,
+  CANCELLED: XCircle,
+};
 
 const AdminDashboard = async () => {
   const [
@@ -36,6 +56,7 @@ const AdminDashboard = async () => {
     activeDiscountsCount,
     salesSummary,
     pageViewStatistics,
+    orderStatusDistribution,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.product.count(),
@@ -45,9 +66,24 @@ const AdminDashboard = async () => {
     prisma.discount.count({ where: { isActive: true } }),
     getSalesSummary(),
     getPageViewStatistics(1),
+    getOrderStatusDistribution(),
   ]);
   const pageViews = pageViewStatistics.pages;
   const totalPageViews = pageViewStatistics.totalViews;
+  const trackedPages = pageViewStatistics.trackedPages;
+
+  const totalOrders = orderStatusDistribution.reduce(
+    (sum, item) => sum + item.count,
+    0,
+  );
+
+  const orderStatusStats = orderStatusDistribution.map(({ status, count }) => ({
+    status,
+    count,
+    label: orderStatusLabels[status],
+    icon: orderStatusIcons[status],
+    color: orderStatusColors[status] as COLOR,
+  }));
 
   /*
    * Financial performance: highlight key sales and return metrics at the
@@ -104,46 +140,63 @@ const AdminDashboard = async () => {
       title: "المستخدمين",
       value: usersCount,
       icon: Users,
-      description: "إجمالي المستخدمين",
+      description: "إجمالي المستخدمين المسجلين",
       color: "INFO",
     },
     {
       title: "المنتجات",
       value: productsCount,
       icon: Package,
-      description: "إجمالي المنتجات",
+      description: "إجمالي منتجات المتجر",
       color: "SUCCESS",
     },
     {
       title: "الخصومات",
       value: discountsCount,
       icon: Percent,
-      description: `منها ${activeDiscountsCount} مفعّل`,
+      description: `منها ${toArabicNums(activeDiscountsCount)} مفعّل حاليًا`,
       color: "DANGER",
     },
   ];
 
   /*
-   * Show less critical structural and configuration data in the site
-   * summary without repeating it as large statistic cards.
+   * Structural / configuration data about the site. These four items fill
+   * the 2x2 grid so the section does not appear sparse.
    */
   const secondaryStats: {
     title: string;
     value: number;
     icon: typeof Tags;
     color: COLOR;
+    description: string;
   }[] = [
     {
       title: "التصنيفات",
       value: categoriesCount,
       icon: Tags,
       color: "WARNING",
+      description: "إجمالي تصنيفات المنتجات",
     },
     {
       title: "مناطق التوصيل",
       value: deliveryZonesCount,
       icon: Truck,
       color: "MAIN",
+      description: "المناطق المسجلة حاليًا",
+    },
+    {
+      title: "إجمالي الطلبات",
+      value: totalOrders,
+      icon: ShoppingCart,
+      color: "INFO",
+      description: "جميع الطلبات في النظام",
+    },
+    {
+      title: "الصفحات المتتبعة",
+      value: trackedPages,
+      icon: Eye,
+      color: "SUCCESS",
+      description: `${toArabicNums(totalPageViews)} مشاهدة إجمالًا`,
     },
   ];
 
@@ -154,6 +207,7 @@ const AdminDashboard = async () => {
     icon: typeof Users;
     color: COLOR;
     count?: number;
+    description: string;
   }[] = [
     {
       title: "المستخدمين",
@@ -161,6 +215,7 @@ const AdminDashboard = async () => {
       icon: Users,
       color: "INFO",
       count: usersCount,
+      description: "المسجلين والزوار",
     },
     {
       title: "المنتجات",
@@ -168,6 +223,7 @@ const AdminDashboard = async () => {
       icon: Package,
       color: "SUCCESS",
       count: productsCount,
+      description: "كتالوج المتجر",
     },
     {
       title: "التصنيفات",
@@ -175,6 +231,7 @@ const AdminDashboard = async () => {
       icon: Tags,
       color: "WARNING",
       count: categoriesCount,
+      description: "هيكل الأقسام",
     },
     {
       title: "مناطق التوصيل",
@@ -182,6 +239,7 @@ const AdminDashboard = async () => {
       icon: Truck,
       color: "MAIN",
       count: deliveryZonesCount,
+      description: "تكلفة ومناطق",
     },
     {
       title: "الخصومات",
@@ -189,12 +247,15 @@ const AdminDashboard = async () => {
       icon: Percent,
       color: "DANGER",
       count: discountsCount,
+      description: "الكوبونات والعروض",
     },
     {
       title: "الطلبات",
       href: "/admin/orders",
       icon: ShoppingCart,
       color: "SECONDARY",
+      count: totalOrders,
+      description: "إدارة ومتابعة",
     },
   ];
 
@@ -246,9 +307,72 @@ const AdminDashboard = async () => {
         </p>
       </div>
 
+      {/* Order Status Distribution */}
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-9 shrink-0 items-center justify-center bg-info/10 text-info">
+              <ShoppingCart className="size-4.5" />
+            </div>
+
+            <div className="min-w-0">
+              <h2 className="font-bold">حالة الطلبات</h2>
+
+              <p className="text-xs text-muted-foreground">
+                إجمالي {toArabicNums(totalOrders)} طلب موزعة حسب الحالة
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/admin/orders"
+            className="flex items-center gap-1 text-xs font-medium text-main hover:underline"
+          >
+            <span>عرض كل الطلبات</span>
+            <ArrowLeft className="size-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3">
+          {orderStatusStats.map(
+            ({ status, count, label, icon: Icon, color }) => {
+              const styles = getStatColorClasses(color);
+
+              return (
+                <Link
+                  key={status}
+                  href="/admin/orders"
+                  className={`group relative flex min-w-0 flex-col gap-2 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${styles.hoverBorder} ${styles.hoverShadow}`}
+                >
+                  <span
+                    className={`absolute inset-x-0 top-0 h-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
+                  />
+
+                  <div
+                    className={`flex size-8 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 ${styles.iconBg} ${styles.iconText}`}
+                  >
+                    <Icon className="size-4" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <p className="text-xl font-bold tabular-nums lg:text-2xl">
+                      {toArabicNums(count)}
+                    </p>
+
+                    <p className="mt-0.5 text-xs font-medium text-muted-foreground">
+                      {label}
+                    </p>
+                  </div>
+                </Link>
+              );
+            },
+          )}
+        </div>
+      </section>
+
       {/* Financial Performance (Sales & Returns) */}
-      <section className="flex min-w-0 flex-col gap-3 lg:gap-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
           <div className="flex items-center gap-2.5">
             <div className="flex size-9 shrink-0 items-center justify-center bg-success/10 text-success">
               <ReceiptText className="size-4.5" />
@@ -272,7 +396,7 @@ const AdminDashboard = async () => {
           </Link>
         </div>
 
-        <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+        <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4 lg:gap-3">
           {financialStats.map(
             ({ title, value, icon: Icon, description, color }) => {
               const styles = getStatColorClasses(color);
@@ -280,32 +404,30 @@ const AdminDashboard = async () => {
               return (
                 <div
                   key={title}
-                  className={`group relative min-w-0 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
+                  className={`group relative flex min-w-0 items-center gap-3 overflow-hidden border border-border bg-background p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted/30 hover:shadow-md lg:p-4 ${styles.hoverBorder} ${styles.hoverShadow}`}
                 >
                   <span
-                    className={`absolute inset-x-0 top-0 h-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
+                    className={`absolute inset-y-0 right-0 w-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
                   />
 
-                  <div className="flex items-start justify-between gap-3 lg:gap-4">
-                    <div className="flex min-w-0 flex-col gap-1">
-                      <p className="text-sm font-medium text-muted-foreground">
-                        {title}
-                      </p>
+                  <div
+                    className={`flex size-11 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 ${styles.iconBg} ${styles.iconText}`}
+                  >
+                    <Icon className="size-5" />
+                  </div>
 
-                      <p className="wrap-break-word text-2xl font-bold tracking-tight tabular-nums lg:text-3xl">
-                        {value}
-                      </p>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {title}
+                    </p>
 
-                      <p className="text-xs text-muted-foreground">
-                        {description}
-                      </p>
-                    </div>
+                    <p className="mt-1 text-xl font-bold tabular-nums text-foreground lg:text-2xl">
+                      {value}
+                    </p>
 
-                    <div
-                      className={`flex size-12 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${styles.iconBg} ${styles.iconText}`}
-                    >
-                      <Icon className="size-6" />
-                    </div>
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {description}
+                    </p>
                   </div>
                 </div>
               );
@@ -315,22 +437,28 @@ const AdminDashboard = async () => {
       </section>
 
       {/* Featured Stats */}
-      <section className="flex min-w-0 flex-col gap-3 lg:gap-4">
-        <div className="flex items-center gap-2.5">
-          <div className="flex size-9 shrink-0 items-center justify-center bg-info/10 text-info">
-            <TrendingUp className="size-4.5" />
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-9 shrink-0 items-center justify-center bg-info/10 text-info">
+              <TrendingUp className="size-4.5" />
+            </div>
+
+            <div className="min-w-0">
+              <h2 className="font-bold">نشاط الموقع</h2>
+
+              <p className="text-xs text-muted-foreground">
+                أهم مؤشرات المستخدمين والمنتجات والخصومات
+              </p>
+            </div>
           </div>
 
-          <div className="min-w-0 flex-1">
-            <h2 className="font-bold">نشاط الموقع</h2>
-
-            <p className="text-xs text-muted-foreground">
-              أهم مؤشرات المستخدمين والمنتجات والخصومات
-            </p>
-          </div>
+          <span className="shrink-0 bg-muted px-2.5 py-1 text-xs font-semibold tabular-nums text-muted-foreground">
+            {toArabicNums(featuredStats.length)} مؤشرات
+          </span>
         </div>
 
-        <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-3 lg:gap-4">
+        <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 lg:gap-3">
           {featuredStats.map(
             ({ title, value, icon: Icon, description, color }) => {
               const styles = getStatColorClasses(color);
@@ -338,32 +466,30 @@ const AdminDashboard = async () => {
               return (
                 <div
                   key={title}
-                  className={`group relative min-w-0 overflow-hidden border border-background-second/20 bg-background p-3 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg lg:p-5 ${styles.hoverBorder} ${styles.hoverShadow}`}
+                  className={`group relative flex min-w-0 items-center gap-3 overflow-hidden border border-border bg-background p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted/30 hover:shadow-md lg:p-4 ${styles.hoverBorder} ${styles.hoverShadow}`}
                 >
                   <span
-                    className={`absolute inset-x-0 top-0 h-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
+                    className={`absolute inset-y-0 right-0 w-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
                   />
 
-                  <div className="flex items-start justify-between gap-3 lg:gap-4">
-                    <div className="flex min-w-0 flex-col gap-1">
-                      <p className="text-sm font-medium text-muted-foreground">
-                        {title}
-                      </p>
+                  <div
+                    className={`flex size-11 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 ${styles.iconBg} ${styles.iconText}`}
+                  >
+                    <Icon className="size-5" />
+                  </div>
 
-                      <p className="wrap-break-word text-4xl font-bold tracking-tight tabular-nums">
-                        {toArabicNums(value)}
-                      </p>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {title}
+                    </p>
 
-                      <p className="text-xs text-muted-foreground">
-                        {description}
-                      </p>
-                    </div>
+                    <p className="mt-1 text-2xl font-bold tabular-nums text-foreground lg:text-3xl">
+                      {toArabicNums(value)}
+                    </p>
 
-                    <div
-                      className={`flex size-13 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${styles.iconBg} ${styles.iconText}`}
-                    >
-                      <Icon className="size-7" />
-                    </div>
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {description}
+                    </p>
                   </div>
                 </div>
               );
@@ -400,49 +526,81 @@ const AdminDashboard = async () => {
       </section>
 
       {/* Tables Shortcuts */}
-      <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
-        <div className="border-b border-border pb-3 lg:pb-4">
-          <h2 className="font-bold">الجداول</h2>
+      <section className="flex min-w-0 flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3 lg:pb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-9 shrink-0 items-center justify-center bg-main/10 text-main">
+              <Package className="size-4.5" />
+            </div>
 
-          <p className="mt-1 text-sm text-muted-foreground">
-            انتقل مباشرة لأي جدول بيانات في الموقع
-          </p>
+            <div className="min-w-0">
+              <h2 className="font-bold">الجداول</h2>
+
+              <p className="text-xs text-muted-foreground">
+                انتقل مباشرة لأي جدول بيانات في الموقع
+              </p>
+            </div>
+          </div>
+
+          <span className="shrink-0 bg-muted px-2.5 py-1 text-xs font-semibold tabular-nums text-muted-foreground">
+            {toArabicNums(tableShortcuts.length)} جداول
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6 lg:gap-3">
-          {tableShortcuts.map(({ title, href, icon: Icon, color, count }) => {
-            const styles = getStatColorClasses(color);
+        <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 lg:gap-3">
+          {tableShortcuts.map(
+            ({ title, href, icon: Icon, color, count, description }) => {
+              const styles = getStatColorClasses(color);
 
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={`group flex flex-col items-center gap-2 border border-border p-3 text-center transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted/40 ${styles.hoverBorder} ${styles.hoverShadow}`}
-              >
-                <div
-                  className={`flex size-10 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 ${styles.iconBg} ${styles.iconText}`}
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`group relative flex min-w-0 items-center gap-3 overflow-hidden border border-border bg-background p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted/30 hover:shadow-md lg:p-4 ${styles.hoverBorder} ${styles.hoverShadow}`}
                 >
-                  <Icon className="size-5" />
-                </div>
+                  <span
+                    className={`absolute inset-y-0 right-0 w-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
+                  />
 
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold">{title}</p>
+                  <div
+                    className={`flex size-11 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 ${styles.iconBg} ${styles.iconText}`}
+                  >
+                    <Icon className="size-5" />
+                  </div>
 
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {count !== undefined
-                      ? `${toArabicNums(count)} عنصر`
-                      : "عرض الجدول"}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-foreground">
+                      {title}
+                    </p>
+
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                      {description}
+                    </p>
+
+                    {count !== undefined && (
+                      <p className="mt-1 text-lg font-bold tabular-nums text-foreground">
+                        {toArabicNums(count)}
+                        <span className="mr-1 text-xs font-medium text-muted-foreground">
+                          عنصر
+                        </span>
+                      </p>
+                    )}
+                  </div>
+
+                  <ArrowLeft
+                    aria-hidden="true"
+                    className={`size-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:-translate-x-1 ${styles.iconText}`}
+                  />
+                </Link>
+              );
+            },
+          )}
         </div>
       </section>
 
       {/* Main Content */}
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
-        {/* Overview */}
+        {/* Site Summary */}
         <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:col-span-2 lg:gap-4 lg:p-4">
           <div className="flex items-center justify-between gap-3 border-b border-border pb-3 lg:gap-4 lg:pb-4">
             <div className="min-w-0">
@@ -459,36 +617,46 @@ const AdminDashboard = async () => {
           </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:gap-3">
-            {secondaryStats.map(({ title, value, icon: Icon, color }) => {
-              const styles = getStatColorClasses(color);
+            {secondaryStats.map(
+              ({ title, value, icon: Icon, color, description }) => {
+                const styles = getStatColorClasses(color);
 
-              return (
-                <div
-                  key={title}
-                  className={`group flex items-center gap-3 bg-muted p-2 transition-colors duration-300 lg:p-3 ${styles.hoverBorder}`}
-                >
+                return (
                   <div
-                    className={`flex size-9 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-105 ${styles.iconBg} ${styles.iconText}`}
+                    key={title}
+                    className={`group relative flex min-w-0 items-center gap-3 overflow-hidden border border-border bg-background p-3 transition-all duration-300 hover:-translate-y-0.5 hover:bg-muted/30 hover:shadow-md lg:p-4 ${styles.hoverBorder} ${styles.hoverShadow}`}
                   >
-                    <Icon className="size-4" />
-                  </div>
+                    <span
+                      className={`absolute inset-y-0 right-0 w-1 ${styles.accent} opacity-70 transition-opacity duration-300 group-hover:opacity-100`}
+                    />
 
-                  <div className="min-w-0">
-                    <p className="truncate text-xs text-muted-foreground">
-                      {title}
-                    </p>
+                    <div
+                      className={`flex size-11 shrink-0 items-center justify-center transition-transform duration-300 group-hover:scale-110 ${styles.iconBg} ${styles.iconText}`}
+                    >
+                      <Icon className="size-5" />
+                    </div>
 
-                    <p className="mt-1 font-bold tabular-nums">
-                      {toArabicNums(value)}
-                    </p>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-semibold text-foreground">
+                        {title}
+                      </p>
+
+                      <p className="mt-1 text-2xl font-bold tabular-nums text-foreground">
+                        {toArabicNums(value)}
+                      </p>
+
+                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                        {description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              },
+            )}
           </div>
         </section>
 
-        {/* Actions */}
+        {/* Quick Actions */}
         <section className="flex flex-col gap-3 border border-background-second/20 bg-background p-3 shadow-sm lg:gap-4 lg:p-4">
           <div className="border-b border-border pb-3 lg:pb-4">
             <h2 className="font-bold">إجراءات سريعة</h2>

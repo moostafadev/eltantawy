@@ -70,16 +70,33 @@ export const createOrderAction = async (
     };
   }
 
-  const {
-    customerName,
-    customerPhone,
-    deliveryZoneId,
-    addressLine,
-    notes,
-  } = result.data;
+  const { customerName, customerPhone, deliveryZoneId, addressLine, notes } =
+    result.data;
 
   try {
     const cart = await CartService.getHydratedCart();
+
+    const hasHiddenItem = cart.items.some(
+      (item) => item.product.status === "HIDDEN",
+    );
+
+    if (hasHiddenItem) {
+      return {
+        success: false,
+        message: "بعض المنتجات في سلتك لم تعد متوفرة، يرجى تحديث السلة",
+      };
+    }
+
+    const hasOutOfStockItem = cart.items.some(
+      (item) => item.product.status === "OUT_OF_STOCK",
+    );
+
+    if (hasOutOfStockItem) {
+      return {
+        success: false,
+        message: "بعض المنتجات في سلتك غير متوفرة حاليًا، يرجى تحديث السلة",
+      };
+    }
 
     if (!cart.items.length) {
       return {

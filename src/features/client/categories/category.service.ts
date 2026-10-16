@@ -33,6 +33,7 @@ export const getCategoriesForStore = async () => {
           discountPrice: true,
           unit: true,
           saleType: true,
+          status: true,
           weightOptions: {
             select: {
               id: true,
@@ -53,6 +54,14 @@ export const getCategoriesForStore = async () => {
     price: number;
     discountPrice: number | null;
     unit: "KG" | "PIECE";
+    saleType: "NORMAL" | "WEIGHT_RANGE";
+    status: "AVAILABLE" | "HIDDEN" | "OUT_OF_STOCK";
+    weightOptions: {
+      id: string;
+      name: string;
+      minWeight: number;
+      maxWeight: number;
+    }[];
   };
 
   type CategoryNode = {
@@ -143,21 +152,27 @@ const fetchHomeCategories = async (limit: number) => {
       image: true,
       _count: {
         select: {
-          products: true,
+          products: {
+            where: { status: { not: "HIDDEN" } },
+          },
         },
       },
       children: {
         select: {
           _count: {
             select: {
-              products: true,
+              products: {
+                where: { status: { not: "HIDDEN" } },
+              },
             },
           },
           children: {
             select: {
               _count: {
                 select: {
-                  products: true,
+                  products: {
+                    where: { status: { not: "HIDDEN" } },
+                  },
                 },
               },
             },

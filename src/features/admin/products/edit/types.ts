@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createProductSchema } from "../create/form/schema";
 import { editProductSchema } from "./form/schema";
+import { ProductStatus } from "../status";
 
 export type CreateProductFormValues = z.input<typeof createProductSchema>;
 
@@ -29,6 +30,7 @@ export interface Product {
   discountValue: number | null;
   unit: "KG" | "PIECE";
   saleType: "NORMAL" | "WEIGHT_RANGE";
+  status: ProductStatus;
   weightOptions: ProductWeightOption[];
   categoryId: string | null;
   category: ProductCategory | null;

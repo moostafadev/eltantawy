@@ -5,19 +5,112 @@ import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 const MIN_TOP_SELLING_PRODUCTS = 4;
+const PRODUCTS_PER_CATEGORY = 2;
+
+const productSelect = {
+  id: true,
+  title: true,
+  image: true,
+  price: true,
+  discountPrice: true,
+  unit: true,
+  saleType: true,
+  status: true,
+  weightOptions: true,
+} as const;
+
+type HomeProduct = {
+  id: string;
+  title: string;
+  image: string | null;
+  price: number;
+  discountPrice: number | null;
+  unit: "KG" | "PIECE";
+  saleType: "NORMAL" | "WEIGHT_RANGE";
+  status: "AVAILABLE" | "HIDDEN" | "OUT_OF_STOCK";
+  weightOptions: {
+    id: string;
+    name: string;
+    minWeight: number;
+    maxWeight: number;
+    productId: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+};
 
 /**
- * Finds the best-selling products by summing items from delivered orders,
- * using the same sales-total ranking as the admin dashboard.
- *
- * If fewer products have sales than the requested minimum, fills the
- * remaining slots with unique products from the catalog so the home-page
- * section does not appear sparse.
+ * A product is sellable when its status is neither HIDDEN nor OUT_OF_STOCK.
+ * A missing `status` field (legacy data) is treated as sellable, because
+ * Prisma + MongoDB does not backfill defaults on legacy documents.
  */
+const isSellable = (product: { status?: string | null }): boolean =>
+  product.status !== "HIDDEN" && product.status !== "OUT_OF_STOCK";
+
+/**
+ * Fetches up to `perCategory` sellable products from each category, excluding
+ * the given IDs. Products are returned interleaved (one per category first,
+ * then a second pass) so the result mixes categories instead of grouping them.
+ */
+const fetchProductsFromEachCategory = async (
+  excludeIds: string[],
+  perCategory: number,
+): Promise<HomeProduct[]> => {
+  const categories = await prisma.category.findMany({
+    select: { id: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  if (categories.length === 0) {
+    return [];
+  }
+
+  // Fetch candidates from every category in parallel.
+  const perCategoryResults = await Promise.all(
+    categories.map((category) =>
+      prisma.product.findMany({
+        where: {
+          categoryId: category.id,
+          ...(excludeIds.length > 0 ? { id: { notIn: excludeIds } } : {}),
+        },
+        select: productSelect,
+        orderBy: { createdAt: "desc" },
+        // Grab extra so we can drop non-sellable ones and still have enough.
+        take: perCategory * 3,
+      }),
+    ),
+  );
+
+  // Keep only the first `perCategory` sellable products per category.
+  const buckets = perCategoryResults.map((products) =>
+    products.filter(isSellable).slice(0, perCategory),
+  );
+
+  // Interleave: one product from each category, then a second round, etc.
+  const interleaved: HomeProduct[] = [];
+  const seen = new Set<string>();
+
+  for (let round = 0; round < perCategory; round++) {
+    for (const bucket of buckets) {
+      const product = bucket[round];
+
+      if (product && !seen.has(product.id)) {
+        seen.add(product.id);
+        interleaved.push(product);
+      }
+    }
+  }
+
+  return interleaved;
+};
+
 const fetchTopSellingProducts = async (
   limit: number,
   minimum: number,
-) => {
+): Promise<HomeProduct[]> => {
+  /* ------------------------------------------------------------------ */
+  /* 1) Rank product IDs by total sales from delivered orders            */
+  /* ------------------------------------------------------------------ */
   const topItems = await prisma.orderItem.groupBy({
     by: ["productId"],
     where: {
@@ -38,43 +131,14 @@ const fetchTopSellingProducts = async (
 
   const topIds = topItems.map((item) => item.productId);
 
-  const productSelect = {
-    id: true,
-    title: true,
-    image: true,
-    price: true,
-    discountPrice: true,
-    unit: true,
-    saleType: true,
-    weightOptions: true,
-  } as const;
-
-  let orderedProducts: {
-    id: string;
-    title: string;
-    image: string | null;
-    price: number;
-    discountPrice: number | null;
-    unit: "KG" | "PIECE";
-    saleType: "NORMAL" | "WEIGHT_RANGE";
-    weightOptions: {
-      id: string;
-      name: string;
-      minWeight: number;
-      maxWeight: number;
-      productId: string;
-      createdAt: Date;
-      updatedAt: Date;
-    }[];
-  }[] = [];
+  /* ------------------------------------------------------------------ */
+  /* 2) Fetch ranked products (no status filter in the query)            */
+  /* ------------------------------------------------------------------ */
+  let orderedProducts: HomeProduct[] = [];
 
   if (topIds.length > 0) {
     const products = await prisma.product.findMany({
-      where: {
-        id: {
-          in: topIds,
-        },
-      },
+      where: { id: { in: topIds } },
       select: productSelect,
     });
 
@@ -82,39 +146,48 @@ const fetchTopSellingProducts = async (
       products.map((product) => [product.id, product]),
     );
 
-    // Preserve sales ranking instead of using the database result order.
     orderedProducts = topIds
       .map((id) => productsMap.get(id))
-      .filter((product): product is NonNullable<typeof product> =>
-        Boolean(product),
+      .filter((product): product is HomeProduct =>
+        Boolean(product && isSellable(product)),
       );
   }
 
-  /*
-   * Fill the remaining slots with randomly selected products when needed.
-   */
+  /* ------------------------------------------------------------------ */
+  /* 3) Top up with products from each category when we're short         */
+  /* ------------------------------------------------------------------ */
   if (orderedProducts.length < minimum) {
-    const needed = minimum - orderedProducts.length;
-
     const excludeIds = orderedProducts.map((product) => product.id);
 
-    const fillCandidates = await prisma.product.findMany({
-      where: {
-        id: {
-          notIn: excludeIds,
-        },
-      },
-      select: productSelect,
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: needed,
-    });
+    const categoryPicks = await fetchProductsFromEachCategory(
+      excludeIds,
+      PRODUCTS_PER_CATEGORY,
+    );
 
-    orderedProducts = [...orderedProducts, ...fillCandidates];
+    orderedProducts = [...orderedProducts, ...categoryPicks];
   }
 
-  return orderedProducts;
+  /* ------------------------------------------------------------------ */
+  /* 4) If still short, fall back to the newest sellable products        */
+  /* ------------------------------------------------------------------ */
+  if (orderedProducts.length < minimum) {
+    const needed = minimum - orderedProducts.length;
+    const excludeIds = orderedProducts.map((product) => product.id);
+
+    const fallback = await prisma.product.findMany({
+      where: excludeIds.length > 0 ? { id: { notIn: excludeIds } } : {},
+      select: productSelect,
+      orderBy: { createdAt: "desc" },
+      take: needed * 3,
+    });
+
+    orderedProducts = [
+      ...orderedProducts,
+      ...fallback.filter(isSellable).slice(0, needed),
+    ];
+  }
+
+  return orderedProducts.slice(0, limit);
 };
 
 export const getTopSellingProducts = async (
@@ -123,6 +196,7 @@ export const getTopSellingProducts = async (
 ) =>
   unstable_cache(
     () => fetchTopSellingProducts(limit, minimum),
-    ["home-top-selling", String(limit), String(minimum)],
+    // v6: bumped so a fresh cache entry is created.
+    ["home-top-selling-v6", String(limit), String(minimum)],
     { revalidate: 300, tags: ["home-top-selling"] },
   )();

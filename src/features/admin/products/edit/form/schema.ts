@@ -42,6 +42,7 @@ export const editProductSchema = z
     categoryId: z.string().optional(),
     saleType: z.enum(["NORMAL", "WEIGHT_RANGE"]),
     weightOptions: z.array(productWeightOptionSchema).optional(),
+    status: z.enum(["AVAILABLE", "HIDDEN", "OUT_OF_STOCK"]),
   })
   .refine(
     (data) =>

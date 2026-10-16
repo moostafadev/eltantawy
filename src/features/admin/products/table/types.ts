@@ -1,4 +1,5 @@
 import { ProductUnit, ProductSaleType } from "@prisma/client";
+import { ProductStatus } from "../status";
 
 export interface Product {
   id: string;
@@ -9,6 +10,7 @@ export interface Product {
   discountPrice: number | null;
   unit: ProductUnit;
   saleType: ProductSaleType;
+  status: ProductStatus;
   categoryId: string | null;
   category: {
     id: string;

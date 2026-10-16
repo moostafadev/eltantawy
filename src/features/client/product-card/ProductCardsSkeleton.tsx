@@ -6,8 +6,8 @@ interface ProductCardsSkeletonProps {
 }
 
 const ProductCardSkeleton = () => (
-  <div className="flex min-w-0 flex-col overflow-hidden border border-border bg-background shadow-sm">
-    <div className="relative aspect-square w-full overflow-hidden bg-muted">
+  <div className="flex h-full min-w-0 flex-col overflow-hidden border border-border bg-background shadow-sm">
+    <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-muted">
       <Skeleton aspectRatio={1} />
       <Skeleton width={40} height={24} className="absolute right-2 top-2" />
       <Skeleton
@@ -22,18 +22,17 @@ const ProductCardSkeleton = () => (
       />
     </div>
     <div className="flex flex-1 flex-col gap-1 p-2 lg:gap-2 lg:p-3">
-      <div className="min-w-0 flex flex-col gap-0.5 lg:gap-1.5">
-        <div className="w-3/4 lg:hidden">
-          <Skeleton height={24} />
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5 lg:gap-1.5">
+        {/* Matches the line-clamp-2 + min-h on the real title */}
+        <div className="flex min-h-12 flex-col gap-1 lg:min-h-14">
+          <Skeleton height={16} className="w-3/4" />
+          <Skeleton height={16} className="w-1/2" />
         </div>
-        <div className="hidden w-3/4 lg:block">
-          <Skeleton height={28} />
-        </div>
-        <Skeleton width={48} height={16} />
+        <Skeleton width={48} height={14} />
       </div>
       <div className="flex flex-wrap items-baseline gap-1 lg:gap-2">
-        <Skeleton width={90} height={24} />
-        <Skeleton width={70} height={16} />
+        <Skeleton width={90} height={22} />
+        <Skeleton width={70} height={14} />
       </div>
     </div>
   </div>

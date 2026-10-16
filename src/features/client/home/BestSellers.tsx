@@ -9,6 +9,11 @@ import { getTopSellingProducts } from "./home.service";
 const BestSellers = async () => {
   const bestSellers = await getTopSellingProducts(8);
 
+  // Hide the section only when there are genuinely no products to show.
+  if (bestSellers.length === 0) {
+    return null;
+  }
+
   return (
     <section
       className="bg-background-second/20 py-15 md:py-20"

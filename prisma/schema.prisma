@@ -59,6 +59,12 @@ enum ReturnStatus {
   REFUNDED
 }
 
+enum ProductStatus {
+  AVAILABLE
+  HIDDEN
+  OUT_OF_STOCK
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -109,6 +115,7 @@ model Product {
   unit ProductUnit
 
   saleType ProductSaleType @default(NORMAL)
+  status   ProductStatus   @default(AVAILABLE)
 
   weightOptions ProductWeightOption[]
 

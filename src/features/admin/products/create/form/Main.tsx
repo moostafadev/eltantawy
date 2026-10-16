@@ -17,6 +17,7 @@ import { useCategoryCreateActions } from "@/features/admin/categories/create/sto
 import { CreateProductFormValues, IProps } from "../types";
 import { createProductAction } from "./createProduct.service";
 import { createProductSchema } from "./schema";
+import { productStatusOptions } from "../../status";
 
 const defaultValues: CreateProductFormValues = {
   title: "",
@@ -28,6 +29,7 @@ const defaultValues: CreateProductFormValues = {
   unit: "KG",
   categoryId: "",
   saleType: "NORMAL",
+  status: "AVAILABLE",
   weightOptions: [],
 };
 
@@ -256,8 +258,8 @@ const CreateProductForm = ({ categories }: IProps) => {
         placeholder="مثال: 10 أو 40"
       />
       <p className="-mt-2 text-xs leading-5 text-muted-foreground">
-        مثال: خصم 10% أو 40 ج.م من سعر 400 ج.م يجعل السعر 360 ج.م. تُقرّب
-        الكسور للأعلى.
+        مثال: خصم 10% أو 40 ج.م من سعر 400 ج.م يجعل السعر 360 ج.م. تُقرّب الكسور
+        للأعلى.
       </p>
 
       <Select<CreateProductFormValues>
@@ -278,6 +280,12 @@ const CreateProductForm = ({ categories }: IProps) => {
           { value: "NORMAL", label: "عادي" },
           { value: "WEIGHT_RANGE", label: "نطاق وزن" },
         ]}
+      />
+
+      <Select<CreateProductFormValues>
+        name="status"
+        label="حالة المنتج"
+        options={[...productStatusOptions]}
       />
 
       <WeightOptionsFields />

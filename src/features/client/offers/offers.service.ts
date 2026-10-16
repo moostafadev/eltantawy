@@ -9,9 +9,8 @@ import { prisma } from "@/lib/prisma";
 export const getDiscountedProducts = async () => {
   const products = await prisma.product.findMany({
     where: {
-      discountPrice: {
-        not: null,
-      },
+      discountPrice: { not: null },
+      status: { not: "HIDDEN" },
     },
     orderBy: {
       updatedAt: "desc",
@@ -24,6 +23,7 @@ export const getDiscountedProducts = async () => {
       discountPrice: true,
       unit: true,
       saleType: true,
+      status: true,
       weightOptions: true,
     },
   });

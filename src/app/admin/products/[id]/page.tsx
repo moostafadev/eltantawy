@@ -7,6 +7,7 @@ import { Button } from "@/components/button";
 import { CategoryGraph } from "@/features/admin/categories/create/Graph";
 import { getCategoriesForGraph } from "@/features/admin/categories/table";
 import { getOneProduct } from "@/features/admin/products/table";
+import { productStatusLabels } from "@/features/admin/products/status";
 
 interface ProductProps {
   params: Promise<{
@@ -102,6 +103,11 @@ const Product = async ({ params }: ProductProps) => {
             <ProductItem
               label="نوع البيع"
               value={product.saleType === "WEIGHT_RANGE" ? "نطاق وزن" : "عادي"}
+            />
+
+            <ProductItem
+              label="الحالة"
+              value={productStatusLabels[product.status]}
             />
 
             <ProductItem

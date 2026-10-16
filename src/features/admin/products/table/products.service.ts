@@ -114,6 +114,7 @@ export const getOneProduct = async (id: string) => {
           title: true,
         },
       },
+      status: true,
       weightOptions: {
         select: {
           id: true,

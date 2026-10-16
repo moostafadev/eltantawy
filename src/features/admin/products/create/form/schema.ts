@@ -48,8 +48,7 @@ export const createProductSchema = z
       .optional()
       .refine(
         (value) =>
-          !value ||
-          (Number.isFinite(Number(value)) && Number(value) >= 0),
+          !value || (Number.isFinite(Number(value)) && Number(value) >= 0),
         "قيمة الخصم غير صحيحة",
       ),
 
@@ -60,6 +59,7 @@ export const createProductSchema = z
     saleType: z.enum(["NORMAL", "WEIGHT_RANGE"]),
 
     weightOptions: z.array(productWeightOptionSchema).optional(),
+    status: z.enum(["AVAILABLE", "HIDDEN", "OUT_OF_STOCK"]),
   })
   .refine(
     (data) =>

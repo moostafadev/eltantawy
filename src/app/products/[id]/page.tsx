@@ -59,7 +59,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
 
   const product = await getProductForStore(id);
 
-  if (!product) {
+  if (!product || product.status === "HIDDEN") {
     notFound();
   }
 
@@ -166,6 +166,12 @@ const ProductPage = async ({ params }: ProductPageProps) => {
             <p className="leading-7 text-muted-foreground">{product.desc}</p>
           )}
 
+          {product.status === "OUT_OF_STOCK" && (
+            <div className="border border-danger/30 bg-danger/5 p-3 text-sm font-medium text-danger">
+              هذا المنتج غير متوفر حاليًا
+            </div>
+          )}
+
           <div className="border-t border-background-second/60 pt-4">
             <ProductDetailPurchase
               productId={product.id}
@@ -173,6 +179,7 @@ const ProductPage = async ({ params }: ProductPageProps) => {
               discountPrice={product.discountPrice}
               unit={product.unit}
               saleType={product.saleType}
+              status={product.status}
               weightOptions={product.weightOptions}
             />
           </div>

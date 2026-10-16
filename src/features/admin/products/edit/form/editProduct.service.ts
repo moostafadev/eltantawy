@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 import { calculateDiscountedPrice } from "@/lib/products/pricing";
@@ -27,6 +27,7 @@ export const editProductAction = async (id: string, values: unknown) => {
     unit,
     categoryId,
     saleType,
+    status,
     weightOptions,
   } = result.data;
 
@@ -83,9 +84,7 @@ export const editProductAction = async (id: string, values: unknown) => {
               )
             : null,
         discountValueType:
-          discountValue && Number(discountValue) > 0
-            ? discountValueType
-            : null,
+          discountValue && Number(discountValue) > 0 ? discountValueType : null,
         discountValue:
           discountValue && Number(discountValue) > 0
             ? Number(discountValue)
@@ -93,6 +92,7 @@ export const editProductAction = async (id: string, values: unknown) => {
         unit,
         categoryId: categoryId || null,
         saleType,
+        status,
         weightOptions: {
           deleteMany: {},
           create:
@@ -110,6 +110,8 @@ export const editProductAction = async (id: string, values: unknown) => {
     revalidatePath("/admin/products");
     revalidatePath(`/admin/products/${id}`);
     revalidatePath(`/admin/products/${id}/edit`);
+    revalidateTag("home-top-selling", { expire: 0 });
+    revalidateTag("home-categories", { expire: 0 });
 
     return {
       success: true,

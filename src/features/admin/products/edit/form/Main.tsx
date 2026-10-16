@@ -16,6 +16,7 @@ import { useToast } from "@/components/toaster";
 import { editProductSchema } from "./schema";
 import { EditProductFormValues, IProps } from "../types";
 import { editProductAction } from "./editProduct.service";
+import { productStatusOptions } from "../../status";
 
 const WeightOptionsFields = () => {
   const { control, watch } = useFormContext<EditProductFormValues>();
@@ -132,12 +133,14 @@ const EditProductForm = ({ product, categories }: IProps) => {
     discountValue:
       product.discountValue !== null
         ? String(product.discountValue)
-        : product.discountPrice !== null && product.discountPrice < product.price
+        : product.discountPrice !== null &&
+            product.discountPrice < product.price
           ? String(product.price - product.discountPrice)
           : "",
     unit: product.unit,
     categoryId: product.categoryId ?? "",
     saleType: product.saleType,
+    status: product.status,
     weightOptions: product.weightOptions.map((option) => ({
       id: option.id,
       name: option.name,
@@ -241,8 +244,8 @@ const EditProductForm = ({ product, categories }: IProps) => {
         placeholder="مثال: 10 أو 40"
       />
       <p className="-mt-2 text-xs leading-5 text-muted-foreground">
-        مثال: خصم 10% أو 40 ج.م من سعر 400 ج.م يجعل السعر 360 ج.م. تُقرّب
-        الكسور للأعلى.
+        مثال: خصم 10% أو 40 ج.م من سعر 400 ج.م يجعل السعر 360 ج.م. تُقرّب الكسور
+        للأعلى.
       </p>
 
       <Select<EditProductFormValues>
@@ -263,6 +266,12 @@ const EditProductForm = ({ product, categories }: IProps) => {
           { value: "NORMAL", label: "عادي" },
           { value: "WEIGHT_RANGE", label: "نطاق وزن" },
         ]}
+      />
+
+      <Select<EditProductFormValues>
+        name="status"
+        label="حالة المنتج"
+        options={[...productStatusOptions]}
       />
 
       <WeightOptionsFields />
