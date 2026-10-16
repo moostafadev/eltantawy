@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 import { editCategorySchema } from "./schema";
@@ -105,6 +105,7 @@ export const editCategoryAction = async (id: string, values: unknown) => {
 
     revalidatePath("/admin/products/categories");
     revalidatePath(`/admin/products/categories/${id}`);
+    revalidateTag("home-categories", { expire: 0 });
 
     return {
       success: true,

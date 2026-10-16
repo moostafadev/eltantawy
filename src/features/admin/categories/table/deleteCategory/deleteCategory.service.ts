@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 import { prisma } from "@/lib/prisma";
 
@@ -55,6 +55,7 @@ export const deleteCategoryAction = async (id: string) => {
     await deleteCategoryTree(id);
 
     revalidatePath("/admin/products/categories");
+    revalidateTag("home-categories", { expire: 0 });
 
     return {
       success: true,
